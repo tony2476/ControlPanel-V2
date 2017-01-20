@@ -1,2 +1,2 @@
 # ControlPanel-V2
-MHVC Version of Control Panel
+HMVC Version of Control Panel with Admin Panel V2 template.

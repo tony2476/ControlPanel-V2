@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$allowed_domains = array('mhhelper.fulltiming.info', 'mhhelper.local');
+$allowed_domains = array('mhhelper.fulltiming.info', 'framework.local');
 $default_domain  = 'mhhelper.fulltiming.info';
 
 if (in_array($_SERVER['HTTP_HOST'], $allowed_domains, TRUE)) {

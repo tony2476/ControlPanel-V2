@@ -1,3 +1,11 @@
+**************************
+Framework
+**************************
+
+This is a core framework using Codeigniter, Ion Auth, DB Admin 2 and HMVC.
+
+On top if this I am creating a menu system and a menu editor plus other modules to handle things such as basic RBACL.
+
 ###################
 What is CodeIgniter
 ###################

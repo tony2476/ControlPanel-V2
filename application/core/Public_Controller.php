@@ -17,6 +17,13 @@ class Public_Controller extends MY_Controller {
 		parent::__construct();
 
 		// prepare theme name
+		 
+		// Set menu
+		
+		$this->menu->set_top_menu($this->config->item('top_menu_name'));
+		$this->menu->set_side_menu($this->config->item('left_menu_name'));
+		$menu_data = $this->menu->display_menu();
+		$this->template->set_menu_data($menu_data);
 		
 	}
 

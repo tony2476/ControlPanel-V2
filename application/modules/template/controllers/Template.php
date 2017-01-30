@@ -1,12 +1,14 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Template extends Public_Controller {
+class Template extends MX_Controller {
 
+	// Template configuration variables
 	private 	$template_name = "default";
 	private 	$template_module_path;
 	private 	$template_module_dir;
 	private 	$page_title = "Default Title";
 
+	// Template Data (To insert into the page)
 	private 	$menu_data = array ( 
 		'menu_data' => ''
 		);
@@ -27,6 +29,7 @@ class Template extends Public_Controller {
 	function __construct()
 	{
 		parent::__construct();
+		$this->load->config('config');
 		$this->template_module_path = APPPATH.'modules/'.$this->router->fetch_module() . "/views/";
 	}
 
@@ -40,8 +43,10 @@ class Template extends Public_Controller {
 		{
 			return (FALSE);
 		}
+
 		$this->template_name = $template_name;
 		$this->template_module_dir = $this->template_module_path . "$this->template_name";
+		
 		if (!file_exists($this->template_module_dir))
 		{
 			throw new Exception("Template Directory specified does not exist.");
@@ -54,20 +59,24 @@ class Template extends Public_Controller {
 		return (TRUE);
 	}
 
+	// Set the Title for this page.
 	public function set_title($title)
 	{
 		$this->header_data['title'] = $title;
 	}
 
+	// Load the menu data
 	public function set_menu_data($data) {
 		$this->menu_data['menu_data'] = $data;
 	}
 
+	// Load the Page Data
 	public function set_page_data($data) {
 		$this->page_data['page_data'] = $data;
 	}
 
-	public function load_page()
+	// Display the Page.
+	public function display_page()
 	{
 		$this->load->view("$this->template_name/header", $this->header_data);
 		$this->load->view("$this->template_name/menu", $this->menu_data);

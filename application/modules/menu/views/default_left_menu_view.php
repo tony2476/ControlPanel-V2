@@ -16,13 +16,13 @@
 						<a href="<?= base_url('admin/dashboard') ?>"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
 					</li>
 					<li>
-						<a href="<?= base_url('admin/brands') ?>"><i class="fa fa-table fa-fw"></i> Brands</a>
+						<a href="<?= base_url('admin/brands') ?>"><i class="fa fa-table fa-fw"></i> Account</a>
 					</li>
 					<li>
-						<a href="<?= base_url('admin/categories') ?>"><i class="fa fa-edit fa-fw"></i> Categories</a>
+						<a href="<?= base_url('admin/categories') ?>"><i class="fa fa-edit fa-fw"></i> Newsletter</a>
 					</li>
 					<li>
-						<a href="<?= base_url('admin/products') ?>"><i class="fa fa-edit fa-fw"></i> Products</a>
+						<a href="<?= base_url('admin/products') ?>"><i class="fa fa-edit fa-fw"></i> Email</a>
 					</li>
 				</ul>
 			</div>

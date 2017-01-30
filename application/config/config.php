@@ -493,10 +493,15 @@ $config['proxy_ips'] = '';
 | for base controllers and some third-party libraries.
 |
 */
+
+/*
+Disabled - Already declared elsewhere?  Investigate later.
+
 function __autoload($class)
 {
 	if (strpos($class, 'CI_') !== 0)
 	{
 		@include_once(APPPATH . 'core/' . $class . '.php');
 	}
-}
+}*/
+

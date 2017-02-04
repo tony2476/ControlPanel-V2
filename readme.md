@@ -22,7 +22,7 @@ I do not include the Ion Auth code here directly.  To import the most recent ver
 
 `cd application/third_party
 `git clone git@github.com:benedmunds/CodeIgniter-Ion-Auth.git
-`mv CodeIgniter-Ion-Auth/ ion-auth
+`mv CodeIgniter-Ion-Auth/ ion_auth
 `cd ion-auth/
 `git pull
 

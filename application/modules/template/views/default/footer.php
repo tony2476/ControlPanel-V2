@@ -1,6 +1,4 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<!-- jQuery -->
-<script src="<?=base_url()?>assets/admin/js/jquery.min.js"></script>
 
 <!-- Bootstrap Core JavaScript -->
 <script src="<?=base_url()?>assets/admin/js/bootstrap.min.js"></script>
@@ -10,6 +8,8 @@
 
 <!-- Custom Theme JavaScript -->
 <script src="<?=base_url()?>assets/admin/js/sb-admin-2.js"></script>
+
+
 
 </body>
 

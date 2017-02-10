@@ -1,0 +1,54 @@
+
+#editmenu ul {
+	list-style: none;
+	padding-left: 20px;
+	min-height: 10px;
+}
+
+.button-span {
+	padding-top: 3px;
+}
+#editmenu li {
+	margin: 7px;
+	width: 400px;
+	list-style-position:inside;
+	border: 1px solid #bbb;
+	border-radius: 4px;
+}
+
+.colorblue {
+	color: #337ab7;
+}
+
+.colorblue:hover {
+	color: #135a97;
+}
+
+#editmenu a {
+	text-decoration:none;
+}
+
+#editmenu > ul > li > ul  {
+	margin: 3px;
+	min-height: 20px;
+		
+}
+
+#editmenu > ul > li > ul > li {
+	width: 90%;
+	margin: 3px;
+	line-height: 25px;
+	height: 30px;	
+}
+
+#editmenu > ul > li > ul > li > ul {
+	visibility: collapse;
+	visibility: hidden;
+	display: none;
+	height: 0px;
+}
+
+.pointer {
+	cursor: pointer;
+}
+

@@ -17,6 +17,34 @@ class Menu extends MX_Controller {
 		$this->load->config('config');
 	}
 
+	public function test()
+	{
+		$top_data = $this->config->item($this->top_menu);
+		
+		echo "<pre>";
+		echo "top menu array\n <br />";
+		print_r ($top_data);
+		
+
+		$data = json_encode($top_data);
+		echo "json data \n<br />";
+		print_r ($data);
+
+		$data = json_decode($data, TRUE);
+		echo "json decoded data \n<br />";
+		print_r ($data);
+
+
+		echo "</pre>";
+	}
+
+	public function index()
+	{
+		echo "Working, but nothing here";
+	}
+
+
+
 	public function display_menu()
 	{
 		//Get the top menu data, then remove any items this user does not RBACL access rights to.
@@ -35,6 +63,19 @@ class Menu extends MX_Controller {
 		
 		#$menu_data .= $this->load->view("menu/default_left_menu_view", $left_data, TRUE);
 		return ($menu_data);
+	}
+
+	public function load_menu($menu_name)
+	{
+		$sql = "select ID from menus where menu_name = '$menu_name'";
+		return (json_decode($result['menu_data']));
+
+	}
+
+	public function save_menu($menu_name, $menu_data)
+	{
+		$data = json_encode($menu_data);
+		$sql = "update menus set menu_name='$menu_name', menu_data='$menu_data' where menu_name=$'menu_name'";
 	}
 
 	/**

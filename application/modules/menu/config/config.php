@@ -17,21 +17,21 @@ $config['top_menu'] = array (
 			'submenu'	=>	array (
 					// Use index => array to create a new menu and set it's sort order.
 				0 => array (
-					'title'		=> '<i class="fa fa-user fa-fw"></i> User Profile</a>',
+					'title'		=> '<i class="fa fa-user fa-fw"></i> User Profile',
 					'href'		=>	"#",
 					'sort_order' =>	"0",
 					'footer' 	=>	FALSE,
 					'required_group'	=>	FALSE,
 					),
 				2 => array (
-					'title' 	=> '<i class="fa fa-gear fa-fw"></i> Settings</a>',
+					'title' 	=> '<i class="fa fa-gear fa-fw"></i> Settings',
 					'href'		=>	"#",
 					'sort_order' =>	"1",
 					'footer'	=>	'<li class="divider"></li>',
 					'required_group'	=>	FALSE,
 					),
 				1 => array (
-					'title'		=> '<i class="fa fa-sign-out fa-fw"></i> Logout</a>',
+					'title'		=> '<i class="fa fa-sign-out fa-fw"></i> Logout',
 					'href'		=>	"#",
 					'sort_order' =>	"2",
 					'footer'		=>	FALSE,

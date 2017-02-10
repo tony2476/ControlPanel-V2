@@ -12,12 +12,12 @@
 									Choose a Menu.
 									<span class="caret"></span>
 								</button>
-								<ul class="dropdown-menu pull-right" role="menu">
-									<li><a href="#">Menu 1</a>
+								<ul id="menu_select" class="dropdown-menu pull-right" role="menu">
+									<li><a href="#" id="Top_Menu">Top_Menu</a>
 									</li>
-									<li><a href="#">Menu 2</a>
+									<li><a href="#" id="Left_Menu">Left_Menu 2</a>
 									</li>
-									<li><a href="#">Menu 2</a>
+									<li><a href="#" id="Admin_Menu">Admin_Menu</a>
 									</li>
 									<li class="divider"></li>
 									<li><a href="#">Something else here</a>
@@ -94,10 +94,6 @@
 							<div class="modal-body">
 								<form role="form">
 									<div class="form-group">
-										<label for="icon"><span class="fa fa-photo fa-fw"></span> Icon</label>
-										<input type="text" class="form-control" id="icon" placeholder="Enter Icon Name">
-									</div>
-									<div class="form-group">
 										<label for="title"><span class="fa fa-tag fa-fw"></span> Title</label>
 										<input type="text" class="form-control" id="title" placeholder="Enter Title">
 									</div>
@@ -164,7 +160,7 @@
 			count = children.length;
 			count++;
 
-			$( '<li id="Item_' + count + '"><a href="' + link + '">' + title + '</a> <span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span> <ul><i class="fa fa-clone fa-fw"></i></ul></li>' ).insertBefore( $( "#menuend" ) );
+			$( '<li id="Item_' + count + '"><a href="' + link + '">' + title + '</a> <span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span> <ul></ul></li>' ).insertBefore( $( "#menuend" ) );
 
 
 			// Reset sortable to add the new item
@@ -178,13 +174,48 @@
 			$('#addItemModal').modal('hide');
 		});
 
-		function Delete(currentEl)
-		{
-			currentEl.parentNode.parentNode.removeChild(currentEl.parentNode);
-		}
+		// Load
+		$('#menu_select a').click(function(e){
+			e.preventDefault(e);
+			document.getElementById("results" ).innerHTML = "Loading Menu " + ( e.currentTarget.id );
+			var $menu = 'menu=' + e.currentTarget.id;
+			$.ajax({
+				url:"/menu_editor/ajax_load",
+				type:"post",
+				dataType:"html",
+				data: $menu,
+				success:function(response){
+					document.getElementById("editmenu" ).innerHTML =  response;
+					console.log(response);
+				}
+			});
+		});
 
-		function Edit(currentEl)
-		{
+		// Save
+		$('#btn-save').click(function(e) { 
+			e.preventDefault(e);
+			var HTML = document.getElementById("editmenu");
+			var $data = 'menu=' + escape(HTML.outerHTML);
+			console.log(HTML);
+			$.ajax({
+				url:"/menu_editor/ajax_save",
+				type:"post",
+				dataType:"html",
+				data:$data,
+				success:function(obj){
+					document.getElementById("results" ).innerHTML =  obj;
+					console.log(obj);
+				}
+			});
+		});
+	});
+	function Delete(currentEl)
+	{
+		currentEl.parentNode.parentNode.removeChild(currentEl.parentNode);
+	}
+
+	function Edit(currentEl)
+	{
 			//currentEl.parentNode.parentNode.removeChild(currentEl.parentNode);
 			link = ($('a', currentEl.parentNode).attr('href'));
 			title = ($('a', currentEl.parentNode).text());
@@ -195,27 +226,4 @@
 			$('#addItemModal').modal('show');
 			currentEl.parentNode.parentNode.removeChild(currentEl.parentNode);
 		}
-
-
-		// Save
-		$('#btn-save').click(function(e) { 
-			e.preventDefault();
-
-
-			//var HTML = (document.all['editmenu'].outerHTML);
-			var HTML = document.getElementById("editmenu");
-			var $data = 'menu=' + escape(HTML.outerHTML);
-			console.log(HTML);
-			$.ajax({
-				url:"/menu_editor/ajax",
-				type:"post",
-				dataType:"html",
-				data:$data,
-				success:function(obj){
-					document.getElementById("results" ).innerHTML =  obj;
-					console.log(obj)
-				}
-			});
-		});
-	});
-</script>
+	</script>

@@ -23,25 +23,35 @@ class Menu_editor extends Public_Controller {
 		
 	}
 
-	public function ajax() {
-		$value='';
-		if ($this->input->post('menu')) {
-			$value= $this->input->post('menu');
+	public function ajax_load() {
+		if ($this->input->post('menu'))
+		{
+			echo '<ul id="rootul"><li id="Item_1"><a href="#"><i class="fa fa-home fa-fw" ></i>Home</a><span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span> <ul></ul></li><div id="menuend"></div></ul>';
+		}
+	}
 
+	public function ajax_save() {
+		$html='';
+		if ($this->input->post('menu')) 
+		{
+			$html= $this->input->post('menu');
+			$dom = new DOMDocument;
+			$dom->loadHTML($html);
+
+			$menuname = $dom->getElementsByTagName('ul')->item(0)->getAttribute('id');
+			$html = str_replace( 'class="ui-sortable"', "", $html);
+			$html = str_replace( 'class="ui-sortable-handle"', "", $html);
+
+			echo "Menu was saved with name: $menuname <br />";
+			echo $html;
+		}
+		else
+		{
+			return FALSE;
 		}
 
-		//$value =  ($_POST['menu']);
-		//$file = "/tmp/json.log";
 
 
-		if ($value!='') {
-			echo $value;
-		} else {
-			echo json_encode("error: OOPS!");
-		}
 
-//		$post= print_r($_POST, true);
-//		file_put_contents($file, $post . "\n\n", FILE_APPEND | LOCK_EX);
-//		file_put_contents($file, $json . "\n\n", FILE_APPEND | LOCK_EX);
 	}
 }

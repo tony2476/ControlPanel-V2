@@ -23,6 +23,14 @@
 <!-- Custom Fonts -->
 <link href="<?=base_url()?>assets/admin/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
+<!-- jQuery -->
+<script src="<?=base_url()?>assets/admin/js/jquery.min.js"></script>
+<script src="<?=base_url()?>assets/admin/js/jquery-ui.js"></script>
+	
+	<link rel="stylesheet" href="<?=base_url()?>assets/admin/css/menu.css">
+	<link href="<?=base_url()?>assets/admin/css/font-awesome.css" rel="stylesheet" type="text/css">
+
+
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>

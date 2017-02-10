@@ -27,6 +27,7 @@ class Welcome extends Public_Controller {
 		$page_data = '';
 		$this->template->set_page_data($page_data);
 		$this->template->display_page();
+		#$this->menu->test();
 
 		
 

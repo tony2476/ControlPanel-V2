@@ -12,7 +12,8 @@
 	margin: 7px;
 	width: 400px;
 	list-style-position:inside;
-	border: 1px solid #bbb;
+	background-color: #f8f8f8;
+	border: 1px solid #e7e7e7;
 	border-radius: 4px;
 }
 

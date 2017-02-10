@@ -14,6 +14,7 @@ class Menu_editor extends Public_Controller {
 	}
 
 	public function index() {
+		$this->template->set_title("Menu Editor.");
 		$menu = array();
 		$page_data = '';
 		$page_data = $this->load->view("menu_editor/menu_editor_view", $menu, TRUE);
@@ -24,10 +25,10 @@ class Menu_editor extends Public_Controller {
 
 	public function ajax() {
 		$value='';
-	if ($this->input->post('menu')) {
-		$value= $this->input->post('menu');
+		if ($this->input->post('menu')) {
+			$value= $this->input->post('menu');
 
-	}
+		}
 
 		//$value =  ($_POST['menu']);
 		//$file = "/tmp/json.log";

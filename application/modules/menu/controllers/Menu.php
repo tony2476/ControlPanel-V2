@@ -137,4 +137,75 @@ class Menu extends MX_Controller {
 		}
 		return $menu;
 	}
+
+	private function process_menu_dom($html)
+	{
+		$html = str_replace( 'class="ui-sortable"', "", $html);
+		$html = str_replace( 'class="ui-sortable-handle"', "", $html);
+
+
+		$dom = new DOMDocument;
+		$dom->loadHTML($html);
+
+		// Remove spans as they are not needed for the display of the menu.
+		$spans = $dom->getElementsByTagName("span");
+		while ($spans->length > 0) 
+		{
+			$span = $spans->item(0);
+			$span->parentNode->removeChild($span);
+		}
+
+
+		$menuname = $dom->getElementsByTagName('ul')->item(0)->getAttribute('id');
+
+
+		#$elements = $dom->getElementsByTagName('li');
+		$xpath = new DOMXpath($dom);
+		$elements = $xpath->query("*/div/ul/li");
+
+
+		$menu = array();
+		$count=0;
+
+		foreach ($elements as $element) 
+		{
+			$menu[$count] = $this->print_node_info($element);
+
+			if ($element->childNodes->length >=2){
+				$subcount = 0;
+				$sub = $xpath->query('.//li', $element);
+				foreach ($sub as $subli)
+				{
+
+					$menu[$count][$subcount] = $this->print_node_info($subli);
+					$subcount++;
+				}
+			}
+			$count++;
+		}
+		return ($menu);
+	}
+
+	private function print_node_info($node) 
+	{
+		$result = array();
+		//echo $node->childNodes->length;
+		$result['id'] = $node->attributes->getNamedItem('id')->value;
+		$result['href'] = $node->getElementsByTagName('a')->item(0)->attributes->getNamedItem('href')->value;
+		$result['title'] = $node->getElementsByTagName('a')->item(0)->nodeValue;
+
+		// Check for icon in <i> tags,  <i> tag should be within the menu items <a> tag.
+		if ($node->getElementsByTagName('i')->length >0)
+		{
+			$icons = $node->getElementsByTagName('i');
+			foreach ($icons as $icon) 
+			{
+				if ($icon->parentNode->parentNode === $node)
+				{
+					$result['icon'] = ($node->getElementsByTagName('i')->item(0)->attributes->getNamedItem('class')->value);
+				}
+			}
+			return $result;
+		}
+	}
 }

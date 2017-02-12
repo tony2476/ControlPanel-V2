@@ -27,65 +27,62 @@
 						</div>
 					</div>
 					<div class="panel-body">
+						<div class="pull-right">
+							<button id="btn-save" class="btn btn-warning" type="submit">Save</button>
+							<button class="btn btn-success" type="button" tabindex="-1" id="additemmodalbutton" value="All" data-toggle="modal" data-target="#additemmodal">Add</button>
+						</div>
 						<div id="editmenu">
 							<ul id="rootul">
-								<li id="Item_1"><a href="#"><i class="fa fa-home fa-fw" ></i>Home</a><ul></ul></li>
-								<li ><a href="#"><i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i></a>
+								<li id="Item_1"><a href="#1"><i class="fa fa-home fa-fw" ></i>Home</a><span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span><ul></ul></li>
+								<li id="Item_2"><a href="#2"><i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i></a><span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span>
 									<ul>
-										<li id="Item_2"><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a><ul></ul></li>
-										<li id="Item_3"><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a><ul></ul></li>
-										<li id="Item_4"><a href="#"><i class="fa fa-sign-out fa-fw"></i> Logout</a><ul></ul></li>
+										<li id="Item_3"><a href="#3"><i class="fa fa-gear fa-fw"></i> Settings</a><span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span><ul></ul></li>
+										<li id="Item_4"><a href="#4"><i class="fa fa-user fa-fw"></i> User Profile</a><span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span><ul></ul></li>
+										<li id="Item_5"><a href="#5"><i class="fa fa-sign-out fa-fw"></i> Logout</a><span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span><ul></ul></li>
 									</ul>
 
 								</li>
-								<li id="Item_5">Item 3<ul></ul></li>
-								<li id="Item_6">Item 4<ul></ul></li>
+								<li id="Item_6"><a href="#6"><i class="fa fa-user fa-fw" ></i>Item 5</a><span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span><ul></ul></li>
+								<li id="Item_7"><a href="#7"><i class="fa fa-gear fa-fw" ></i>Item 6</a><span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span><ul></ul></li>
 								<div id="menuend"></div>
 							</ul>
 						</div>
 					</div>
-
 				</div>
+
 			</div>
+
 			<div class="col-lg-4">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						Instructions
 					</div>
 					<div class="panel-body">
-						<p>This is just a rough test of the features.  You can save and it posts to the server.</p>  
-
 						<p>The add button loads the modal (click anywhere else to dismiss).</p>
 
 						<p>If you want to add an icon before a title please use this format;</p>
-						<p><pre>&lti class="fa fa-sign-out fa-fw">&lt/i> Logout</pre></p>
-						<br />
-						<div>
-							<button id="btn-save" class="btn btn-warning" type="submit">Save</button>
-							<button class="btn btn-success" type="button" tabindex="-1" id="additemmodalbutton" value="All" data-toggle="modal" data-target="#additemmodal">Add</button>
-						</div>
-						<div class="">
-							<h4>Results from AJAX Post will be shown here.</h4>
-							<p>When you click save.</p>
-							<div id="results">
-							</div>
-						</div>
-						<div>
-						</div>
+						<p>
+							<pre>&lti class="fa fa-your-icon-here fa-fw">&lt/i> Logout</pre><br />You can view all the icons here;
+							<a href="http://fontawesome.io/icons/">http://fontawesome.io/icons/</a>
+						</p>
+
+						<p>Menus can only be nested 1 deep.  That is a top level then 1 sub menu.  If you drag a menu item with a submenu onto another menu item the excess items won't be visible.  To recover them move the menu item back to the root level.
+						</p>
+
+						<p>Do <strong>not</strong> save! until you are sure the menu is how you want it.  Saving overwrites the original version</p>
+
+						<p>If you make a mistake and want to undo all the changes,  simply refresh your browser</p>
+
+						<p>Please note if you delete a root menu that contains submenus it will delete the submenus as well</p>
+
 					</div>
 				</div>
-
 			</div>
-
-
-
-
 
 			<div class="container">
 				<!-- Modal -->
 				<div class="modal fade" id="addItemModal" role="dialog">
 					<div class="modal-dialog">
-
 						<!-- Modal content-->
 						<div class="modal-content">
 							<div class="modal-header">
@@ -101,26 +98,33 @@
 										<label for="link"><span class="fa fa-link fa-fw"></span> Link</label>
 										<input type="text" class="form-control" id="link" placeholder="Enter Link">
 									</div>
+									<div class="form-group">
+										<label for="required_role"><span class="fa fa-exclamation fa-fw"></span> Role</label>
+										<input type="text" class="form-control" id="required_role" placeholder="Enter Role">
+									</div>
 									<div class="checkbox">
 										<label><input type="checkbox" value="" checked>Footer Bar</label>
 									</div>
 									<button id="addBtn" class="btn btn-default btn-success btn-block"><span class="fa fa-plus fa-fw"></span> Add</button>
 								</form>
 							</div>
-							<div class="modal-footer">
-								Footer
-							</div>
+
 						</div>
 
 					</div>
 				</div> 
 			</div>
-
-			
 		</div>
 	</div>
+											<div class="">
+							<h4>Results from AJAX Post will be shown here.</h4>
+							<p>When you click save.</p>
+							<div id="results">
+							</div>
+						</div>
+</div>
 
-	<script type="text/javascript">
+<script type="text/javascript">
 	// When page has loaded.
 	$(document).ready(function()
 	{
@@ -129,14 +133,17 @@
 		{
 			document.getElementById('title').value = '';
 			document.getElementById('link').value = '';
+			document.getElementById('required_role').value = '';
 			$("#addItemModal").modal();
 		});
+
 		// Setup Delete 
 		$(".deleteMe").on("click", function()
 		{
 			$(this).closest("li").remove();
 			console.log("DELETING ITEM") ;
 		});
+
 		// Setup Sortable
 		$("#editmenu ul").sortable
 		({
@@ -154,17 +161,19 @@
 			e.preventDefault();
 			var title = $('#title').val();
 			var link = $('#link').val();
+			var required_role = $('#required_role').val();
 
 			var context = $('#editmenu');
 			children = context.find('li');
 			count = children.length;
 			count++;
 
-			$( '<li id="Item_' + count + '"><a href="' + link + '">' + title + '</a> <span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span> <ul></ul></li>' ).insertBefore( $( "#menuend" ) );
+			$( '<li id="Item_' + count + '" data-role="' + required_role + '"><a href="' + link + '">' + title + '</a> <span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span> <ul></ul></li>' ).insertBefore( $( "#menuend" ) );
 
 
 			// Reset sortable to add the new item
-			$("#editmenu ul").sortable({
+			$("#editmenu ul").sortable
+			({
 				connectWith: "#editmenu ul",
 				placeholder: "ui-state-highlight",
 				forcePlaceholderSize:true
@@ -175,16 +184,19 @@
 		});
 
 		// Load
-		$('#menu_select a').click(function(e){
+		$('#menu_select a').click(function(e)
+		{
 			e.preventDefault(e);
 			document.getElementById("results" ).innerHTML = "Loading Menu " + ( e.currentTarget.id );
 			var $menu = 'menu=' + e.currentTarget.id;
-			$.ajax({
+			$.ajax
+			({
 				url:"/menu_editor/ajax_load",
 				type:"post",
 				dataType:"html",
 				data: $menu,
-				success:function(response){
+				success:function(response)
+				{
 					document.getElementById("editmenu" ).innerHTML =  response;
 					console.log(response);
 				}
@@ -192,23 +204,27 @@
 		});
 
 		// Save
-		$('#btn-save').click(function(e) { 
+		$('#btn-save').click(function(e) 
+		{ 
 			e.preventDefault(e);
 			var HTML = document.getElementById("editmenu");
 			var $data = 'menu=' + escape(HTML.outerHTML);
 			console.log(HTML);
-			$.ajax({
+			$.ajax
+			({
 				url:"/menu_editor/ajax_save",
 				type:"post",
 				dataType:"html",
 				data:$data,
-				success:function(obj){
+				success:function(obj)
+				{
 					document.getElementById("results" ).innerHTML =  obj;
 					console.log(obj);
 				}
 			});
 		});
 	});
+
 	function Delete(currentEl)
 	{
 		currentEl.parentNode.parentNode.removeChild(currentEl.parentNode);
@@ -219,10 +235,12 @@
 			//currentEl.parentNode.parentNode.removeChild(currentEl.parentNode);
 			link = ($('a', currentEl.parentNode).attr('href'));
 			title = ($('a', currentEl.parentNode).text());
+			required_role = ($('li', currentEl.parentNode).attr('required_role'));
 
 			console.log (link + " " + title)
 			document.getElementById('title').value = title;
 			document.getElementById('link').value = link;
+			document.getElementById('required_role').value = required_role;
 			$('#addItemModal').modal('show');
 			currentEl.parentNode.parentNode.removeChild(currentEl.parentNode);
 		}

@@ -8,13 +8,15 @@ class Menu extends MX_Controller {
 
 	private 	$top_menu;
 	private 	$side_menu;
-
+	private 	$menu;
 	function __construct()
 	{
 		parent::__construct();
 		$this->template_module_path = APPPATH.'modules/'.$this->router->fetch_module() . "/views/";
 		// Load the module config file.
 		$this->load->config('config');
+		$this->load->model('menu/menu_model');
+		$this->menu = New Menu_model;
 	}
 
 	public function test()
@@ -48,8 +50,14 @@ class Menu extends MX_Controller {
 	public function display_menu()
 	{
 		//Get the top menu data, then remove any items this user does not RBACL access rights to.
-		$top_data = $this->config->item($this->top_menu);
-		$top_data = $this->check_item_permissions($top_data);
+		#$top_data = $this->config->item($this->top_menu);
+		
+		$top_data = array 
+		(
+			'menu' => $this->menu->load_menu('Top_Menu'),
+		);
+		
+		#$top_data = $this->check_item_permissions($top_data);
 
 		//Get the left menu data, then remove any items this user does not RBACL access rights to.
 		$left_data = array();  // Temporary holding data until we implement it.
@@ -70,12 +78,6 @@ class Menu extends MX_Controller {
 		$sql = "select ID from menus where menu_name = '$menu_name'";
 		return (json_decode($result['menu_data']));
 
-	}
-
-	public function save_menu($menu_name, $menu_data)
-	{
-		$data = json_encode($menu_data);
-		$sql = "update menus set menu_name='$menu_name', menu_data='$menu_data' where menu_name=$'menu_name'";
 	}
 
 	/**
@@ -122,6 +124,7 @@ class Menu extends MX_Controller {
 	 * @return type
 	 */
 	private function check_item_permissions($menu) {
+		//ChromePhp::log($menu);
 		foreach ($menu['menu'] as $primarykey => $primary)
 		{
 			if (isset($primary['submenu'])) 
@@ -138,74 +141,5 @@ class Menu extends MX_Controller {
 		return $menu;
 	}
 
-	private function process_menu_dom($html)
-	{
-		$html = str_replace( 'class="ui-sortable"', "", $html);
-		$html = str_replace( 'class="ui-sortable-handle"', "", $html);
 
-
-		$dom = new DOMDocument;
-		$dom->loadHTML($html);
-
-		// Remove spans as they are not needed for the display of the menu.
-		$spans = $dom->getElementsByTagName("span");
-		while ($spans->length > 0) 
-		{
-			$span = $spans->item(0);
-			$span->parentNode->removeChild($span);
-		}
-
-
-		$menuname = $dom->getElementsByTagName('ul')->item(0)->getAttribute('id');
-
-
-		#$elements = $dom->getElementsByTagName('li');
-		$xpath = new DOMXpath($dom);
-		$elements = $xpath->query("*/div/ul/li");
-
-
-		$menu = array();
-		$count=0;
-
-		foreach ($elements as $element) 
-		{
-			$menu[$count] = $this->print_node_info($element);
-
-			if ($element->childNodes->length >=2){
-				$subcount = 0;
-				$sub = $xpath->query('.//li', $element);
-				foreach ($sub as $subli)
-				{
-
-					$menu[$count][$subcount] = $this->print_node_info($subli);
-					$subcount++;
-				}
-			}
-			$count++;
-		}
-		return ($menu);
-	}
-
-	private function print_node_info($node) 
-	{
-		$result = array();
-		//echo $node->childNodes->length;
-		$result['id'] = $node->attributes->getNamedItem('id')->value;
-		$result['href'] = $node->getElementsByTagName('a')->item(0)->attributes->getNamedItem('href')->value;
-		$result['title'] = $node->getElementsByTagName('a')->item(0)->nodeValue;
-
-		// Check for icon in <i> tags,  <i> tag should be within the menu items <a> tag.
-		if ($node->getElementsByTagName('i')->length >0)
-		{
-			$icons = $node->getElementsByTagName('i');
-			foreach ($icons as $icon) 
-			{
-				if ($icon->parentNode->parentNode === $node)
-				{
-					$result['icon'] = ($node->getElementsByTagName('i')->item(0)->attributes->getNamedItem('class')->value);
-				}
-			}
-			return $result;
-		}
-	}
 }

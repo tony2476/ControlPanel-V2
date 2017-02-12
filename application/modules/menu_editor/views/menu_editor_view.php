@@ -136,7 +136,7 @@
 			connectWith: "#editmenu ul",
 			revert: true,
 			helper: 'clone',
-			appendTo: '#rootul',
+			appendTo: '#menuend',
 			placeholder: "ui-state-highlight",
 			forcePlaceholderSize:true
 		});
@@ -161,6 +161,9 @@
 			$("#editmenu ul").sortable
 			({
 				connectWith: "#editmenu ul",
+				revert: true,
+				helper: 'clone',
+				appendTo: '#menuend',
 				placeholder: "ui-state-highlight",
 				forcePlaceholderSize:true
 			});
@@ -185,6 +188,16 @@
 				{
 					document.getElementById("editmenu" ).innerHTML =  response;
 					document.getElementById("current_menu" ).innerHTML =  e.currentTarget.id;
+					// Reset sortable to add the new item
+					$("#editmenu ul").sortable
+					({
+						connectWith: "#editmenu ul",
+						revert: true,
+						helper: 'clone',
+						appendTo: '#menuend',
+						placeholder: "ui-state-highlight",
+						forcePlaceholderSize:true
+					});
 					console.log(response);
 				}
 			});

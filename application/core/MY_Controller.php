@@ -28,6 +28,7 @@ class MY_Controller extends MX_Controller {
 		// Load the ion_auth library from the third_party folder.  Use add_package_path() so that all future calls to that library prepend the path.
 		// I kept the entire ion_auth library in it's own folder to make updates easier and for encapsulation.  Everything relating to ion_auth is in that directory.
 		$this->load->add_package_path(APPPATH.'third_party/ion_auth') -> library('ion_auth');
+		$this->load->add_package_path(APPPATH.'third_party/chromephp') -> library('chromephp');
 
 		// Load Globally Required Modules.
 		$this->load->module('template');

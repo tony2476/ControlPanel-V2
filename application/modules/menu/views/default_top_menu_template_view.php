@@ -2,13 +2,13 @@
 	{menu}
 	<li class="dropdown">
 		<a class="dropdown-toggle" data-toggle="dropdown" href="{href}">
-			{title}
+			{icon} {title}
 		</a>
 		<ul class="{ul_class}">
 			{submenu}
 			<li>
 				<a href="{href}">
-					{title}
+					{icon} {title}
 				</a>
 			</li>
 			{footer}

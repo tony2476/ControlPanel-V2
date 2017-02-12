@@ -1,1 +1,0 @@
-This contains all functionality relating to SalesForce Cases.

@@ -1,0 +1,8 @@
+cd /home/karl/Documents/Development/karl/framework/
+git push framework master
+cd /home/karl/Documents/Development/Tony-richardson/cp-v2/
+git checkout framework
+git pull framework master
+git checkout master
+git merge framework
+git push cp master

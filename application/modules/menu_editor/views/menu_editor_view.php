@@ -5,7 +5,7 @@
 			<div class="col-lg-8">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						Menu Editor
+						<strong>Currently Editing  : </strong> <span id="current_menu">No Menu Selected.</span>
 						<div class="pull-right">
 							<div class="btn-group">
 								<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -28,20 +28,8 @@
 							<button class="btn btn-success" type="button" tabindex="-1" id="additemmodalbutton" value="All" data-toggle="modal" data-target="#additemmodal">Add</button>
 						</div>
 						<div id="editmenu">
-							<ul id="Left_Menu">
-								<li id="Item_1"><a href="#1"><i class="fa fa-home fa-fw" ></i>Home</a><span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span><ul></ul></li>
-								<li id="Item_2"><a href="#2"><i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i></a><span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span>
-									<ul>
-										<li id="Item_3"><a href="#3"><i class="fa fa-gear fa-fw"></i> Settings</a><span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span><ul></ul></li>
-										<li id="Item_4"><a href="#4"><i class="fa fa-user fa-fw"></i> User Profile</a><span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span><ul></ul></li>
-										<li id="Item_5"><a href="#5"><i class="fa fa-sign-out fa-fw"></i> Logout</a><span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span><ul></ul></li>
-									</ul>
-
-								</li>
-								<li id="Item_6"><a href="#6"><i class="fa fa-user fa-fw" ></i>Item 5</a><span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span><ul></ul></li>
-								<li id="Item_7"><a href="#7"><i class="fa fa-gear fa-fw" ></i>Item 6</a><span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span><ul></ul></li>
-								<div id="menuend"></div>
-							</ul>
+							
+							<p>Please choose a menu to edit from the drop down box at the top right of this area.</p>
 						</div>
 					</div>
 				</div>
@@ -196,6 +184,7 @@
 				success:function(response)
 				{
 					document.getElementById("editmenu" ).innerHTML =  response;
+					document.getElementById("current_menu" ).innerHTML =  e.currentTarget.id;
 					console.log(response);
 				}
 			});

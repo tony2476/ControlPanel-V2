@@ -154,7 +154,7 @@
 			count = children.length;
 			count++;
 
-			$( '<li id="Item_' + count + '" data-role="' + required_role + '"><a href="' + link + '">' + title + '</a> <span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span> <ul></ul></li>' ).insertBefore( $( "#menuend" ) );
+			$( '<li id="Item_' + new Date().getTime().toString() + '" data-role="' + required_role + '"><a href="' + link + '">' + title + '</a> <span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span> <ul></ul></li>' ).insertBefore( $( "#menuend" ) );
 
 
 			// Reset sortable to add the new item

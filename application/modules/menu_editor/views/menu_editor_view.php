@@ -13,15 +13,11 @@
 									<span class="caret"></span>
 								</button>
 								<ul id="menu_select" class="dropdown-menu pull-right" role="menu">
-									<li><a href="#" id="Top_Menu">Top_Menu</a>
+									{menu_list}
+									<li><a href="#" id="{menu_name}">{menu_name}</a>
 									</li>
-									<li><a href="#" id="Left_Menu">Left_Menu 2</a>
-									</li>
-									<li><a href="#" id="Admin_Menu">Admin_Menu</a>
-									</li>
-									<li class="divider"></li>
-									<li><a href="#">Something else here</a>
-									</li>
+									{/menu_list}
+									
 								</ul>
 							</div>
 						</div>
@@ -32,7 +28,7 @@
 							<button class="btn btn-success" type="button" tabindex="-1" id="additemmodalbutton" value="All" data-toggle="modal" data-target="#additemmodal">Add</button>
 						</div>
 						<div id="editmenu">
-							<ul id="rootul">
+							<ul id="Left_Menu">
 								<li id="Item_1"><a href="#1"><i class="fa fa-home fa-fw" ></i>Home</a><span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span><ul></ul></li>
 								<li id="Item_2"><a href="#2"><i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i></a><span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span>
 									<ul>
@@ -116,12 +112,14 @@
 			</div>
 		</div>
 	</div>
-											<div class="">
-							<h4>Results from AJAX Post will be shown here.</h4>
-							<p>When you click save.</p>
-							<div id="results">
-							</div>
-						</div>
+
+	<!-- Remove this before going live -->
+	<div class="">
+		<h4>Results from AJAX Post will be shown here.</h4>
+		<p>When you click save.</p>
+		<div id="results">
+		</div>
+	</div>
 </div>
 
 <script type="text/javascript">

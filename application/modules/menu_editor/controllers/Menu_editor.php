@@ -46,7 +46,7 @@ class Menu_editor extends Public_Controller {
 			$html= $this->input->post('menu');
 			$html = str_replace( 'class="ui-sortable"', "", $html);
 			$html = str_replace( 'class="ui-sortable-handle"', "", $html);
-
+			#$html = str_replace( '<div id="editmenu">', "", $html);
 			// Get the name of the menu.
 			$dom = new DOMDocument;
 			$dom->loadHTML($html);

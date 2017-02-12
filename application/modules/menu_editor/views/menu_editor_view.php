@@ -206,7 +206,7 @@
 		{ 
 			e.preventDefault(e);
 			var HTML = document.getElementById("editmenu");
-			var $data = 'menu=' + escape(HTML.outerHTML);
+			var $data = 'menu=' + escape(HTML.innerHTML);
 			console.log(HTML);
 			$.ajax
 			({

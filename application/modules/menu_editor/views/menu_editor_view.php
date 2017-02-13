@@ -28,7 +28,7 @@
 							<button class="btn btn-success" type="button" tabindex="-1" id="additemmodalbutton" value="All" data-toggle="modal" data-target="#additemmodal">Add</button>
 						</div>
 						<div id="editmenu">
-							
+							<br /><br /><br /><br />
 							<p>Please choose a menu to edit from the drop down box at the top right of this area.</p>
 						</div>
 					</div>
@@ -46,7 +46,7 @@
 
 						<p>If you want to add an icon before a title please use this format;</p>
 						<p>
-							<pre>&lti class="fa fa-your-icon-here fa-fw">&lt/i> Logout</pre><br />You can view all the icons here;
+							<pre>fa fa-your-icon-here fa-fw</pre><br />You can view all the icons here;
 							<a href="http://fontawesome.io/icons/">http://fontawesome.io/icons/</a>
 						</p>
 
@@ -109,7 +109,7 @@
 							<div class="modal-body">
 								<form role="form">
 									<div class="form-group">
-										<label for="editicon"><span class="fa fa-tag fa-fw"></span> Title</label>
+										<label for="editicon"><span class="fa fa-tag fa-fw"></span> Icon</label>
 										<input type="text" class="form-control" id="editicon" placeholder="Edit Icon">
 									</div>
 									<div class="form-group">
@@ -142,13 +142,7 @@
 		</div>
 	</div>
 
-	<!-- Remove this before going live -->
-	<div class="">
-		<h4>Results from AJAX Post will be shown here.</h4>
-		<p>When you click save.</p>
-		<div id="results">
-		</div>
-	</div>
+
 </div>
 
 <script type="text/javascript">
@@ -170,7 +164,7 @@
 		$(".deleteMe").on("click", function()
 		{
 			$(this).closest("li").remove();
-			console.log("DELETING ITEM") ;
+			//console.log("DELETING ITEM") ;
 		});
 
 		// Setup Sortable
@@ -190,6 +184,7 @@
 			e.preventDefault();
 			var title = $('#edittitle').val();
 			var link = $('#editlink').val();
+
 			var icon = $('#editicon').val();
 			var required_role = $('#editrequired_role').val();
 
@@ -227,7 +222,11 @@
 			// insert the new node into the menu at the current position.
 			menu_item.insertBefore(newlink, menu_item.childNodes[0]);
 
-			// Reset sortable to add the new item
+			var role = document.createAttribute('data-role');
+			role.value = required_role;
+			menu_item.setAttributeNode(role);
+
+			// Reset sortable to add the edtied item
 			$("#editmenu ul").sortable
 			({
 				connectWith: "#editmenu ul",
@@ -276,7 +275,7 @@
 		$('#menu_select a').click(function(e)
 		{
 			e.preventDefault(e);
-			document.getElementById("results" ).innerHTML = "Loading Menu " + ( e.currentTarget.id );
+			//document.getElementById("results" ).innerHTML = "Loading Menu " + ( e.currentTarget.id );
 			var $menu = 'menu=' + e.currentTarget.id;
 			$.ajax
 			({
@@ -299,7 +298,7 @@
 						placeholder: "ui-state-highlight",
 						forcePlaceholderSize:true
 					});
-					console.log(response);
+					//console.log(response);
 				}
 			});
 		});
@@ -310,7 +309,7 @@
 			e.preventDefault(e);
 			var HTML = document.getElementById("editmenu");
 			var $data = 'menu=' + escape(HTML.innerHTML);
-			console.log(HTML);
+			//console.log(HTML);
 			$.ajax
 			({
 				url:"/menu_editor/ajax_save",
@@ -319,8 +318,8 @@
 				data:$data,
 				success:function(obj)
 				{
-					document.getElementById("results" ).innerHTML =  obj;
-					console.log(obj);
+					//document.getElementById("results" ).innerHTML =  obj;
+					//console.log(obj);
 				}
 			});
 		});
@@ -336,17 +335,34 @@ function Edit(currentEl)
 	link = ($('a', currentEl.parentNode).attr('href'));
 	icon = ($('i', currentEl.parentNode).attr('class'));
 	title = ($(currentEl.parentNode).find('a').first().text());
-	console.log ($(currentEl.parentNode).find('a').first().text());
-	required_role = ($('li', currentEl.parentNode).attr('required_role'));
-
+	
+	if (currentEl.parentNode.getElementsByTagName('i').length >=3 )
+	{
+		icon = ($('i', currentEl.parentNode).attr('class'));
+	}
+	else
+	{
+		icon = '';
+	}
+	
+	if (currentEl.parentNode.hasAttribute('data-role')) 
+	{
+		required_role = currentEl.parentNode.getAttributeNode('data-role').value;
+		//console.log (required_role);
+	}
+	else
+	{
+		required_role = 'none';
+	}
+	//console.log (required_role);
 	document.getElementById('edittitle').value = title;
 	document.getElementById('editlink').value = link;
 	document.getElementById('editicon').value = icon;
-	document.getElementById('editrequired_role').attr = required_role;
+	document.getElementById('editrequired_role').value = required_role;
 	document.getElementById('editid').value = currentEl.parentNode.id;
 
 	$('#editItemModal').modal('show');
-			//currentEl.parentNode.parentNode.removeChild(currentEl.parentNode);
-			
-		}
-	</script>
+	
+
+}
+</script>

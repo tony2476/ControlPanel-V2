@@ -87,7 +87,7 @@
 										<input type="text" class="form-control" id="required_role" placeholder="Enter Role">
 									</div>
 									<div class="checkbox">
-										<label><input type="checkbox" value="" checked>Footer Bar</label>
+										<label><input id="addbar" type="checkbox" name="separator" value="" >Separator Bar</label>
 									</div>
 									<button id="addBtn" class="btn btn-default btn-success btn-block"><span class="fa fa-plus fa-fw"></span> Add</button>
 								</form>
@@ -128,7 +128,7 @@
 										<input type="hidden" class="form-control" id="editid" placeholder="Enter Role">
 									</div>
 									<div class="checkbox">
-										<label><input type="checkbox" value="" checked>Footer Bar</label>
+										<label><input id="editbar" type="checkbox" name="separator" value="" >Add A Separator Bar</label>
 									</div>
 									<button id="editBtn" class="btn btn-default btn-success btn-block"><span class="fa fa-plus fa-fw"></span> Edit</button>
 								</form>
@@ -184,7 +184,8 @@
 			e.preventDefault();
 			var title = $('#edittitle').val();
 			var link = $('#editlink').val();
-
+			
+			
 			var icon = $('#editicon').val();
 			var required_role = $('#editrequired_role').val();
 
@@ -225,7 +226,15 @@
 			var role = document.createAttribute('data-role');
 			role.value = required_role;
 			menu_item.setAttributeNode(role);
-
+			if (document.getElementById('editbar').checked) {
+				var bar = document.createElement('li');
+				bar.className = 'divider';
+				var barline = document.createElement('i');
+				bar.appendChild(barline);
+				
+				$( '<span onmouseover="" class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span>' ).insertAfter(barline);
+				menu_item.parentNode.appendChild(bar);
+			}
 			// Reset sortable to add the edtied item
 			$("#editmenu ul").sortable
 			({
@@ -255,6 +264,12 @@
 			count++;
 
 			$( '<li id="Item_' + new Date().getTime().toString() + '" data-role="' + required_role + '"><a href="' + link + '">' + title + '</a> <span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span> <ul></ul></li>' ).insertBefore( $( "#menuend" ) );
+			if (document.getElementById('addbar').checked)  
+			{
+				$( '<li><span onmouseover="" class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span></li>' ).insertBefore( $( "#menuend" ) );
+			}
+			// Unset it so it can be used again.
+			document.getElementById('addbar').checked = false;
 
 			// Reset sortable to add the new item
 			$("#editmenu ul").sortable
@@ -360,7 +375,7 @@ function Edit(currentEl)
 	document.getElementById('editicon').value = icon;
 	document.getElementById('editrequired_role').value = required_role;
 	document.getElementById('editid').value = currentEl.parentNode.id;
-
+	document.getElementById('editbar').checked = false;
 	$('#editItemModal').modal('show');
 	
 

@@ -25,6 +25,10 @@
 	color: #135a97;
 }
 
+.divider {
+	min-height: 30px;
+}
+
 #editmenu a {
 	text-decoration:none;
 }

@@ -105,7 +105,16 @@ class Menu_model extends CI_Model
 	private function convert_node_to_array($node) 
 	{
 		$result = array();
-
+		
+		if ($node->childNodes->length == 1) {
+			$result['id'] = '';
+			$result['href'] = '';
+			$result['footer'] = '<li class="divider"></li>';
+			$result['icon'] = '';
+			$result['title'] = '';
+		
+			return $result;
+		}
 		$result['id'] = $node->attributes->getNamedItem('id')->value;
 		$result['href'] = $node->getElementsByTagName('a')->item(0)->attributes->getNamedItem('href')->value;
 		$result['title'] = $node->getElementsByTagName('a')->item(0)->nodeValue;

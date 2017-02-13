@@ -92,12 +92,53 @@
 									<button id="addBtn" class="btn btn-default btn-success btn-block"><span class="fa fa-plus fa-fw"></span> Add</button>
 								</form>
 							</div>
-
 						</div>
-
 					</div>
 				</div> 
 			</div>
+
+			<div class="container">
+				<!-- Modal -->
+				<div class="modal fade" id="editItemModal" role="dialog">
+					<div class="modal-dialog">
+						<!-- Modal content-->
+						<div class="modal-content">
+							<div class="modal-header">
+								Header
+							</div>
+							<div class="modal-body">
+								<form role="form">
+									<div class="form-group">
+										<label for="editicon"><span class="fa fa-tag fa-fw"></span> Title</label>
+										<input type="text" class="form-control" id="editicon" placeholder="Edit Icon">
+									</div>
+									<div class="form-group">
+										<label for="title"><span class="fa fa-tag fa-fw"></span> Title</label>
+										<input type="text" class="form-control" id="edittitle" placeholder="Enter Title">
+									</div>
+									<div class="form-group">
+										<label for="link"><span class="fa fa-link fa-fw"></span> Link</label>
+										<input type="text" class="form-control" id="editlink" placeholder="Enter Link">
+									</div>
+									<div class="form-group">
+										<label for="required_role"><span class="fa fa-exclamation fa-fw"></span> Role</label>
+										<input type="text" class="form-control" id="editrequired_role" placeholder="Enter Role">
+									</div>
+									<div class="form-group">
+										<input type="hidden" class="form-control" id="editid" placeholder="Enter Role">
+									</div>
+									<div class="checkbox">
+										<label><input type="checkbox" value="" checked>Footer Bar</label>
+									</div>
+									<button id="editBtn" class="btn btn-default btn-success btn-block"><span class="fa fa-plus fa-fw"></span> Edit</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div> 
+			</div>
+
+
 		</div>
 	</div>
 
@@ -114,6 +155,8 @@
 	// When page has loaded.
 	$(document).ready(function()
 	{
+		$.ajaxSetup({ cache: false });
+
 		// Setup Modal Button
 		$("#additemmodalbutton").click(function()
 		{
@@ -141,6 +184,64 @@
 			forcePlaceholderSize:true
 		});
 
+		// Edit Item
+		$("#editBtn").click(function(e)
+		{
+			e.preventDefault();
+			var title = $('#edittitle').val();
+			var link = $('#editlink').val();
+			var icon = $('#editicon').val();
+			var required_role = $('#editrequired_role').val();
+
+			var context = $('#editmenu');
+
+			// Get the id of the menu item we want to edit.
+			menu_id = document.getElementById('editid').value;
+			// Get the id of the menu item we want to edit.
+			menu_item = document.getElementById(menu_id);
+			
+			// Clear the first <a> tag so we can replace it.
+			menu_item.getElementsByTagName('a')[0].outerHTML ='';
+
+			// Create a new <a> tag
+			var newlink = document.createElement('a'); 
+			// Create a new <i> tag for the icon
+			var newicon = document.createElement('i');
+			// Create a new text node for the tile and insert it.
+			var newlinktitle = document.createTextNode(title);
+			// Create a new attribute container called href
+			var newhref = document.createAttribute('href');
+			// Set the new href attribute value
+			newhref.value = link;
+			// Place the href attribute container in the <a> link
+			newlink.setAttributeNode(newhref);
+			
+			// Set the Classes for the <i> tag
+			newicon.className = icon;
+			
+			// insert the icon into the <a> tag
+			newlink.appendChild(newicon);
+			// insert the text node into the <a> Tag after the icon <i> tag
+			newlink.appendChild(newlinktitle);
+
+			// insert the new node into the menu at the current position.
+			menu_item.insertBefore(newlink, menu_item.childNodes[0]);
+
+			// Reset sortable to add the new item
+			$("#editmenu ul").sortable
+			({
+				connectWith: "#editmenu ul",
+				revert: true,
+				helper: 'clone',
+				appendTo: '#menuend',
+				placeholder: "ui-state-highlight",
+				forcePlaceholderSize:true
+			});
+
+			// Close the Modal
+			$('#editItemModal').modal('hide');
+		});
+
 		// Add New Item
 		$("#addBtn").click(function(e)
 		{
@@ -155,7 +256,6 @@
 			count++;
 
 			$( '<li id="Item_' + new Date().getTime().toString() + '" data-role="' + required_role + '"><a href="' + link + '">' + title + '</a> <span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span> <ul></ul></li>' ).insertBefore( $( "#menuend" ) );
-
 
 			// Reset sortable to add the new item
 			$("#editmenu ul").sortable
@@ -193,6 +293,7 @@
 					({
 						connectWith: "#editmenu ul",
 						revert: true,
+						cache: false,
 						helper: 'clone',
 						appendTo: '#menuend',
 						placeholder: "ui-state-highlight",
@@ -225,23 +326,27 @@
 		});
 	});
 
-	function Delete(currentEl)
-	{
-		currentEl.parentNode.parentNode.removeChild(currentEl.parentNode);
-	}
+function Delete(currentEl)
+{
+	currentEl.parentNode.parentNode.removeChild(currentEl.parentNode);
+}
 
-	function Edit(currentEl)
-	{
+function Edit(currentEl)
+{
+	link = ($('a', currentEl.parentNode).attr('href'));
+	icon = ($('i', currentEl.parentNode).attr('class'));
+	title = ($(currentEl.parentNode).find('a').first().text());
+	console.log ($(currentEl.parentNode).find('a').first().text());
+	required_role = ($('li', currentEl.parentNode).attr('required_role'));
+
+	document.getElementById('edittitle').value = title;
+	document.getElementById('editlink').value = link;
+	document.getElementById('editicon').value = icon;
+	document.getElementById('editrequired_role').attr = required_role;
+	document.getElementById('editid').value = currentEl.parentNode.id;
+
+	$('#editItemModal').modal('show');
 			//currentEl.parentNode.parentNode.removeChild(currentEl.parentNode);
-			link = ($('a', currentEl.parentNode).attr('href'));
-			title = ($('a', currentEl.parentNode).text());
-			required_role = ($('li', currentEl.parentNode).attr('required_role'));
-
-			console.log (link + " " + title)
-			document.getElementById('title').value = title;
-			document.getElementById('link').value = link;
-			document.getElementById('required_role').value = required_role;
-			$('#addItemModal').modal('show');
-			currentEl.parentNode.parentNode.removeChild(currentEl.parentNode);
+			
 		}
 	</script>

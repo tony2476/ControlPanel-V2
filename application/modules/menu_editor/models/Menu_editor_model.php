@@ -21,7 +21,7 @@ class Menu_editor_model extends CI_Model
 	{
 		$query = $this->db->where('menu_name', $menu_name)->get($this->dbtable);
 		$result = $query->row();
-		//print_r($result->menu_data);
+		
 		return ($result->menu_data);
 	}
 
@@ -32,7 +32,7 @@ class Menu_editor_model extends CI_Model
 			'menu_name' => $menu_name,
 			'menu_data' => $menu_data,
 			);
-		print_r($data);
+		//print_r($data);
 		$this->db->replace($this->dbtable, $data);
 	}
 

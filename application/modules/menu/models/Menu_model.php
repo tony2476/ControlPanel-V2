@@ -45,8 +45,9 @@ class Menu_model extends CI_Model
 	 */
 	private function process_menu_dom($html)
 	{
-		$html = str_replace( 'class="ui-sortable"', "", $html);
-		$html = str_replace( 'class="ui-sortable-handle"', "", $html);
+		$html = str_replace( 'ui-sortable-handle', "", $html);
+		$html = str_replace( 'ui-sortable', "", $html);
+		
 
 		$dom = new DOMDocument;
 		$dom->loadHTML($html);
@@ -68,20 +69,16 @@ class Menu_model extends CI_Model
 
 		foreach ($elements as $element) 
 		{
-
 			$parent_count = 0;
 			if ($this->count_parents($element, $parent_count) <5) {
 				$menu_data[$count] = $this->convert_node_to_array($element);
 				$menu_data[$count]['submenu'] = array();
 			}
 
-
-
 			if ($element->childNodes->length >=4){
 				$subcount = 0;
 				$sub = $xpath->query('.//li', $element);
 
-				
 				foreach ($sub as $subli)
 				{
 					$menu_data[$count]['ul_class']	= 'dropdown-menu settings-messages';
@@ -92,7 +89,6 @@ class Menu_model extends CI_Model
 					}
 					$subcount++;
 				}
-				#if (isset($menu_data[$count]['icon'])) $menu_data[$count]['icon'] .= '<i class="fa fa-caret-down"></i>';
 			}
 			$count++;
 		}
@@ -105,15 +101,19 @@ class Menu_model extends CI_Model
 	private function convert_node_to_array($node) 
 	{
 		$result = array();
-		
-		if ($node->childNodes->length == 1) {
-			$result['id'] = '';
-			$result['href'] = '';
-			$result['footer'] = '<li class="divider"></li>';
-			$result['icon'] = '';
-			$result['title'] = '';
-		
-			return $result;
+		if ($node->hasAttribute('class'))
+		{
+			$class = $node->getAttribute('class');
+			if (strpos($class ,'divider') !== FALSE)
+			{
+				$result['id'] = '';
+				$result['href'] = '';
+				$result['footer'] = '<li class="divider"></li>';
+				$result['icon'] = '';
+				$result['title'] = '';
+
+				return $result;
+			}
 		}
 		$result['id'] = $node->attributes->getNamedItem('id')->value;
 		$result['href'] = $node->getElementsByTagName('a')->item(0)->attributes->getNamedItem('href')->value;

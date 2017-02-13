@@ -114,6 +114,8 @@
 	// When page has loaded.
 	$(document).ready(function()
 	{
+		$.ajaxSetup({ cache: false });
+
 		// Setup Modal Button
 		$("#additemmodalbutton").click(function()
 		{
@@ -193,6 +195,7 @@
 					({
 						connectWith: "#editmenu ul",
 						revert: true,
+						cache: false,
 						helper: 'clone',
 						appendTo: '#menuend',
 						placeholder: "ui-state-highlight",
@@ -237,11 +240,13 @@
 			title = ($('a', currentEl.parentNode).text());
 			required_role = ($('li', currentEl.parentNode).attr('required_role'));
 
+
 			console.log (link + " " + title)
 			document.getElementById('title').value = title;
 			document.getElementById('link').value = link;
-			document.getElementById('required_role').value = required_role;
+			document.getElementById('required_role').attr = required_role;
 			$('#addItemModal').modal('show');
 			currentEl.parentNode.parentNode.removeChild(currentEl.parentNode);
+			
 		}
 	</script>

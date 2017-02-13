@@ -36,6 +36,8 @@ class Menu_editor extends Public_Controller {
 		{
 			$editor = New Menu_editor_model;
 			echo ($editor->load_menu($this->input->post('menu')));
+			ChromePhp::log('THIS IS WHAT I AM RETURNING');
+			ChromePhp::log($editor->load_menu($this->input->post('menu')));
 		}
 	}
 

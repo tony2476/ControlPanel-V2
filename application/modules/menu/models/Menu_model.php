@@ -34,7 +34,7 @@ class Menu_model extends CI_Model
 			'menu_name' => $menu_name,
 			'menu_data' => $menu_data,
 			);
-		print_r($data);
+		
 		$this->db->replace($this->dbtable, $data);
 	}
 
@@ -80,19 +80,25 @@ class Menu_model extends CI_Model
 			if ($element->childNodes->length >=4){
 				$subcount = 0;
 				$sub = $xpath->query('.//li', $element);
+
+				
 				foreach ($sub as $subli)
 				{
 					$menu_data[$count]['ul_class']	= 'dropdown-menu settings-messages';
 					$menu_data[$count]['submenu'][$subcount] = $this->convert_node_to_array($subli);
-
+					if (!strpos($menu_data[$count]['icon'],'caret-down')) 
+					{
+						$menu_data[$count]['icon'] .= '<i class="fa fa-caret-down"></i>';
+					}
 					$subcount++;
 				}
-				if (isset($menu_data[$count]['icon'])) $menu_data[$count]['icon'] .= '<i class="fa fa-caret-down"></i>';
-
+				#if (isset($menu_data[$count]['icon'])) $menu_data[$count]['icon'] .= '<i class="fa fa-caret-down"></i>';
 			}
 			$count++;
 		}
 
+		
+		
 		return ($menu_data);
 	}
 

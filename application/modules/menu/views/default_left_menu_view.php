@@ -12,18 +12,26 @@
 						</div>
 						<!-- /input-group -->
 					</li>
+
+
+					{menu}
 					<li>
-						<a href="<?= base_url('admin/dashboard') ?>"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+					<a href="{href}">
+							{icon} {title}
+						</a>
+						<ul class="{ul_class}">
+							{submenu}
+							<li>
+								<a href="{href}">
+									{icon} {title}
+								</a>
+							</li>
+							{footer}
+							{/submenu}
+						</ul>
 					</li>
-					<li>
-						<a href="<?= base_url('admin/brands') ?>"><i class="fa fa-table fa-fw"></i> Account</a>
-					</li>
-					<li>
-						<a href="<?= base_url('admin/categories') ?>"><i class="fa fa-edit fa-fw"></i> Newsletter</a>
-					</li>
-					<li>
-						<a href="<?= base_url('admin/products') ?>"><i class="fa fa-edit fa-fw"></i> Email</a>
-					</li>
+					{/menu}
+
 				</ul>
 			</div>
 			<!-- /.sidebar-collapse -->

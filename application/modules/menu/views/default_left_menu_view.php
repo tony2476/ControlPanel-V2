@@ -12,25 +12,11 @@
 						</div>
 						<!-- /input-group -->
 					</li>
-					<li>
-						<a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
-					</li>
-					<li>
-						<a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
-						<ul class="nav nav-second-level">
-							<li>
-								<a href="flot.html">Flot Charts</a>
-							</li>
-							<li>
-								<a href="morris.html">Morris.js Charts</a>
-							</li>
-						</ul>
-						<!-- /.nav-second-level -->
-					</li>
+
 
 					{menu}
-					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="{href}">
+					<li>
+					<a href="{href}">
 							{icon} {title}
 						</a>
 						<ul class="{ul_class}">
@@ -45,7 +31,7 @@
 						</ul>
 					</li>
 					{/menu}
-					
+
 				</ul>
 			</div>
 			<!-- /.sidebar-collapse -->

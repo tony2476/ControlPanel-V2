@@ -1,7 +1,7 @@
 <ul class="nav navbar-top-links navbar-right">
 	{menu}
 	<li class="dropdown">
-		<a class="dropdown-toggle" data-toggle="dropdown" href="{href}">
+		<a {href_class} href="{href}">
 			{icon} {title}
 		</a>
 		<ul class="{ul_class}">

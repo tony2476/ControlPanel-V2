@@ -81,12 +81,19 @@ class Menu_model extends CI_Model
 
 				foreach ($sub as $subli)
 				{
+					$menu_data[$count]['href_class'] = 'class="dropdown-toggle" data-toggle="dropdown"';
 					$menu_data[$count]['ul_class']	= 'dropdown-menu settings-messages';
 					if ($menu_type == "vertical") {
 						$menu_data[$count]['ul_class']	= 'nav nav-second-level';
 					}
+					
+					if (!strpos($menu_data[$count]['icon'],'fa arrow') && $menu_type == "vertical") 
+					{
+						$menu_data[$count]['icon'] = $menu_data[$count]['icon'] . '<span class="fa arrow"></span>';
+					}
+
 					$menu_data[$count]['submenu'][$subcount] = $this->convert_node_to_array($subli);
-					if (!strpos($menu_data[$count]['icon'],'caret-down')) 
+					if (!strpos($menu_data[$count]['icon'],'caret-down') && $menu_type == "horizontal") 
 					{
 						$menu_data[$count]['icon'] .= '<i class="fa fa-caret-down"></i>';
 					}
@@ -95,9 +102,6 @@ class Menu_model extends CI_Model
 			}
 			$count++;
 		}
-
-		
-		
 		return ($menu_data);
 	}
 

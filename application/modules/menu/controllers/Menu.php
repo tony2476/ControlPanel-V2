@@ -54,17 +54,18 @@ class Menu extends MX_Controller {
 		
 		$top_data = array 
 		(
-			'menu' => $this->menu->load_menu('Top_Menu'),
+			'menu' => $this->menu->load_menu('Top_Menu', 'horizontal'),
 		);
 		
 		#$top_data = $this->check_item_permissions($top_data);
 
 		//Get the left menu data, then remove any items this user does not RBACL access rights to.
 		$left_data = array(
-			'menu' => $this->menu->load_menu('Left_Menu'),
+			'menu' => $this->menu->load_menu('Left_Menu', 'vertical'),
 
 		);  // Temporary holding data until we implement it.
 
+		
 		# build the menu,  get the header, the top menu and the left menu and return the whole menu structure.
 		$menu_data = $this->load->view("menu/default_menu_header_view", '', TRUE);
 

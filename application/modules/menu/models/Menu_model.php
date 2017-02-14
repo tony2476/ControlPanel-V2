@@ -17,11 +17,11 @@ class Menu_model extends CI_Model
 		}
 	}
 
-	public function load_menu($menu_name)
+	public function load_menu($menu_name, $menu_type)
 	{
 		$query = $this->db->where('menu_name', $menu_name)->get($this->dbtable);
 		$result = $query->row();
-		$result =$this->process_menu_dom($result->menu_data);
+		$result =$this->process_menu_dom($result->menu_data, $menu_type);
 		
 		return ($result);
 		#return ($result->menu_data);
@@ -43,7 +43,7 @@ class Menu_model extends CI_Model
 	 * @param type $html 
 	 * @return type
 	 */
-	private function process_menu_dom($html)
+	private function process_menu_dom($html, $menu_type)
 	{
 		$html = str_replace( 'ui-sortable-handle', "", $html);
 		$html = str_replace( 'ui-sortable', "", $html);
@@ -74,7 +74,7 @@ class Menu_model extends CI_Model
 				$menu_data[$count] = $this->convert_node_to_array($element);
 				$menu_data[$count]['submenu'] = array();
 			}
-
+			
 			if ($element->childNodes->length >=4){
 				$subcount = 0;
 				$sub = $xpath->query('.//li', $element);
@@ -82,6 +82,9 @@ class Menu_model extends CI_Model
 				foreach ($sub as $subli)
 				{
 					$menu_data[$count]['ul_class']	= 'dropdown-menu settings-messages';
+					if ($menu_type == "vertical") {
+						$menu_data[$count]['ul_class']	= 'nav nav-second-level';
+					}
 					$menu_data[$count]['submenu'][$subcount] = $this->convert_node_to_array($subli);
 					if (!strpos($menu_data[$count]['icon'],'caret-down')) 
 					{

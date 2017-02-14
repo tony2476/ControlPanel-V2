@@ -1,153 +1,149 @@
-<div id="page-wrapper">
-	<div class="container-fluid">
-		<h1 class="page-header">Menu Editor</h1>
-		<div class="row">
-			<div class="col-lg-8">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<strong>Currently Editing  : </strong> <span id="current_menu">No Menu Selected.</span>
-						<div class="pull-right">
-							<div class="btn-group">
-								<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-									Choose a Menu.
-									<span class="caret"></span>
-								</button>
-								<ul id="menu_select" class="dropdown-menu pull-right" role="menu">
-									{menu_list}
-									<li><a href="#" id="{menu_name}">{menu_name}</a>
-									</li>
-									{/menu_list}
-									
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="panel-body">
-						<div class="pull-right">
-							<button id="btn-save" class="btn btn-warning" type="submit">Save</button>
-							<button class="btn btn-success" type="button" tabindex="-1" id="additemmodalbutton" value="All" data-toggle="modal" data-target="#additemmodal">Add</button>
-						</div>
-						<div id="editmenu">
-							<br /><br /><br /><br />
-							<p>Please choose a menu to edit from the drop down box at the top right of this area.</p>
-						</div>
-					</div>
-				</div>
 
-			</div>
+<h1 class="page-header">Menu Editor</h1>
+<div class="row">
+	<div class="col-lg-8">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<strong>Currently Editing  : </strong> <span id="current_menu">No Menu Selected.</span>
+				<div class="pull-right">
+					<div class="btn-group">
+						<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+							Choose a Menu.
+							<span class="caret"></span>
+						</button>
+						<ul id="menu_select" class="dropdown-menu pull-right" role="menu">
+							{menu_list}
+							<li><a href="#" id="{menu_name}">{menu_name}</a>
+							</li>
+							{/menu_list}
 
-			<div class="col-lg-4">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						Instructions
-					</div>
-					<div class="panel-body">
-						<p>The add button loads the modal (click anywhere else to dismiss).</p>
-
-						<p>If you want to add an icon before a title please use this format;</p>
-						<p>
-							<pre>fa fa-your-icon-here fa-fw</pre><br />You can view all the icons here;
-							<a href="http://fontawesome.io/icons/">http://fontawesome.io/icons/</a>
-						</p>
-
-						<p>Menus can only be nested 1 deep.  That is a top level then 1 sub menu.  If you drag a menu item with a submenu onto another menu item the excess items won't be visible.  To recover them move the menu item back to the root level.
-						</p>
-
-						<p>Do <strong>not</strong> save! until you are sure the menu is how you want it.  Saving overwrites the original version</p>
-
-						<p>If you make a mistake and want to undo all the changes,  simply refresh your browser</p>
-
-						<p>Please note if you delete a root menu that contains submenus it will delete the submenus as well</p>
-
+						</ul>
 					</div>
 				</div>
 			</div>
-
-			<div class="container">
-				<!-- Modal -->
-				<div class="modal fade" id="addItemModal" role="dialog">
-					<div class="modal-dialog">
-						<!-- Modal content-->
-						<div class="modal-content">
-							<div class="modal-header">
-								Header
-							</div>
-							<div class="modal-body">
-								<form role="form">
-								<div class="form-group">
-										<label for="icon"><span class="fa fa-tag fa-fw"></span> Icon</label>
-										<input type="text" class="form-control" id="icon" placeholder="Edit Icon">
-									</div>
-									<div class="form-group">
-										<label for="title"><span class="fa fa-tag fa-fw"></span> Title</label>
-										<input type="text" class="form-control" id="title" placeholder="Enter Title">
-									</div>
-									<div class="form-group">
-										<label for="link"><span class="fa fa-link fa-fw"></span> Link</label>
-										<input type="text" class="form-control" id="link" placeholder="Enter Link">
-									</div>
-									<div class="form-group">
-										<label for="required_role"><span class="fa fa-exclamation fa-fw"></span> Role</label>
-										<input type="text" class="form-control" id="required_role" placeholder="Enter Role">
-									</div>
-									<div class="checkbox">
-										<label><input id="addbar" type="checkbox" name="separator" value="" >Separator Bar</label>
-									</div>
-									<button id="addBtn" class="btn btn-default btn-success btn-block"><span class="fa fa-plus fa-fw"></span> Add</button>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div> 
+			<div class="panel-body">
+				<div class="pull-right">
+					<button id="btn-save" class="btn btn-warning" type="submit">Save</button>
+					<button class="btn btn-success" type="button" tabindex="-1" id="additemmodalbutton" value="All" data-toggle="modal" data-target="#additemmodal">Add</button>
+				</div>
+				<div id="editmenu">
+					<br /><br /><br /><br />
+					<p>Please choose a menu to edit from the drop down box at the top right of this area.</p>
+				</div>
 			</div>
-
-			<div class="container">
-				<!-- Modal -->
-				<div class="modal fade" id="editItemModal" role="dialog">
-					<div class="modal-dialog">
-						<!-- Modal content-->
-						<div class="modal-content">
-							<div class="modal-header">
-								Header
-							</div>
-							<div class="modal-body">
-								<form role="form">
-									<div class="form-group">
-										<label for="editicon"><span class="fa fa-tag fa-fw"></span> Icon</label>
-										<input type="text" class="form-control" id="editicon" placeholder="Edit Icon">
-									</div>
-									<div class="form-group">
-										<label for="title"><span class="fa fa-tag fa-fw"></span> Title</label>
-										<input type="text" class="form-control" id="edittitle" placeholder="Enter Title">
-									</div>
-									<div class="form-group">
-										<label for="link"><span class="fa fa-link fa-fw"></span> Link</label>
-										<input type="text" class="form-control" id="editlink" placeholder="Enter Link">
-									</div>
-									<div class="form-group">
-										<label for="required_role"><span class="fa fa-exclamation fa-fw"></span> Role</label>
-										<input type="text" class="form-control" id="editrequired_role" placeholder="Enter Role">
-									</div>
-									<div class="form-group">
-										<input type="hidden" class="form-control" id="editid" placeholder="Enter Role">
-									</div>
-									<div class="checkbox">
-										<label><input id="editbar" type="checkbox" name="separator" value="" >Add A Separator Bar</label>
-									</div>
-									<button id="editBtn" class="btn btn-default btn-success btn-block"><span class="fa fa-plus fa-fw"></span> Edit</button>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div> 
-			</div>
-
-
 		</div>
+
+	</div>
+
+	<div class="col-lg-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				Instructions
+			</div>
+			<div class="panel-body">
+				<p>The add button loads the modal (click anywhere else to dismiss).</p>
+
+				<p>If you want to add an icon before a title please use this format;</p>
+				<p>
+					<pre>fa fa-your-icon-here fa-fw</pre><br />You can view all the icons here;
+					<a href="http://fontawesome.io/icons/">http://fontawesome.io/icons/</a>
+				</p>
+
+				<p>Menus can only be nested 1 deep.  That is a top level then 1 sub menu.  If you drag a menu item with a submenu onto another menu item the excess items won't be visible.  To recover them move the menu item back to the root level.
+				</p>
+
+				<p>Do <strong>not</strong> save! until you are sure the menu is how you want it.  Saving overwrites the original version</p>
+
+				<p>If you make a mistake and want to undo all the changes,  simply refresh your browser</p>
+
+				<p>Please note if you delete a root menu that contains submenus it will delete the submenus as well</p>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<!-- Modal -->
+		<div class="modal fade" id="addItemModal" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						Header
+					</div>
+					<div class="modal-body">
+						<form role="form">
+							<div class="form-group">
+								<label for="icon"><span class="fa fa-tag fa-fw"></span> Icon</label>
+								<input type="text" class="form-control" id="icon" placeholder="Edit Icon">
+							</div>
+							<div class="form-group">
+								<label for="title"><span class="fa fa-tag fa-fw"></span> Title</label>
+								<input type="text" class="form-control" id="title" placeholder="Enter Title">
+							</div>
+							<div class="form-group">
+								<label for="link"><span class="fa fa-link fa-fw"></span> Link</label>
+								<input type="text" class="form-control" id="link" placeholder="Enter Link">
+							</div>
+							<div class="form-group">
+								<label for="required_role"><span class="fa fa-exclamation fa-fw"></span> Role</label>
+								<input type="text" class="form-control" id="required_role" placeholder="Enter Role">
+							</div>
+							<div class="checkbox">
+								<label><input id="addbar" type="checkbox" name="separator" value="" >Separator Bar</label>
+							</div>
+							<button id="addBtn" class="btn btn-default btn-success btn-block"><span class="fa fa-plus fa-fw"></span> Add</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div> 
+	</div>
+
+	<div class="container">
+		<!-- Modal -->
+		<div class="modal fade" id="editItemModal" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						Header
+					</div>
+					<div class="modal-body">
+						<form role="form">
+							<div class="form-group">
+								<label for="editicon"><span class="fa fa-tag fa-fw"></span> Icon</label>
+								<input type="text" class="form-control" id="editicon" placeholder="Edit Icon">
+							</div>
+							<div class="form-group">
+								<label for="title"><span class="fa fa-tag fa-fw"></span> Title</label>
+								<input type="text" class="form-control" id="edittitle" placeholder="Enter Title">
+							</div>
+							<div class="form-group">
+								<label for="link"><span class="fa fa-link fa-fw"></span> Link</label>
+								<input type="text" class="form-control" id="editlink" placeholder="Enter Link">
+							</div>
+							<div class="form-group">
+								<label for="required_role"><span class="fa fa-exclamation fa-fw"></span> Role</label>
+								<input type="text" class="form-control" id="editrequired_role" placeholder="Enter Role">
+							</div>
+							<div class="form-group">
+								<input type="hidden" class="form-control" id="editid" placeholder="Enter Role">
+							</div>
+							<div class="checkbox">
+								<label><input id="editbar" type="checkbox" name="separator" value="" >Add A Separator Bar</label>
+							</div>
+							<button id="editBtn" class="btn btn-default btn-success btn-block"><span class="fa fa-plus fa-fw"></span> Edit</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div> 
 	</div>
 
 
 </div>
+
 
 <script type="text/javascript">
 	// When page has loaded.

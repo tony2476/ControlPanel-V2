@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-
+</div>
 <!-- Bootstrap Core JavaScript -->
 <script src="<?=base_url()?>assets/admin/js/bootstrap.min.js"></script>
 

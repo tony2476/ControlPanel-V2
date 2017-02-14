@@ -55,7 +55,7 @@ class Menu extends MX_Controller {
 		$top_data = array 
 		(
 			'menu' => $this->menu->load_menu('Top_Menu', 'horizontal'),
-		);
+			);
 		
 		#$top_data = $this->check_item_permissions($top_data);
 
@@ -145,5 +145,8 @@ class Menu extends MX_Controller {
 		return $menu;
 	}
 
-
+	function _remap()
+	{
+		echo 'No direct access allowed';
+	}
 }

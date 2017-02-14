@@ -9,7 +9,8 @@
 <!-- Custom Theme JavaScript -->
 <script src="<?=base_url()?>assets/admin/js/sb-admin-2.js"></script>
 
-
+<!-- FontAwesome Picker -->
+<script src="<?=base_url()?>assets/admin/js/fontawesome-iconpicker.js"></script>
 
 </body>
 

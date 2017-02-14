@@ -74,6 +74,10 @@
 							</div>
 							<div class="modal-body">
 								<form role="form">
+								<div class="form-group">
+										<label for="icon"><span class="fa fa-tag fa-fw"></span> Icon</label>
+										<input type="text" class="form-control" id="icon" placeholder="Edit Icon">
+									</div>
 									<div class="form-group">
 										<label for="title"><span class="fa fa-tag fa-fw"></span> Title</label>
 										<input type="text" class="form-control" id="title" placeholder="Enter Title">
@@ -249,11 +253,12 @@
 			// Close the Modal
 			$('#editItemModal').modal('hide');
 		});
-
+		$('.my').iconpicker();
 		// Add New Item
 		$("#addBtn").click(function(e)
 		{
 			e.preventDefault();
+			var icon = $('#icon').val();
 			var title = $('#title').val();
 			var link = $('#link').val();
 			var required_role = $('#required_role').val();
@@ -263,7 +268,7 @@
 			count = children.length;
 			count++;
 
-			$( '<li id="Item_' + new Date().getTime().toString() + '" data-role="' + required_role + '"><a href="' + link + '">' + title + '</a> <span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span> <ul></ul></li>' ).insertBefore( $( "#menuend" ) );
+			$( '<li id="Item_' + new Date().getTime().toString() + '" data-role="' + required_role + '"><a href="' + link + '"><i class="' + icon + '"></i>' + title + '</a> <span onmouseover=""  class="button-span pointer pull-right" onclick="Delete(this);"><i class="colorblue fa fa-trash fa-fw"></i></span><span onmouseover=""  class="button-span pointer pull-right" onclick="Edit(this);"><i class="colorblue fa fa-edit fa-fw"></i></span> <ul></ul></li>' ).insertBefore( $( "#menuend" ) );
 			
 			if (document.getElementById('addbar').checked)  
 			{
@@ -315,8 +320,7 @@
 						forcePlaceholderSize:true,
 						stop: function(ev, ui) {
 							if ($(ui.item).find("li").length > 0)
-							{						// ################################################
-								//if(ui.item.( $(find('li')   ))("number"))
+							{						
 								$(this).sortable("cancel");
 							}
 						}

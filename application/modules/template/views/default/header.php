@@ -17,6 +17,9 @@
 <!-- MetisMenu CSS -->
 <link href="<?=base_url()?>assets/admin/css/metisMenu.min.css" rel="stylesheet">
 
+<!-- Font Awesome Picker -->
+<link href="<?=base_url()?>assets/admin/css/fontawesome-iconpicker.min.css" rel="stylesheet">
+
 <!-- Custom CSS -->
 <link href="<?=base_url()?>assets/admin/css/sb-admin-2.css" rel="stylesheet">
 

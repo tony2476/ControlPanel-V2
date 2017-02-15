@@ -51,11 +51,18 @@ class Menu extends MX_Controller {
 	{
 		//Get the top menu data, then remove any items this user does not RBACL access rights to.
 		#$top_data = $this->config->item($this->top_menu);
-		
+		$username = '';
+		if ($user = $this->ion_auth->user()->row())
+		{
+			$username = "$user->first_name  $user->last_name";
+		}
+
+
 		$top_data = array 
 		(
 			'menu' => $this->menu->load_menu('Top_Menu', 'horizontal'),
-		);
+			'username' => $username,
+			);
 		
 		#$top_data = $this->check_item_permissions($top_data);
 
@@ -145,5 +152,8 @@ class Menu extends MX_Controller {
 		return $menu;
 	}
 
-
+	function _remap()
+	{
+		echo 'No direct access allowed';
+	}
 }

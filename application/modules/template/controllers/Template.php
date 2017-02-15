@@ -33,6 +33,12 @@ class Template extends MX_Controller {
 		$this->template_module_path = APPPATH.'modules/'.$this->router->fetch_module() . "/views/";
 	}
 
+
+	public function index()
+	{
+
+	}
+
 	/*
 	 * This function sets the template name to be used to display this page.
 	 */
@@ -78,6 +84,30 @@ class Template extends MX_Controller {
 	// Display the Page.
 	public function display_page()
 	{
+
+		if ($this->session->flashdata('message')) 
+		{
+			$message = array 
+			(
+				'message' => $this->session->flashdata('message'),
+				);
+			$message = $this->parser->parse("template/$this->template_name/messages/flash_message", $message, TRUE);
+			
+		}
+		elseif ($this->session->flashdata('error')) 
+		{
+			$message = array 
+			(
+				'message' => $this->session->flashdata('error'),
+				);
+			$message = $this->parser->parse("/template/$this->template_name/messages/flash_error", $message, TRUE);
+		}
+		if (isset($message)) 
+		{
+			$this->page_data['page_data'] = $message . $this->page_data['page_data'];
+
+		}
+
 		$this->load->view("$this->template_name/header", $this->header_data);
 		$this->load->view("$this->template_name/menu", $this->menu_data);
 		$this->load->view("$this->template_name/main", $this->page_data);

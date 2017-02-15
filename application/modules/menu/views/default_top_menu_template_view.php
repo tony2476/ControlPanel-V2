@@ -1,4 +1,6 @@
+
 <ul class="nav navbar-top-links navbar-right">
+{username}
 	{menu}
 	<li class="dropdown">
 		<a {href_class} href="{href}">

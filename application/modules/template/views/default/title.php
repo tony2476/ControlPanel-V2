@@ -1,7 +1,4 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-
-<?php echo $page_data; ?>
-
-</div>
-</div>
-
+<div id="page-wrapper">
+	<div class="container-fluid">
+<h1>{title}</h1>

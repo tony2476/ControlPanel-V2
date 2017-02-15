@@ -100,7 +100,7 @@ class Template extends MX_Controller {
 			(
 				'message' => $this->session->flashdata('error'),
 				);
-			$message = $this->parser->parse("/template/$this->template_name/messages/flash_error", $message, TRUE);
+			$message = $this->parser->parse("template/$this->template_name/messages/flash_error", $message, TRUE);
 		}
 		if (isset($message)) 
 		{
@@ -110,6 +110,7 @@ class Template extends MX_Controller {
 
 		$this->load->view("$this->template_name/header", $this->header_data);
 		$this->load->view("$this->template_name/menu", $this->menu_data);
+		$this->parser->parse("template/$this->template_name/title", $this->header_data);
 		$this->load->view("$this->template_name/main", $this->page_data);
 		$this->load->view("$this->template_name/footer");
 	}

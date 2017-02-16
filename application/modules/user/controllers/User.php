@@ -32,6 +32,8 @@ class User extends Public_Controller {
 		$this->user_list_url = $this->config->item('user_list_url');
 		$this->default_user_url = $this->config->item('default_user_url', 'user');
 		$this->default_admin_url = $this->config->item('default_admin_url', 'user');
+				$this->form_validation->set_rules('username', 'Username', 'check_username');
+		$this->form_validation->set_rules('email', 'Email', 'check_email');
 		
 	}
 
@@ -227,10 +229,12 @@ class User extends Public_Controller {
 	 */
 	public function create()
 	{
+		if (!$this->session->is_admin)
+		{
+			redirect('/', 'refresh');
+		}
 		// validators
 		$this->form_validation->set_error_delimiters($this->config->item('error_delimeter_left'), $this->config->item('error_delimeter_right'));
-		$this->form_validation->set_rules('username', 'Username', 'check_username');
-		$this->form_validation->set_rules('email', 'Email', 'check_email');
 		// Is form Validated
 		if ($this->form_validation->run('contact') == TRUE)
 		{

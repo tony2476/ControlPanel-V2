@@ -1,5 +1,4 @@
 
-<h1 class="page-header">Menu Editor</h1>
 <div class="row">
 	<div class="col-lg-8">
 		<div class="panel panel-default">

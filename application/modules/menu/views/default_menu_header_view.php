@@ -9,7 +9,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="<?= base_url('admin/dashboard') ?>">{site_title}</a>
+			<a class="navbar-brand" href="<?= base_url('/') ?>">{site_title}</a>
 		</div>
 		<!-- /.navbar-header -->
 

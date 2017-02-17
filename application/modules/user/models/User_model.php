@@ -19,10 +19,21 @@ class User_model extends CI_Model
 	public function list_all_users()
 	{
 		$query = $this->db->get($this->dbtable);
-		$result = $query->result();
-		
-		
-		return ($result);
+		$results = $query->result();
+	
+		foreach ($results as $result) {
+			$id = $result->id;
+			if ($result->active) {
+				$result->colour = 'btn-success';
+				$result->icon = 'glyphicon-pause';
+			}
+			else 
+			{
+				$result->colour = 'btn-warning';	
+				$result->icon = 'glyphicon-play';
+			}
+		}
+		return ($results);
 		
 	}
 }

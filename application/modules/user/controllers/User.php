@@ -24,17 +24,17 @@ class User extends Public_Controller {
 		$this->load->library('form_validation');
 		$this->load->library('parser');
 		$this->load->model('user/user_model');
+		$this->load->helper('form');
 		$this->user = New User_model;
 
 		$this->load->config('ion_auth', TRUE);
 		$this->identity_column = $this->config->item('identity', 'ion_auth');
 		$this->config->load('user/config');
+		
 		$this->user_list_url = $this->config->item('user_list_url');
 		$this->default_user_url = $this->config->item('default_user_url', 'user');
 		$this->default_admin_url = $this->config->item('default_admin_url', 'user');
-				$this->form_validation->set_rules('username', 'Username', 'check_username');
-		$this->form_validation->set_rules('email', 'Email', 'check_email');
-		
+
 	}
 
 	public function set_default_list_url($url)
@@ -86,6 +86,7 @@ class User extends Public_Controller {
 			//the user is not logging in so display the login page
 			//set the flash data error message if there is one
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+			$this->session->set_flashdata('message', $this->data['message']);
 			$this->data['username'] = array('name' => 'username',
 				'id' => 'username',
 				'type' => 'text',
@@ -97,36 +98,37 @@ class User extends Public_Controller {
 				'type' => 'password',
 				);
 
-			$this->template->set_title("Login Page");
+			$this->template->set_title("");
 
 			$form = array 
 			(
 				'form_open' => form_open('', array('class'=>'form-signin')),
-				'form_close' => form_close(),
+			'form_close' => form_close(),
+			);
+				$page_data = $this->parser->parse('user/login_form_view', $form, TRUE);
+
+				$this->template->set_page_data($page_data);
+				$this->template->display_page();
+			}
+		}
+
+		public function user_list()
+		{
+			if (!$this->session->is_admin)
+			{
+				redirect('/', 'refresh');
+			}
+
+			$user_list = array(
+				'list' => $this->user->list_all_users(),
 				);
-			$page_data = $this->parser->parse('user/login_form_view', $form, TRUE);
+			$this->template->set_title("Client List");
+
+			$page_data = $this->parser->parse('user/user_list_view', $user_list	, TRUE);
 
 			$this->template->set_page_data($page_data);
 			$this->template->display_page();
 		}
-	}
-
-	public function user_list()
-	{
-		if (!$this->session->is_admin)
-		{
-			redirect('/', 'refresh');
-		}
-		$user_list = array(
-			'list' => $this->user->list_all_users(),
-			);
-		$this->template->set_title("Client List");
-
-		$page_data = $this->parser->parse('user/user_list_view', $user_list	, TRUE);
-
-		$this->template->set_page_data($page_data);
-		$this->template->display_page();
-	}
 
 	/**
 	 * Logout
@@ -203,8 +205,15 @@ class User extends Public_Controller {
 		{
 			redirect('/', 'refresh');
 		}
-
 		$user_id = $this->uri->segment(3);
+		$current_user = $this->ion_auth->get_user_id();
+		
+		if ($current_user == $user_id) {
+			$this->session->set_flashdata('message','You are not allowed to suspend/resume Yourself.');
+			redirect($this->user_list_url,'refresh');
+		}
+
+		
 		$user = $this->ion_auth->user($user_id)->row();
 		$status = $user->active;
 		
@@ -220,7 +229,7 @@ class User extends Public_Controller {
 			);
 		
 		$this->ion_auth->update($user_id, $data);
-		redirect($user_list_url,'refresh');
+		redirect($this->user_list_url,'refresh');
 	}
 
 	/**
@@ -235,6 +244,8 @@ class User extends Public_Controller {
 		}
 		// validators
 		$this->form_validation->set_error_delimiters($this->config->item('error_delimeter_left'), $this->config->item('error_delimeter_right'));
+		$this->form_validation->set_rules('username', 'Username', 'check_username');
+		$this->form_validation->set_rules('email', 'Email', 'check_email');
 		// Is form Validated
 		if ($this->form_validation->run('contact') == TRUE)
 		{
@@ -274,7 +285,7 @@ class User extends Public_Controller {
 
 		$form = array 
 		(
-			'form_open' => form_open('/user/create', array('class'=>'form-signin')),
+			'form_open' => form_open('/user/create', array ('class'=>'form-signin')),
 			'form_close' => form_close(),
 			);
 		$page_data = $this->parser->parse('user/create_user_form_view', $form, TRUE);
@@ -289,7 +300,11 @@ class User extends Public_Controller {
 	 */
 	public function delete()
 	{
-
+		if (!$this->session->is_admin)
+		{
+			$this->session->set_flashdata('message','You Do not have permission to access that feature.');
+			redirect('/', 'refresh');
+		}
 		$user_id = $this->uri->segment(3);
 		# You are not allowed to delete yourself.
 		$current_user = $this->ion_auth->get_user_id();
@@ -310,7 +325,7 @@ class User extends Public_Controller {
 		}
 
 		
-		redirect('admin/clients','refresh');
+		redirect($this->user_list_url,'refresh');
 	}
 
 	/**
@@ -321,8 +336,74 @@ class User extends Public_Controller {
 	{
 		if (!$this->session->is_admin)
 		{
+			$this->session->set_flashdata('error', 'You need to be logged in as an administrator to access that feature.');
 			redirect('/', 'refresh');
 		}
+		
+		// Get user ID from URL
+		$user_id = $this->uri->segment(3);
+
+		// make sure we have a numeric id
+		if (is_null($user_id) OR ! is_numeric($user_id))
+		{
+			$this->session->set_flashdata('error', "$user_id is either missing or not numeric");
+			redirect($this->user_list_url,'refresh');
+		}
+		$this->user = $this->ion_auth->user($user_id)->row();
+
+		if (!isset($this->user->id)) {
+			$this->session->set_flashdata('error', "$user_id is not a valid user id.");
+			redirect($this->user_list_url,'refresh');	
+		}
+
+		// Save the original username and email in case the user changes it.
+		$this->session->set_userdata('original_username', $this->user->username);
+		$this->session->set_userdata('original_email', $this->user->email); 
+
+		// Validate the Form
+		$this->form_validation->set_error_delimiters($this->config->item('error_delimeter_left'), $this->config->item('error_delimeter_right'));
+		
+		// If the form validated
+		if ($this->form_validation->run('ion_contact_edit'))
+		{
+
+			// save the changes
+			$this->ion_auth->update($user_id, $this->input->post());
+
+			// return to list and display message
+			redirect($this->user_list_url,'refresh');
+		}
+		
+		if ($this->form_validation->run('ion_contact_edit') === FALSE) {
+			$this->session->set_flashdata('validation_error', validation_errors());
+			
+		}
+
+		// Set is_admin for form.		
+		if ($this->ion_auth->is_admin($user_id)) 
+		{
+			$this->user->is_admin = TRUE; 
+			
+		} 
+		else 
+		{
+			$this->user->is_admin = FALSE;
+		}
+
+		$this->template->set_title("Edit User.");
+
+		$form_headers = array 
+		(
+			'form_open' => form_open("/user/user_edit/$user_id", array ('class'=>'form-signin')),
+			'form_close' => form_close(),
+			);
+		$form = array_merge ($form_headers, (array) $this->user);
+
+		$page_data = $this->parser->parse('user/edit_user_form_view', $form, TRUE);
+
+		$this->template->set_page_data($page_data);
+		$this->template->display_page();
+
 	}
 
 	public function display_session()
@@ -335,199 +416,59 @@ class User extends Public_Controller {
 		echo "Session data <br />";
 		print_r ($this->session->all_userdata());
 		echo "</pre>";
-		
-		
 	}
 
-
-
-	/**
-	 * Activate Account,  from email link.
-	 * link looks like this;
-	 * http://cp.advisornet.ca/user/activate/$id/$auth_code
+		/**
+	 * Registration Form
 	 */
-	function activate()
-	{
-		$user_id = $this->uri->segment(3);
-		$auth_code = $this->uri->segment(4);
-
-		if ($auth_code !== false)
+		public function register()
 		{
-			$activation = $this->ion_auth->activate($user_id, $auth_code);
-		}
-		
-		if ($activation)
-		{
-			// redirect them to the auth page
-			$this->session->set_flashdata('message', $this->ion_auth->messages());
-			redirect("/", 'refresh');
-		}
-		else
-		{
-			// redirect them to the forgot password page
-			$this->session->set_flashdata('message', $this->ion_auth->errors());
-			redirect("user/forgot", 'refresh');
-		}
-	}
-
-	/**
-	 * Forgot password
-	 */
-	function forgot()
-	{
 		// validators
-		$this->form_validation->set_error_delimiters($this->config->item('error_delimeter_left'), $this->config->item('error_delimeter_right'));
-		$this->form_validation->set_rules('email', lang('users input email'), 'required|trim|max_length[256]|valid_email|callback__check_email_exists');
+			$this->form_validation->set_error_delimiters($this->config->item('error_delimeter_left'), $this->config->item('error_delimeter_right'));
 
-		if ($this->form_validation->run() == TRUE)
-		{
-			// Set filter by email with XSS protection.
-			$filters['email'] = $this->input->post('email', TRUE);
-			$user = $this->ion_auth->where($filters)->users()->result();
-			$username = $user[0]->username;
 
-			// send the email
-			$result = $this->ion_auth->forgotten_password($username);
-			// Set the message and redirect to the appropriate page..
-			if ($result)
+			if ($this->form_validation->run('ion_contact_create') == TRUE)
 			{
-				
-				$this->session->set_flashdata('message', sprintf(lang('users msg password_reset_success'), $this->ion_auth->messages()));
-				redirect("user/login", 'refresh'); //we should display a confirmation page here instead of the login page?
-			}
-			else
-			{
-				
-				$this->session->set_flashdata('message', sprintf(lang('users error password_reset_failed'), $this->ion_auth->messages()));
-			}
+				$username = $this->input->post('username');
+				$first_name = $this->input->post('first_name');
+				$last_name = $this->input->post('last_name');
+				$email = $this->input->post('email');
+				$password = $this->input->post('password');
 
-			// redirect home and display message
-			redirect(base_url());
-		}
-
-		// setup page header data
-		$this->set_title( lang('users title forgot') );
-
-		$data = $this->includes;
-
-		// set content data
-		$content_data = array(
-			'cancel_url' => base_url(),
-			'user'       => NULL
-			);
-
-		// load views
-		$data['content'] = $this->load->view('user/forgot_form', $content_data, TRUE);
-		$this->load->view($this->template, $data);
-	}
-
-	// reset password - final step for forgotten password
-	public function reset($code = NULL)
-	{
-		$code = $this->uri->segment(3);
-		//echo $code;
-		if (!$code)
-		{
-			show_404();
-		}
-		$user = $this->ion_auth->forgotten_password_check($code);
-		if ($user)
-		{
-			log_message ('debug', "Got user");
-			// if the code is valid then display the password reset form
-			$this->form_validation->set_rules('password', lang('users input password'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_repeat]');
-			$this->form_validation->set_rules('password_repeat', lang('users input password_repeat'), 'required|trim|matches[password]');
-			if ($this->form_validation->run() == false)
-			{
-				
-				$csrf = $this->_get_csrf_nonce();
-				$this->set_title( lang('users title forgot') );
-
-				$data = $this->includes;
-
-				// set content data
-				$content_data = array(
-					'cancel_url' 	=> base_url(),
-					'user'       	=> NULL,
-					'csrf'			=> $csrf
+				$additional_data = array(
+					'first_name' => $first_name,
+					'last_name' => $last_name
 					);
 
-				// load views
-				$data['content'] = $this->load->view('ion/password_reset_form', $content_data, TRUE);
-				$this->load->view($this->template, $data);
-
-			}
-			else
-			{
-				// do we have a valid request?
-				if ($this->_valid_csrf_nonce() === FALSE)
+				if($this->ion_auth->register($username,$password,$email,$additional_data, $group ))
 				{
-					// nonce doesn't match
-					$this->ion_auth->clear_forgotten_password_code($code);
-					$this->session->set_flashdata('message', sprintf(lang('users error password_reset_failed'), $this->ion_auth->messages()));
-					log_message ('debug', "Nonce didn't match.");
-					redirect("user/login", 'refresh');
-
+					$this->session->set_flashdata('message', sprintf(lang('users msg register_success'), $this->input->post('first_name', TRUE)));
 				}
-				else  // Nonce matches - reset the password.
+				else
 				{
-					// finally change the password
-					$identity = $user->{$this->config->item('identity', 'ion_auth')};
-					$change = $this->ion_auth->reset_password($identity, $this->input->post('password'));
-					if ($change)
-					{
-						// if the password was successfully changed
-						
-						$this->session->set_flashdata('message', $this->ion_auth->messages());
-						redirect("user/login", 'refresh');
-					}
-					else
-					{
-						$this->session->set_flashdata('message', $this->ion_auth->errors());
-						redirect('user/login/' . $code, 'refresh');
-					}
+					log_message('debug', "REGISTER USER FAILED: " . $this->ion_auth->errors());
+					$this->session->set_flashdata('error', 'User registration failed');
+					redirect('/user/register', 'refresh');
 				}
+
+			// redirect home and display message
+				redirect(base_url());
 			}
-		}
-		else
-		{
-			// if the code is invalid then send them back to the forgot password page
-			$this->session->set_flashdata('message', $this->ion_auth->errors());
-			redirect("user/forgot", 'refresh');
-		}
-	}
 
-	function _check_username($username, $current)
-	{
-		//$this->ion_auth->identity_check($username)
-		if (trim($username) != trim($current) && $this->ion_auth->identity_check($username))
-		{
-			$this->form_validation->set_message('_check_username', "Username $username already exists");
-			return FALSE;
-		}
-		else
-		{
-			return $username;
-		}
-	}
+			$this->template->set_title("Create Account.");
 
-	/* 
-	 * Check if the email address already exists.
-	 * 
-	 * We can't have duplicate accounts.
-	 * Callback for forms.
-	 */
+			$form = array 
+			(
+				'form_open' => form_open("/user/register", array ('class'=>'form-signin')),
+				'form_close' => form_close(),
+				);
 
-	function _check_email($email, $current)
-	{
-		if (trim($email) != trim($current) && $this->ion_auth->email_check($email))
-		{
-			$this->form_validation->set_message('_check_email', "The email address $email already exists on this system, we can't add again");
-			return FALSE;
+
+			$page_data = $this->parser->parse('user/register_user_form_view', $form, TRUE);
+
+			$this->template->set_page_data($page_data);
+			$this->template->display_page();
 		}
-		else
-		{
-			return $email;
-		}
+
+
 	}
-}

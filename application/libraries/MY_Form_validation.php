@@ -1,7 +1,11 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
+
 class MY_Form_validation extends CI_Form_validation{    
+	public $CI;
+
 	function __construct($config = array()){
 		parent::__construct($config);
+
 		$this->CI =& get_instance();
 
 	}
@@ -11,7 +15,7 @@ class MY_Form_validation extends CI_Form_validation{
 		//$this->ion_auth->identity_check($username)
 		if (trim($username) != trim($current) && $this->CI->ion_auth->identity_check($username))
 		{
-			$this->CI->form_validation->set_message('_check_username', "Username $username already exists");
+			$this->CI->form_validation->set_message('check_username', "Username $username already exists");
 			return FALSE;
 		}
 		else
@@ -31,7 +35,7 @@ class MY_Form_validation extends CI_Form_validation{
 	{
 		if (trim($email) != trim($current) && $this->CI->ion_auth->email_check($email))
 		{
-			$this->CI->form_validation->set_message('_check_email', "The email address $email already exists on this system, we can't add again");
+			$this->CI->form_validation->set_message('check_email', "The email address $email already exists on this system, we can't add again");
 			return FALSE;
 		}
 		else

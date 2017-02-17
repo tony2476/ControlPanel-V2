@@ -3,7 +3,7 @@
 		<div class="col-md-4 col-md-offset-4">
 			<div class="login-panel panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">Create a New User.</h3>
+					<h3 class="panel-title">Create Account.</h3>
 				</div>
 				<div class="panel-body">
 
@@ -24,16 +24,15 @@
 						<div class="form-group">
 							<input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
 						</div>
-
 						<div class="form-group">
 							<input class="form-control" placeholder="Password" name="password" type="password" value="">
 						</div>
 						<div class="form-group">
-							<input class="form-control" placeholder="Password" name="password_repeat" type="password" value="">
+							<input class="form-control" placeholder="Password Repeat" name="password_repeat" type="password" value="">
 						</div>
 
 						<!-- Change this to a button or input when using this as a form -->
-						<button class="btn btn-lg btn-success btn-block" type="submit">Create</button>
+						<button class="btn btn-lg btn-success btn-block" type="submit">Save</button>
 					</fieldset>
 					{form_close}
 					

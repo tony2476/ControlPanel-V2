@@ -52,16 +52,28 @@ class Menu extends MX_Controller {
 		//Get the top menu data, then remove any items this user does not RBACL access rights to.
 		#$top_data = $this->config->item($this->top_menu);
 		$username = '';
+		$username = "Not logged in";
+		$colour = 'grey';
 		if ($user = $this->ion_auth->user()->row())
 		{
 			$username = "$user->first_name  $user->last_name";
+			$colour = 'blue';
 		}
 
+		if ($this->session->is_admin)
+		{
+			$admin_data = array(
+				'menu' => $this->menu->load_menu('Admin_Menu', 'horizontal'),
+				
+				);
+			$colour = 'red';
+		}
 
 		$top_data = array 
 		(
 			'menu' => $this->menu->load_menu('Top_Menu', 'horizontal'),
 			'username' => $username,
+			'colour' => $colour,
 			);
 		
 		#$top_data = $this->check_item_permissions($top_data);
@@ -69,14 +81,20 @@ class Menu extends MX_Controller {
 		//Get the left menu data, then remove any items this user does not RBACL access rights to.
 		$left_data = array(
 			'menu' => $this->menu->load_menu('Left_Menu', 'vertical'),
+			);  
 
-		);  // Temporary holding data until we implement it.
 
+
+
+		$header_data = array (
+			'site_title' => $this->config->item('site_title'),
+			
+			);
 		
 		# build the menu,  get the header, the top menu and the left menu and return the whole menu structure.
-		$menu_data = $this->load->view("menu/default_menu_header_view", '', TRUE);
-
+		$menu_data = $this->parser->parse("menu/default_menu_header_view", $header_data, TRUE);
 		$menu_data .= $this->parser->parse('menu/default_top_menu_template_view', $top_data, TRUE);
+		if ($this->session->is_admin) $menu_data .= $this->parser->parse("menu/default_admin_menu_tempate_view", $admin_data, TRUE);
 		$menu_data .= $this->parser->parse("menu/default_left_menu_view", $left_data, TRUE);
 
 		

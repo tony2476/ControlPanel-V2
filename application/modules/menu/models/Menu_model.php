@@ -73,6 +73,7 @@ class Menu_model extends CI_Model
 			if ($this->count_parents($element, $parent_count) <5) {
 				$menu_data[$count] = $this->convert_node_to_array($element);
 				$menu_data[$count]['submenu'] = array();
+				// remove child ul's here.
 			}
 			
 			if ($element->childNodes->length >=4){

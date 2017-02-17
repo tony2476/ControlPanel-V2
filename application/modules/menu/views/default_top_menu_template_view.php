@@ -1,6 +1,6 @@
 
 <ul class="nav navbar-top-links navbar-right">
-You are logged in as : <span style="color: {colour}">{username}      </span>
+You are logged in as : <span class="{colour}">{username}      </span>
 	{menu}
 	<li class="dropdown">
 		<a {href_class} href="{href}">

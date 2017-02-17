@@ -53,11 +53,11 @@ class Menu extends MX_Controller {
 		#$top_data = $this->config->item($this->top_menu);
 		$username = '';
 		$username = "Not logged in";
-		$colour = 'grey';
+		$colour = 'text-muted';
 		if ($user = $this->ion_auth->user()->row())
 		{
 			$username = "$user->first_name  $user->last_name";
-			$colour = 'blue';
+			$colour = 'text-success';
 		}
 
 		if ($this->session->is_admin)
@@ -66,7 +66,7 @@ class Menu extends MX_Controller {
 				'menu' => $this->menu->load_menu('Admin_Menu', 'horizontal'),
 				
 				);
-			$colour = 'red';
+			$colour = 'text-danger';
 		}
 
 		$top_data = array 

@@ -10,11 +10,8 @@
 							<span class="caret"></span>
 						</button>
 						<ul id="menu_select" class="dropdown-menu pull-right" role="menu">
-							
 							<li><a href="/user/create" id="">Add a User</a>
 							</li>
-							
-
 						</ul>
 					</div>
 				</div>

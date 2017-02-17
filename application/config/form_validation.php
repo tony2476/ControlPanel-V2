@@ -7,7 +7,7 @@ $config = array
 		(
 			'field' => 'password', 
 			'label' => 'Password', 
-			'rules' => 'required|min_length[5]'
+			'rules' => 'required'
 			),
 		array 
 		(
@@ -51,7 +51,7 @@ $config = array
 		(
 			'field' => 'password', 
 			'label' => 'password', 
-			'rules' => 'min_length[5]|matches[password_repeat]'
+			'rules' => 'min_length[8]|matches[password_repeat]'
 			),
 
 		array 

@@ -67,9 +67,9 @@ class User extends Public_Controller {
 
 				if($this->ion_auth->is_admin()) {
 					$this->session->set_userdata('is_admin', TRUE);
-					redirect($default_admin_url);
+					redirect($this->default_admin_url);
 				} 	else {
-					redirect($default_user_url, 'refresh');
+					redirect($this->default_user_url, 'refresh');
 				}
 			}
 			else
@@ -83,7 +83,7 @@ class User extends Public_Controller {
 
 		else 
 		{
-			//the user is not logging in so display the login page
+			//the user is not logging in or has failed, display the login page
 			//set the flash data error message if there is one
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 			$this->session->set_flashdata('message', $this->data['message']);
@@ -116,6 +116,7 @@ class User extends Public_Controller {
 		{
 			if (!$this->session->is_admin)
 			{
+				$this->session->set_flashdata('error', 'You need to be logged in as an administrator to access that feature.');
 				redirect('/', 'refresh');
 			}
 
@@ -153,6 +154,7 @@ class User extends Public_Controller {
 		// Only Admins can acccess this function.
 		if (!$this->session->is_admin)
 		{
+			$this->session->set_flashdata('error', 'You need to be logged in as an administrator to access that feature.');
 			redirect('/', 'refresh');
 		}
 		
@@ -203,6 +205,7 @@ class User extends Public_Controller {
 	{
 		if (!$this->session->is_admin)
 		{
+			$this->session->set_flashdata('error', 'You need to be logged in as an administrator to access that feature.');
 			redirect('/', 'refresh');
 		}
 		$user_id = $this->uri->segment(3);
@@ -240,6 +243,7 @@ class User extends Public_Controller {
 	{
 		if (!$this->session->is_admin)
 		{
+			$this->session->set_flashdata('error', 'You need to be logged in as an administrator to access that feature.');
 			redirect('/', 'refresh');
 		}
 		// validators
@@ -406,10 +410,12 @@ class User extends Public_Controller {
 
 	}
 
+	/* For use by admin only - Debug data */
 	public function display_session()
 	{
 		if (!$this->session->is_admin)
 		{
+			$this->session->set_flashdata('error', 'You need to be logged in as an administrator to access that feature.');
 			redirect('/', 'refresh');
 		}
 		echo "<pre>";

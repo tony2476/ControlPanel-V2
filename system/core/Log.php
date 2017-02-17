@@ -176,6 +176,12 @@ class CI_Log {
 
 		$level = strtoupper($level);
 
+		/*if ($msg == '404 Page Not Found: /index') {
+			echo "<pre>";
+			debug_print_backtrace();
+			echo "/<pre>";
+		}*/
+
 		if (( ! isset($this->_levels[$level]) OR ($this->_levels[$level] > $this->_threshold))
 			&& ! isset($this->_threshold_array[$this->_levels[$level]]))
 		{

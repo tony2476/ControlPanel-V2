@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Welcome extends Public_Controller {
+class Dashboard extends Public_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -20,7 +20,7 @@ class Welcome extends Public_Controller {
 	public function index()
 	{
 	
-		$this->template->set_title("Welcome Page");
+		$this->template->set_title("Dashboard");
 						
 		
 		$page_data = '';

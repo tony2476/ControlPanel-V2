@@ -31,6 +31,7 @@ class Template extends MX_Controller {
 		parent::__construct();
 		$this->load->config('config');
 		$this->template_module_path = APPPATH.'modules/'.$this->router->fetch_module() . "/views/";
+		$this->load->library('form_validation');
 	}
 
 
@@ -102,6 +103,17 @@ class Template extends MX_Controller {
 				);
 			$message = $this->parser->parse("template/$this->template_name/messages/flash_error", $message, TRUE);
 		}
+		/*elseif ($this->session->flashdata('validation_error'))
+		{
+			echo "Validation error";
+			$message = array 
+			(
+				'message' => $this->session->flashdata('validation_error'),
+				);
+			$message = $this->parser->parse("template/$this->template_name/messages/flash_error", $message, TRUE);	
+		}*/
+		
+
 		if (isset($message)) 
 		{
 			$this->page_data['page_data'] = $message . $this->page_data['page_data'];
@@ -113,6 +125,8 @@ class Template extends MX_Controller {
 		$this->parser->parse("template/$this->template_name/title", $this->header_data);
 		$this->load->view("$this->template_name/main", $this->page_data);
 		$this->load->view("$this->template_name/footer");
+
+
 	}
 
 	public function template($template_name, $view_file, $data) 

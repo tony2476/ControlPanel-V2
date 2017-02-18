@@ -13,7 +13,7 @@
  *
  */
 
-class Salesforce extends Admin_Controller
+class Import extends Admin_Controller
 {
 
 	private	$sfresult='';
@@ -24,35 +24,28 @@ class Salesforce extends Admin_Controller
 
 		parent::__construct();
 		
-		$this->load->model('salesforce_model');
-		$this->sf = new Salesforce_model;
 		if(!$this->ion_auth->in_group('admin'))
 		{
 			$this->session->set_flashdata('message','You are not allowed to visit the Groups page');
 			redirect('/','refresh');
 		}
-
-		
+		$this->load->model('salesforce/salesforce_model');
+		$this->sf = new Salesforce_model;
 	}
 
 	public function index()
 	{
-		
-		$sfresult = '';
+		echo "Getting All ID's for all accounts<br />";
+		$list = $this->sf->get_all_account_id();
+				
+		foreach ($list as $account_id => $data)
+		{
+			
+			echo $account_id . " : " . $data . "<br />";
+			
+		}
+
 		
 
-		$sf_account_id = '0014000000s14fyAAA';
-		$sfresult = $this->sf->get_all_company_records($sf_account_id);
-
-		
-		$this->template->set_title("Dashboard");
-
-		
-		$page_data = "<pre>" . print_r ($sfresult, TRUE) . "</pre>";
-
-		$this->template->set_page_data($page_data);
-		$this->template->display_page();
-		
 	}
-
 }

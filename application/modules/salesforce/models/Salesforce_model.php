@@ -33,8 +33,37 @@ class Salesforce_model extends CI_Model
 	public function __construct()
 	{
 		parent::__construct();
-		log_message ('debug', "----->>>  Loading SF Library");
+		
 		$this->load->library('salesforce_library');
+	}
+
+
+	/**
+	 * Gets a list of accounts and formats them for a drop down box.
+	 * @return array
+	 */
+	public function get_all_account_id()
+	{
+		$response = $this->salesforce_library->query("
+			SELECT Id, Company_Name__c, Name
+			FROM Account
+			ORDER BY Name ASC
+			");
+		$queryResult = new QueryResult($response);
+		// If no results present return false, fail early.
+		if ($queryResult->size == 0)
+		{
+
+			return(FALSE);
+		}
+		$results = array();
+		for ($queryResult->rewind(); $queryResult->pointer < $queryResult->size; $queryResult->next()) {
+			$record = $queryResult->current();
+		    // Id is on the $record, but other fields are accessed via
+		    // the fields object
+			$results[$record->Id] = $record->fields->Name;
+		}
+		return ($results);
 	}
 
 	public function get_all_company_records($sf_account_id) 

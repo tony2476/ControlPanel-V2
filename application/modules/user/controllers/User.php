@@ -32,8 +32,12 @@ class User extends Public_Controller {
 		$this->config->load('user/config');
 		
 		$this->user_list_url = $this->config->item('user_list_url');
-		$this->default_user_url = $this->config->item('default_user_url', 'user');
-		$this->default_admin_url = $this->config->item('default_admin_url', 'user');
+		$this->default_user_url = $this->config->item('default_user_url');
+		$this->default_admin_url = $this->config->item('default_admin_url');
+		$this->sf_cache_enabled = $this->config->item('sf_cache_enabled');
+		
+		
+
 
 	}
 
@@ -59,12 +63,15 @@ class User extends Public_Controller {
 			
 			if ($this->ion_auth->login($this->input->post('email'), $this->input->post('password'), $remember))
 			{
-
 				//if the login is successful
 				//redirect them back to the home page
 				$this->session->set_flashdata('message', $this->ion_auth->messages());
 				$this->session->set_userdata('logged_in', TRUE);
 
+				if ($this->sf_cache_enabled == 'TRUE') 
+				{
+					$this->load_sf_cache();
+				}
 				if($this->ion_auth->is_admin()) {
 					$this->session->set_userdata('is_admin', TRUE);
 					redirect($this->default_admin_url);
@@ -103,33 +110,103 @@ class User extends Public_Controller {
 			$form = array 
 			(
 				'form_open' => form_open('', array('class'=>'form-signin')),
-			'form_close' => form_close(),
-			);
-				$page_data = $this->parser->parse('user/login_form_view', $form, TRUE);
-
-				$this->template->set_page_data($page_data);
-				$this->template->display_page();
-			}
-		}
-
-		public function user_list()
-		{
-			if (!$this->session->is_admin)
-			{
-				$this->session->set_flashdata('error', 'You need to be logged in as an administrator to access that feature.');
-				redirect('/', 'refresh');
-			}
-
-			$user_list = array(
-				'list' => $this->user->list_all_users(),
+				'form_close' => form_close(),
 				);
-			$this->template->set_title("Client List");
-
-			$page_data = $this->parser->parse('user/user_list_view', $user_list	, TRUE);
+			$page_data = $this->parser->parse('user/login_form_view', $form, TRUE);
 
 			$this->template->set_page_data($page_data);
 			$this->template->display_page();
 		}
+	}
+
+	public function load_sf_cache()
+	{
+		$this->load->model('salesforce/salesforce_model');
+		$this->salesforce = New Salesforce_model;
+		$this->user = $this->ion_auth->user()->row();
+		$sf_contact_id = $this->user->sf_contact_id;
+		$this->salesforce->populate_cache($sf_contact_id);
+	}
+
+	/**
+ 	* Use Harold for testing.
+ 	* @return type
+ 	*/
+	public function assistants()
+	{
+		$assistant_list = array(
+			'list' => $this->user->list_all_assistants(),
+			);
+		$this->template->set_title("Assisant List");
+
+		$page_data = $this->parser->parse('user/assistant_list_view', $assistant_list	, TRUE);
+
+		$this->template->set_page_data($page_data);
+		$this->template->display_page();
+	}
+
+	public function assistant_status()
+	{
+		$assistant_id = $this->uri->segment(3);
+		if (!$this->user->is_assistant($assistant_id))
+		{
+			redirect('/user/assistants', 'refresh');
+		}
+
+		$user_id = $this->uri->segment(3);
+		$current_user = $this->ion_auth->get_user_id();
+		if ($current_user == $user_id) {
+			$this->session->set_flashdata('message','You are not allowed to suspend/resume Yourself.');
+			redirect('/user/assistants', 'refresh');
+		}
+
+		$user = $this->ion_auth->user($assistant_id)->row();
+		$status = $user->active;
+		
+		if ($status) {
+			$status = 0;
+		} else
+		{
+			$status = 1;
+		}
+
+		$data = array(
+			'active' => $status,
+			);
+		
+		$this->ion_auth->update($user_id, $data);
+		redirect('/user/assistants', 'refresh');
+
+	}
+
+	public function assistant_edit()
+	{
+
+	}
+
+	public function assistant_delete()
+	{
+
+	}
+
+	public function user_list()
+	{
+		if (!$this->session->is_admin)
+		{
+			$this->session->set_flashdata('error', 'You need to be logged in as an administrator to access that feature.');
+			redirect('/', 'refresh');
+		}
+
+		$user_list = array(
+			'list' => $this->user->list_all_users(),
+			);
+		$this->template->set_title("Client List");
+
+		$page_data = $this->parser->parse('user/user_list_view', $user_list	, TRUE);
+
+		$this->template->set_page_data($page_data);
+		$this->template->display_page();
+	}
 
 	/**
 	 * Logout
@@ -186,6 +263,12 @@ class User extends Public_Controller {
 
 		$this->session->set_userdata($session_data);
 
+		// Load sf cache if enabled.
+		if ($this->sf_cache_enabled == 'TRUE') 
+		{
+			$this->load_sf_cache();
+		}
+
 		//Set the new users admin status.
 		if($this->ion_auth->is_admin()) 
 		{
@@ -216,7 +299,6 @@ class User extends Public_Controller {
 			redirect($this->user_list_url,'refresh');
 		}
 
-		
 		$user = $this->ion_auth->user($user_id)->row();
 		$status = $user->active;
 		
@@ -386,12 +468,12 @@ class User extends Public_Controller {
 		// Set is_admin for form.		
 		if ($this->ion_auth->is_admin($user_id)) 
 		{
-			$this->user->is_admin = TRUE; 
+			$this->user->is_admin = 'checked'; 
 			
 		} 
 		else 
 		{
-			$this->user->is_admin = FALSE;
+			$this->user->is_admin = '';
 		}
 
 		$this->template->set_title("Edit User.");
@@ -408,20 +490,6 @@ class User extends Public_Controller {
 		$this->template->set_page_data($page_data);
 		$this->template->display_page();
 
-	}
-
-	/* For use by admin only - Debug data */
-	public function display_session()
-	{
-		if (!$this->session->is_admin)
-		{
-			$this->session->set_flashdata('error', 'You need to be logged in as an administrator to access that feature.');
-			redirect('/', 'refresh');
-		}
-		echo "<pre>";
-		echo "Session data <br />";
-		print_r ($this->session->all_userdata());
-		echo "</pre>";
 	}
 
 		/**
@@ -475,6 +543,4 @@ class User extends Public_Controller {
 			$this->template->set_page_data($page_data);
 			$this->template->display_page();
 		}
-
-
 	}

@@ -17,6 +17,8 @@ class Menu extends MX_Controller {
 		$this->load->config('config');
 		$this->load->model('menu/menu_model');
 		$this->menu = New Menu_model;
+		$this->load->model('rbacl/rbacl_model');
+		$this->rbacl = New Rbacl_model;
 	}
 
 	public function test()
@@ -50,7 +52,6 @@ class Menu extends MX_Controller {
 	public function display_menu()
 	{
 		//Get the top menu data, then remove any items this user does not RBACL access rights to.
-		#$top_data = $this->config->item($this->top_menu);
 		$username = '';
 		$username = "Not logged in";
 		$colour = 'text-muted';
@@ -76,19 +77,18 @@ class Menu extends MX_Controller {
 			'colour' => $colour,
 			);
 		
-		#$top_data = $this->check_item_permissions($top_data);
-
 		//Get the left menu data, then remove any items this user does not RBACL access rights to.
 		$left_data = array(
 			'menu' => $this->menu->load_menu('Left_Menu', 'vertical'),
-			);  
-
-
-
+			);
+		
+		if (!$this->ion_auth->in_group('owner') && !$this->ion_auth->in_group('admin'))
+		{
+			$left_data = $this->check_item_permissions($left_data);
+		}
 
 		$header_data = array (
 			'site_title' => $this->config->item('site_title'),
-			
 			);
 		
 		# build the menu,  get the header, the top menu and the left menu and return the whole menu structure.
@@ -97,8 +97,6 @@ class Menu extends MX_Controller {
 		if ($this->session->is_admin) $menu_data .= $this->parser->parse("menu/default_admin_menu_tempate_view", $admin_data, TRUE);
 		$menu_data .= $this->parser->parse("menu/default_left_menu_view", $left_data, TRUE);
 
-		
-		#$menu_data .= $this->load->view("menu/default_left_menu_view", $left_data, TRUE);
 		return ($menu_data);
 	}
 
@@ -154,20 +152,26 @@ class Menu extends MX_Controller {
 	 */
 	private function check_item_permissions($menu) {
 		//ChromePhp::log($menu);
+
 		foreach ($menu['menu'] as $primarykey => $primary)
 		{
 			if (isset($primary['submenu'])) 
 			{
 				foreach ($primary['submenu'] as $itemkey => $item) 
 				{
-					if ($item['required_group'] != FALSE) 
+					if (!$this->rbacl->is_authorised($item['href']))
 					{
 						unset($menu['menu'][$primarykey]['submenu'][$itemkey]);
 					}
 				}
 			}
+
 		}
+
+		
+
 		return $menu;
+		
 	}
 
 	function _remap()

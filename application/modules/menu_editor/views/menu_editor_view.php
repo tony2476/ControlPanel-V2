@@ -84,10 +84,6 @@
 								<label for="link"><span class="fa fa-link fa-fw"></span> Link</label>
 								<input type="text" class="form-control" id="link" placeholder="Enter Link">
 							</div>
-							<div class="form-group">
-								<label for="required_role"><span class="fa fa-exclamation fa-fw"></span> Role</label>
-								<input type="text" class="form-control" id="required_role" placeholder="Enter Role">
-							</div>
 							<div class="checkbox">
 								<label><input id="addbar" type="checkbox" name="separator" value="" >Separator Bar</label>
 							</div>
@@ -123,10 +119,6 @@
 								<input type="text" class="form-control" id="editlink" placeholder="Enter Link">
 							</div>
 							<div class="form-group">
-								<label for="required_role"><span class="fa fa-exclamation fa-fw"></span> Role</label>
-								<input type="text" class="form-control" id="editrequired_role" placeholder="Enter Role">
-							</div>
-							<div class="form-group">
 								<input type="hidden" class="form-control" id="editid" placeholder="Enter Role">
 							</div>
 							<div class="checkbox">
@@ -155,7 +147,7 @@
 		{
 			document.getElementById('title').value = '';
 			document.getElementById('link').value = '';
-			document.getElementById('required_role').value = '';
+			
 			$("#addItemModal").modal();
 		});
 
@@ -379,7 +371,7 @@ function Edit(currentEl)
 	document.getElementById('edittitle').value = title;
 	document.getElementById('editlink').value = link;
 	document.getElementById('editicon').value = icon;
-	document.getElementById('editrequired_role').value = required_role;
+	//document.getElementById('editrequired_role').value = required_role;
 	document.getElementById('editid').value = currentEl.parentNode.id;
 	document.getElementById('editbar').checked = false;
 	$('#editItemModal').modal('show');

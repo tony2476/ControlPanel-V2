@@ -2,7 +2,7 @@
 	<div class="col-lg-12">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<strong>User list and Management.</strong>
+				<strong>RBACL list and Management.</strong>
 				<div class="pull-right">
 					<div class="btn-group">
 						<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -10,7 +10,7 @@
 							<span class="caret"></span>
 						</button>
 						<ul id="menu_select" class="dropdown-menu pull-right" role="menu">
-							<li><a href="/user/create" id="">Add a User</a>
+							<li><a href="/rbacl/add" id="">Add a Role</a>
 							</li>
 						</ul>
 					</div>
@@ -22,11 +22,10 @@
 					<thead>
 						<tr>
 							<th>ID</th>
-							<th>User Name</th>
-							<th>email</th>
-							<th>First Name</th>
-							<th>Last Name </th>
-							<th>Company</th>
+							<th>Role Name</th>
+							<th>Path</th>
+							<th>Group Name</th>
+							<th>Group ID</th>
 							<th>Actions</th>
 						</tr>
 					</thead>
@@ -34,17 +33,14 @@
 					<tbody>
 					{list}
 						<tr class="odd gradeX" data-id="{id}">
-							<td>{id}</td>
-							<td>{username}</td>
-							<td>{email}</td>
-							<td>{first_name}</td>
-							<td>{last_name}</td>
-							<td>{company}</td>
+							<td>{ID}</td>
+							<td>{role_name}</td>
+							<td>{path}</td>
+							<td>{group_name}</td>
+							<td>{group_id}</td>
 							<td class="text-center"> <div class="btn-group">
-								<a href="/user/login_as_user/{id}" class="btn btn-info btn-xs" title="Login as this user"><span class="glyphicon glyphicon-user"></span></a>
-								<a href="/user/toggle_status/{id}" class="btn {colour} btn-xs" title="Suspend/Unsuspend"><span class="glyphicon {icon}"></span></a>
-								<a href="/user/user_edit/{id}" class="btn btn-info btn-xs" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
-								<a href="/user/delete/{id}" class="btn btn-danger btn-xs" data-confirm="Are you sure you want to delete username {username}?"><span class="glyphicon glyphicon-trash"></span></a>
+								<a href="/rbacl/edit/{ID}" class="btn btn-info btn-xs" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+								<a href="/rbacl/delete/{ID}" class="btn btn-danger btn-xs" data-confirm="Are you sure you want to delete the rbacl for {path} called {role_name}?"><span class="glyphicon glyphicon-trash"></span></a>
 							</div></td>
 						</tr>
 						{/list}
@@ -80,4 +76,3 @@
     	});
     });
 </script>
-

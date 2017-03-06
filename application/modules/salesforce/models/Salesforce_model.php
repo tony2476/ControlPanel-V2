@@ -35,6 +35,7 @@ class Salesforce_model extends CI_Model
 		parent::__construct();
 		
 		$this->load->library('salesforce_library');
+
 	}
 
 
@@ -134,4 +135,160 @@ class Salesforce_model extends CI_Model
 		return ($results);
 	}
 
+	/**
+	 * This is called when a user logs in.  It loads all relevent information in one shot from Salesforce and stores it in the session.
+	 * This will speed up page loads on profiles etc.
+	 * @return type
+	 */
+	public function populate_cache($sf_contact_id) 
+	{
+		$response = $this->salesforce_library->query("
+			SELECT 
+			AccountId, 
+			Id,
+			Salutation,
+			Name,
+			MailingStreet,
+			MailingCity,
+			MailingState,
+			MailingPostalCode,
+			MailingCountry,
+			MobilePhone,
+			FirstName,
+			LastName,
+			Email,
+			Phone,
+			e_Card_Data__c,
+			Drupal_E_news_Current__c, 
+			E_News_Sample__c,
+			Account.Drupal_Site_Status__c,
+			Account.Name, 
+			Account.Domain_Name__c, 
+			Account.Website, 
+			Account.Company_Name__c,
+			Account.BillingCity,
+			Account.BillingState,
+			Account.BillingStreet,
+			Account.BillingPostalCode,
+			Account.Phone,
+			Account.AccountStatus__c,
+			Account.Web_Package__c,
+			Account.Website_Live_Date__c,
+			Account.Development_Site__c,
+			Account.Theme_Name__c,
+			Account.Theme_Color__c,
+			Account.Client_Website_Access__c,
+			Account.Domain_Registrar__c,
+			Account.Domain_Expiry__c,
+			Account.AdvisorNet_DNS__c,
+			Account.Photo_Provided__c,
+			Account.Profile_Provided__c,
+			Account.Dealership__c,
+			Account.Branding__c,
+			Account.Secure_Forms_Email__c,
+			Account.E_News_From_Address__c,
+			Account.Business_Logo__c,
+			Account.Footer_Disclaimer__c,
+			Account.Web_Disclaimer__c,
+			Account.Web_Privacy__c,
+			Account.CASL_Consent__c,
+			Account.E_News_Template__c,
+			Account.Quarterly_E_Newsletter__c,
+			Account.E_Newsletter_Disclaimer__c,
+			Account.Drupal_Domain_ID__c,
+			Account.E_News_Custom_Comments_Title__c,
+			Account.E_News_Custom_Comments__c
+			FROM 
+			Contact
+			WHERE Id = '$sf_contact_id'
+			
+			");
+
+		$queryResult = new QueryResult($response);
+		// If no results present return false, fail early.
+		if ($queryResult->size == 0)
+		{
+
+			return(FALSE);
+		}
+		$results = array();
+		for ($queryResult->rewind(); $queryResult->pointer < $queryResult->size; $queryResult->next()) {
+			$record = $queryResult->current();
+		    // Id is on the $record, but other fields are accessed via
+		    // the fields object
+			$results[$record->Id] = $record->fields;
+		}
+
+		//Using double cast to get rid of SObject which caused __PHP_Incomplete_Class errors.
+		$record->fields->Account->fields = (object)(array) $record->fields->Account->fields;
+		$record->fields->Account = (object)(array) $record->fields->Account;
+
+		//return ($results);
+		$this->session->set_userdata('sf_cache', (object)(array) $record->fields);
+	}
+
+
+/**
+ * ======== ROUTINES USED FOR IMPORTING - DO NOT USE IN PRODUCTION. ========
+ */
+
+
+	/**
+	 * Get the primary contact records required for import.
+	 * @param type $sf_account_id 
+	 * @return type
+	 */
+	public function importer_get_contact_records() 
+	{
+		$response = $this->salesforce_library->query("
+			SELECT 
+			FirstName,
+			LastName,
+			Id,
+			AccountId,
+			Email,
+			Email_Password__c,
+			Name,
+			Website__c,
+			Web_Agreement__c,
+			Account.Company_Name__c,
+			Account.Name, 
+			Account.Domain_Name__c, 
+			Account.Website
+			FROM 
+			Contact
+			WHERE
+			Email != 'info@financialwisdom.ca'
+			AND
+			Email != 'pedro@advisornet.ca'
+			AND
+			Email != 'aegir@advisornet.ca'
+			AND
+			(Web_Agreement__c = 'Received' OR Web_Agreement__c = 'None')
+			AND
+			Account.AccountStatus__c != 'Prospecting' 
+			AND
+			Account.AccountStatus__c != 'Former Client'
+			
+			");
+
+		$queryResult = new QueryResult($response);
+		// If no results present return false, fail early.
+		if ($queryResult->size == 0)
+		{
+
+			return(FALSE);
+		}
+		$results = array();
+		for ($queryResult->rewind(); $queryResult->pointer < $queryResult->size; $queryResult->next()) {
+			$record = $queryResult->current();
+		    // Id is on the $record, but other fields are accessed via
+		    // the fields object
+			$results[$record->Id] = $record->fields;
+		}
+		return ($results);
+	}
+
+
 }
+

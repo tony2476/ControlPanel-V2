@@ -74,6 +74,7 @@ class Menu_model extends CI_Model
 				$menu_data[$count] = $this->convert_node_to_array($element);
 				$menu_data[$count]['submenu'] = array();
 				// remove child ul's here.
+				$menu_data[$count]['ul_class']	= 'disabled';
 			}
 			
 			if ($element->childNodes->length >=4){

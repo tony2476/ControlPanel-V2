@@ -42,8 +42,8 @@ class Salesforce extends Admin_Controller
 		
 
 		$sf_account_id = '0014000000s14fyAAA';
-		$sfresult = $this->sf->get_all_company_records($sf_account_id);
-
+		//$sfresult = $this->sf->get_all_company_records($sf_account_id);
+		$sfresult = $this->sf->importer_get_contact_records();
 		
 		$this->template->set_title("Dashboard");
 

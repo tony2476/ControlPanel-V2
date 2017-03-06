@@ -19,3 +19,7 @@ You are logged in as : <span class="{colour}">{username}      </span>
 	</li>
 	{/menu}
 </ul> 
+<script type="text/javascript">
+	// remove disabled elements set in menu_model.php
+	$('.disabled').remove();
+</script>

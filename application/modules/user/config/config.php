@@ -9,5 +9,8 @@ $config['user_list_url'] = '/user/user_list';
 // The default url users will be taken to when they log in.
 $config['default_user_url'] = '/';
 
-// The defualt url admin users will be take to when they login.
+// The default url admin users will be take to when they login.
 $config['default_admin_url'] = '/';
+
+
+$config['sf_cache_enabled'] = 'TRUE';

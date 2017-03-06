@@ -1,3 +1,10 @@
+<?php
+/*echo "<pre>";
+echo "menu <br />";
+print_r ($menu);
+echo "</pre>";*/
+?>
+
 <div class="navbar-default sidebar" role="navigation">
 	<div class="sidebar-nav navbar-collapse">
 		<ul class="nav" id="side-menu">
@@ -38,3 +45,6 @@
 </div>
 <!-- /.navbar-static-side -->
 </nav>
+<script type="text/javascript">
+	$('.disabled').remove();
+</script>

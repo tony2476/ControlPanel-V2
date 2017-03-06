@@ -1,6 +1,49 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 $config = array 
 (
+	'rbacl' => array 
+	(
+		array 
+		(
+			'field' => 'role_name', 
+			'label' => 'role_name', 
+			'rules' => 'required'
+			),
+		array 
+		(
+			'field' => 'path', 
+			'label' => 'path', 
+			'rules' => 'required'
+			),
+		array 
+		(
+			'field' => 'group_name', 
+			'label' => 'group_name', 
+			'rules' => 'required'
+			),
+		array 
+		(
+			'field' => 'description', 
+			'label' => 'description', 
+			'rules' => 'required'
+			),
+		
+		),
+	'personal' => array
+	(
+		array 
+		(
+			'field' => 'first_name', 
+			'label' => 'first_name', 
+			'rules' => 'required'
+			),
+		array 
+		(
+			'field' => 'last_name', 
+			'label' => 'last_name', 
+			'rules' => 'required'
+			),
+		),
 	'login' => array 
 	(
 		array 
@@ -15,7 +58,7 @@ $config = array
 			'label' => 'Email', 
 			'rules' => 'required|trim|max_length[128]'
 			),
-	),
+		),
 	
 	'contact' => array 
 	(
@@ -109,7 +152,7 @@ $config = array
 			'label' => 'MobilePhone', 
 			'rules' => 'trim|min_length[2]|max_length[32]'
 			),
-	),
+		),
 
 
 	'ion_contact_edit' => array 
@@ -154,10 +197,10 @@ $config = array
 			'field' => 'password_repeat', 
 			'label' => 'password_repeat', 
 			'rules' => 'matches[password]'
+			),
 		),
-	),
 
-		'ion_contact_create' => array 
+	'ion_contact_create' => array 
 	(
 		array 
 		(
@@ -199,7 +242,7 @@ $config = array
 			'field' => 'password_repeat', 
 			'label' => 'password_repeat', 
 			'rules' => 'matches[password]'
+			),
 		),
-	),
 
-);
+	);

@@ -23,9 +23,7 @@ class Menu_editor extends Public_Controller {
 			'menu_list' => $editor->list_menus()
 			);
 		
-
 		$page_data = $this->parser->parse('menu_editor/menu_editor_view', $menu_list, TRUE);
-		#$page_data = $this->load->view("menu_editor/menu_editor_view", $menu_list, TRUE);
 		$this->template->set_page_data($page_data);
 		$this->template->display_page();
 		

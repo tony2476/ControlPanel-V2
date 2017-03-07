@@ -37,7 +37,7 @@ class Profile extends Private_Controller {
 
 		$form = array 
 		(
-			'form_open' => form_open('', array('class'=>'form-signin')),
+			'form_open' => form_open('', array('class'=>'form-horizontal')),
 			'form_close' => form_close(),
 			);
 		$this->user = $this->ion_auth->user()->row();
@@ -67,7 +67,7 @@ class Profile extends Private_Controller {
 		}
 		$form = array 
 		(
-			'form_open' => form_open('', array('class'=>'form-signin')),
+			'form_open' => form_open('', array('class'=>'form-horizontal')),
 			'form_close' => form_close(),
 			);
 		$this->user = $this->ion_auth->user()->row();
@@ -97,7 +97,7 @@ class Profile extends Private_Controller {
 		}
 		$form = array 
 		(
-			'form_open' => form_open('', array('class'=>'form-signin')),
+			'form_open' => form_open('', array('class'=>'form-horizontal')),
 			'form_close' => form_close(),
 			);
 		$this->user = $this->ion_auth->user()->row();
@@ -127,7 +127,7 @@ class Profile extends Private_Controller {
 		}
 		$form = array 
 		(
-			'form_open' => form_open('', array('class'=>'form-signin')),
+			'form_open' => form_open('', array('class'=>'form-horizontal')),
 			'form_close' => form_close(),
 			);
 		$this->user = $this->ion_auth->user()->row();

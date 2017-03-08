@@ -239,7 +239,7 @@
 			// Close the Modal
 			$('#editItemModal').modal('hide');
 		});
-		$('.my').iconpicker();
+		
 		// Add New Item
 		$("#addBtn").click(function(e)
 		{

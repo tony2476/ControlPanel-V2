@@ -10,6 +10,9 @@ class Help_editor extends Admin_Controller {
 		parent::__construct();
 		$this->load->model('help_editor/help_editor_model');
 		$this->help = New Help_editor_model;
+
+		$this->display_help = New Display_help_model;
+		
 		if (!$this->session->is_admin)
 		{
 			$this->session->set_flashdata('error', 'You need to be logged in as an administrator to access that feature.');
@@ -20,7 +23,7 @@ class Help_editor extends Admin_Controller {
 
 	public function index()
 	{
-
+		redirect('/help_editor/help_list', 'refresh');
 	}
 
 	public function help_list()
@@ -29,10 +32,14 @@ class Help_editor extends Admin_Controller {
 		$list = $this->help->list_help();
 		
 		$this->template->set_title("");
+		$help_data = $this->display_help->display_help();
 
 		$form = array(
 			'list' => $list,
 			);
+
+		$form = $form + $help_data;
+
 		$page_data = $this->parser->parse('help_editor/help_editor_list_view', $form, TRUE);
 
 		$this->template->set_page_data($page_data);
@@ -82,5 +89,20 @@ class Help_editor extends Admin_Controller {
 
 		$this->template->set_page_data($page_data);
 		$this->template->display_page();
+	}
+
+	public function ajax_add()
+	{
+		$path = $this->input->post('path');
+		$title = $this->input->post('title');
+		
+		if (! $result = $this->help->add_help($path, $title))
+		{
+			
+			return FALSE;
+		}
+
+		echo $result;
+		
 	}
 }

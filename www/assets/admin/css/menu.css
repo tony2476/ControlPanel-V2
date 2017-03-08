@@ -36,7 +36,7 @@
 #editmenu > ul > li > ul  {
 	margin: 3px;
 	min-height: 20px;
-		
+
 }
 
 #editmenu > ul > li > ul > li {
@@ -55,6 +55,10 @@
 
 .pointer {
 	cursor: pointer;
+}
+
+#flash_message {
+	display:	none;
 }
 
 

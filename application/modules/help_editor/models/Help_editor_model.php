@@ -22,11 +22,12 @@ class Help_editor_model extends CI_Model
 	{
 		$data = array 
 		(
-			'id' => $id,
+			
 			'content' => $content,
 			);
 		//print_r($data);
-		$this->db->replace($this->dbtable, $data);
+		$this->db->where('id', $id);
+		$this->db->update($this->dbtable, $data);
 	}
 
 	// Get a list of all help articles,  get first line of article not full body content.
@@ -53,6 +54,26 @@ class Help_editor_model extends CI_Model
 			return FALSE;
 		}
 		return TRUE;
+	}
+
+	public function add_help($path, $title)
+	{
+		if ($path == '' || $title == '')
+		{
+			return FALSE;
+		}
+
+		$data = array(
+			'title' => $title,
+			'path' => $path,
+
+			);
+		$this->db->insert('help', $data);
+		if ($insert_id = $this->db->insert_id())
+		{
+			return $insert_id;
+		}
+		return FALSE;
 	}
 
 }

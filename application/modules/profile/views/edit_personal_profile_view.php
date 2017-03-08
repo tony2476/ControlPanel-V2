@@ -90,14 +90,13 @@
 		<div class="col-md-4">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					Help
+					{help_title}
 				</div>
 				<div class="panel-body">
-					<p>Edit your Companies Contact Data here.</p>
-					<p>You can't edit the Account Status or Your Web Package.  This is here for information only.
-					</div>
+					{help_content}
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
 </div>

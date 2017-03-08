@@ -33,8 +33,8 @@ class MY_Controller extends MX_Controller {
 		// Load Globally Required Modules.
 		$this->load->module('template');
 		$this->load->module('menu');
-		
-		
+		$this->load->model('display_help/display_help_model');
+
 		// Load Globally Required Libraries.
 		$this->load->library('parser');
 

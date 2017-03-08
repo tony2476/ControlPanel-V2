@@ -1,5 +1,5 @@
 <div class="row">
-	<div class="col-lg-12">
+	<div class="col-md-8">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<strong>Help Editor</strong>
@@ -10,7 +10,9 @@
 							<span class="caret"></span>
 						</button>
 						<ul id="menu_select" class="dropdown-menu pull-right" role="menu">
-							<li><a href="/help_editor/add_item" id="">Add a Help Item</a>
+							<li>
+								<a href="#" data-toggle="modal" data-target="#addItemModal">Add a Help Item</a>
+								<!--<a href="/help_editor/add_item" id="">Add a Help Item</a>-->
 							</li>
 						</ul>
 					</div>
@@ -51,6 +53,46 @@
 		</div>
 		<!-- /.panel-body -->
 	</div>
+
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				{help_title}
+			</div>
+			<div class="panel-body">
+				{help_content}
+			</div>
+		</div>
+	</div>
+	
+</div>
+
+
+<div class="container">
+	<!-- Modal -->
+	<div class="modal fade" id="addItemModal" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					Header
+				</div>
+				<div class="modal-body">
+					<form role="form">
+						<div class="form-group">
+							<label for="path"><span class="fa fa-link fa-fw"></span> Path</label>
+							<input type="text" class="form-control" id="path" placeholder="Edit Icon">
+						</div>
+						<div class="form-group">
+							<label for="title"><span class="fa fa-tag fa-fw"></span> Title</label>
+							<input type="text" class="form-control" id="title" placeholder="Enter Title">
+						</div>
+						<button id="addBtn" class="btn btn-default btn-success btn-block"><span class="fa fa-plus fa-fw"></span> Add</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div> 
 </div>
 
 <script>
@@ -64,6 +106,18 @@
 	});
 
 	$(document).ready(function() {
+
+		$.ajaxSetup({ cache: false });
+
+		// Setup Modal Button
+		$("#additemmodalbutton").click(function()
+		{
+			document.getElementById('path').value = '';
+			document.getElementById('title').value = '';
+			
+			$("#addItemModal").modal();
+		});
+
 		$('a[data-confirm]').click(function(ev) {
 			var href = $(this).attr('href');
 			if (!$('#dataConfirmModal').length) {
@@ -74,5 +128,34 @@
 			$('#dataConfirmModal').modal({show:true});
 			return false;
 		});
+
+		$("#addBtn").click(function(e)
+		{
+			e.preventDefault();
+			var path = $('#path').val();
+			var title = $('#title').val();
+
+			// Close the Modal
+			$('#addItemModal').modal('hide');
+
+			$.ajax
+			({
+				url:"/help_editor/ajax_add",
+				type:"post",
+				dataType:"html",
+				data: 'path=' + path + '&title=' + title, 
+				success:function(ID)
+				{
+					$(location).attr('href', '/help_editor/help_edit/' + ID);
+					//document.getElementById("results" ).innerHTML =  obj;
+					console.log(ID);
+				}
+			});
+			
+
+			
+			
+		});
+
 	});
 </script>

@@ -17,9 +17,13 @@ class Profile extends Private_Controller {
 		$this->load->model('salesforce/salesforce_model');
 		$this->salesforce = New Salesforce_model;
 
+		$this->display_help = New Display_help_model;
+
 		$this->load->config('ion_auth', TRUE);
 		$this->identity_column = $this->config->item('identity', 'ion_auth');
 		$this->config->load('user/config');
+
+		
 		
 	}
 
@@ -42,15 +46,21 @@ class Profile extends Private_Controller {
 			);
 		$this->user = $this->ion_auth->user()->row();
 
-		$sf_contact_data = clone $this->session->userdata('sf_cache');
-		if (!is_object($sf_contact_data))
+		if (!is_object($this->session->userdata('sf_cache')))
 		{
 			$this->session->set_flashdata('error', "We cannot locate any data for this user.");
 			redirect('/','refresh');	
 		}
+
+		$sf_contact_data = clone $this->session->userdata('sf_cache');
+
 		$sf_contact_data = (object) (array) $sf_contact_data;
 		unset ($sf_contact_data->Account);
-		$form = $form + (array) $sf_contact_data;
+
+		$help_data = $this->display_help->display_help();
+
+		$form = $form + (array) $help_data + (array) $sf_contact_data;
+		
 
 		$this->template->set_title("");
 		$page_data = $this->parser->parse('profile/edit_personal_profile_view', $form, TRUE);
@@ -65,6 +75,7 @@ class Profile extends Private_Controller {
 		{
 
 		}
+
 		$form = array 
 		(
 			'form_open' => form_open('', array('class'=>'form-horizontal')),
@@ -73,14 +84,18 @@ class Profile extends Private_Controller {
 		$this->user = $this->ion_auth->user()->row();
 		
 		$sf_data = $this->session->userdata('sf_cache');
+
 		if (!is_object($sf_data))
 		{
 			$this->session->set_flashdata('error', "We cannot locate any data for this user.");
 			redirect('/','refresh');	
 		}
 
+		$help_data = $this->display_help->display_help();
+
+
 		$sf_account_data = $sf_data->Account->fields;
-		$form = $form + (array) $sf_account_data;
+		$form = $form + (array) $sf_account_data + $help_data;
 
 		$this->template->set_title("");
 		$page_data = $this->parser->parse('profile/edit_company_profile_view', $form, TRUE);

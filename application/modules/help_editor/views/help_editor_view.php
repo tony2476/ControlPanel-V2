@@ -1,3 +1,10 @@
+<div class="row"  style="margin: 10px;" id="flash_message">
+	<div class="alert alert-success" role="alert-success">
+		<!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>-->
+		<a class="close" onclick="$('#flash_message').slideUp()">×</a>  
+		<div id="message">Saved</div>
+	</div>
+</div>
 
 
 <div class="row">
@@ -8,8 +15,12 @@
 			</div>
 			<div class="panel-body">
 				<textarea id="content">{content}</textarea>
-				<div class="pull-right">
-					<button id="btn-save" class="btn btn-warning" type="submit">Save</button>
+			</div>
+			<div class="panel-footer clearfix">
+				<div class="btn-group pull-right">
+					<a class="btn btn-warning btn-sm" href="/help_editor/help_list">Return to list.</a>
+					<button id="btn-save" class="btn btn-success btn-sm" type="submit">Save</button>
+					
 				</div>
 			</div>
 		</div>
@@ -56,10 +67,10 @@
 			data: 'content=' + data + '&id=' + id,
 			success:function(obj)
 			{
-					//document.getElementById("results" ).innerHTML =  obj;
-					console.log(obj);
-				}
-			});
+				$('#flash_message').slideDown();
+				console.log(obj);
+			}
+		});
 	});
 </script>
 

@@ -50,24 +50,90 @@ class Import extends Admin_Controller
 	owner (boolean)
 
  */
-
-
 	public function index()
+	{
+
+	}
+
+	public function populate_plesk_cache()
+	{
+		$this->load->model('plesk/plesk_model');
+		$this->plesk = New Plesk_model;
+		$query = $this->db->where('plesk_email !=', '')->group_start()->where('plesk_mailbox_id','')->or_where('plesk_site_id','')->group_end()->get('users');
+
+		echo "found: " . $query->num_rows();
+		foreach ($query->result() as $row)
+		{
+			echo $row->username . "<br />";
+			$email = $row->plesk_email;
+			$username = $this->plesk->get_username_from_email($email);
+			$domain = $this->plesk->get_domain_from_email($email);
+			if (!$plesk_mailbox_id = $this->plesk->get_mailbox_id($username, $domain))
+			{
+				echo "Failed mailbox id $email<br />";
+				flush();
+				continue;
+
+			}
+
+			if (!$plesk_site_id = (string) $this->plesk->get_site_id($domain))
+			{
+				echo "Failed site id $email<br />";
+				flush();
+				continue;
+			}
+			echo $plesk_mailbox_id . "<br />
+			$plesk_site_id<br />";
+			flush();
+
+			$data = array 
+			(
+				'plesk_site_id' => $plesk_site_id,
+				'plesk_mailbox_id' => $plesk_mailbox_id,
+				);
+			echo "<pre>";
+			echo "plesk <br />";
+			echo "$email <br />";
+			print_r ($data);
+			echo "</pre>";
+			
+			
+			
+			$this->db->where('plesk_email', $email);
+			$this->db->update('users', $data);
+			
+		}
+	}
+
+	public function add_plesk_email()
+	{
+		$list = $this->sf->importer_get_plesk_enabled();
+		foreach ($list as $item)
+		{
+			$id = $item->Id;
+			$email = $item->Email;
+			$user_id = "not found";
+			$query = $this->db->where('sf_contact_id', $id)->get('users');
+			$result = $query->row();
+			if ($query->num_rows() > 0)
+			{
+				$user_id = $result->id;
+			}
+			echo "SFid: $id, $user_id<br />";
+			$data = array 
+			(
+
+				'plesk_email' => $email,
+				);
+			$this->db->where('id', $user_id);
+			$this->db->update('users', $data);
+		}
+	}
+
+	public function primary_import()
 	{
 		echo "Getting required contact records";
 		$list = $this->sf->importer_get_contact_records();
-		/*foreach ($list as $user) 
-		{
-			echo $user->Account->fields->Name;
-			echo "<br />";
-		}
-
-		echo "<pre>";
-		echo "list <br />";
-		print_r ($list);
-		echo "</pre>";
-		return; */
-
 		foreach ($list as $user) 
 		{
 
@@ -94,7 +160,7 @@ class Import extends Admin_Controller
 				'sf_contact_id' => $user->Id,
 				'sf_account_id' => $user->AccountId,
 				'company' => $user->Account->fields->Company_Name__c,
-			
+
 				);
 			
 			/*echo "$username, $password, $email";

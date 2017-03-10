@@ -161,6 +161,7 @@ class Salesforce_model extends CI_Model
 			e_Card_Data__c,
 			Drupal_E_news_Current__c, 
 			E_News_Sample__c,
+			Email_User__c,
 			Account.Drupal_Site_Status__c,
 			Account.Name, 
 			Account.Domain_Name__c, 
@@ -197,7 +198,8 @@ class Salesforce_model extends CI_Model
 			Account.E_Newsletter_Disclaimer__c,
 			Account.Drupal_Domain_ID__c,
 			Account.E_News_Custom_Comments_Title__c,
-			Account.E_News_Custom_Comments__c
+			Account.E_News_Custom_Comments__c,
+			Account.Email_Server__c
 			FROM 
 			Contact
 			WHERE Id = '$sf_contact_id'
@@ -232,6 +234,49 @@ class Salesforce_model extends CI_Model
  * ======== ROUTINES USED FOR IMPORTING - DO NOT USE IN PRODUCTION. ========
  */
 
+
+	public function importer_get_plesk_enabled()
+	{
+		$response = $this->salesforce_library->query("
+			SELECT 
+			Email,
+			Id 
+			FROM 
+			Contact 
+			WHERE 
+			Email_User__c = true
+			AND
+			Email != 'info@financialwisdom.ca'
+			AND
+			Email != 'pedro@advisornet.ca'
+			AND
+			Email != 'aegir@advisornet.ca'
+			AND
+			(Web_Agreement__c = 'Received' OR Web_Agreement__c = 'None')
+			AND
+			Account.AccountStatus__c != 'Prospecting' 
+			AND
+			Account.AccountStatus__c != 'Former Client'
+			AND
+			Account.AccountStatus__c != ''
+			");
+
+		$queryResult = new QueryResult($response);
+		// If no results present return false, fail early.
+		if ($queryResult->size == 0)
+		{
+
+			return(FALSE);
+		}
+		$results = array();
+		for ($queryResult->rewind(); $queryResult->pointer < $queryResult->size; $queryResult->next()) {
+			$record = $queryResult->current();
+		    // Id is on the $record, but other fields are accessed via
+		    // the fields object
+			$results[$record->Id] = $record->fields;
+		}
+		return ($results);
+	}
 
 	/**
 	 * Get the primary contact records required for import.

@@ -2,7 +2,7 @@
 /*
  * Plesk API key;
  * Use this command to generate a key.
- * /usr/local/psa/bin/secret_key --create -ip-address xxx.xxx.xxx.xxx
+ * newt_listbox_set_current_by_key(listbox, key) --create -ip-address xxx.xxx.xxx.xxx
  *
  * Also add the servers IP to 
  *
@@ -24,10 +24,12 @@ if ($_SERVER['HTTP_HOST'] == 'cp2.local') {
 	// Plesk servers hostname
 	$config['host'] = 'localhost';
 	// advisor plesk server
-	$config['secret_key'] = 'bd237d7f-c9a9-9dab-c60d-548d76b71b19';
+	//$config['secret_key'] = 'bd237d7f-c9a9-9dab-c60d-548d76b71b19';
+	$config['secret_key'] = 'fd55cdb9-7e74-0f4b-b87b-e9118d0c812f';
 }
 else {
 	// Plesk servers hostname
+
 	$config['host'] = 'webmail.advisornet.ca';
 	// advisor plesk server
 	$config['secret_key'] = 'a39aa624-f647-311c-fc79-9b472b24e499';

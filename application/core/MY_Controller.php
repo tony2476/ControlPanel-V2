@@ -7,6 +7,7 @@ class MY_Controller extends MX_Controller {
 
 	var $_container;
 	var $_modules;
+	var $user;
 
 	/**
 	 * Constructor
@@ -14,14 +15,6 @@ class MY_Controller extends MX_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		
-		
-		/*  DELETE THIS !!
-		// Set container variable
-		//$this->_container = $this->config->item('my_application_admin_template_dir_public') . "layout.php";
-		//$this->_modules = $this->config->item('modules_locations');
-
-		*/
 
 		log_message('debug', 'CI My Admin : MY_Controller class loaded');
 		
@@ -37,6 +30,7 @@ class MY_Controller extends MX_Controller {
 
 		// Load Globally Required Libraries.
 		$this->load->library('parser');
+//		$this->load->library('ion_auth');
 
 		// Load Globally Required Helpers.
 		$this->load->helper('url');
@@ -46,6 +40,11 @@ class MY_Controller extends MX_Controller {
 
 		// Set the default template, from the config file.
 		$this->template->set_template($this->config->item('default_template'));
+
+		//Load user data (if logged in)
+		if ($this->ion_auth->logged_in()) {
+			$this->user = $this->ion_auth->user()->row();
+		}
 
 	}
 }

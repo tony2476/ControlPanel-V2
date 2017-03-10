@@ -166,8 +166,13 @@ class Plesk_model extends CI_Model
 		return (FALSE);
 	}
 
-	public function get_mailboxes ($site_id)
+	public function get_mailboxes($site_id)
 	{
+		if ($site_id == '' || (!is_numeric($site_id)) )
+		{
+			log_message('error', "get_mailboxes called with $site_id which is not a positive integer.");
+			return FALSE;
+		}
 		$request = '
 		<packet>
 			<mail>
@@ -183,6 +188,7 @@ class Plesk_model extends CI_Model
 		{
 			return(FALSE);
 		}
+		
 		if ($this->parse_response($response))
 		{
 			$mailboxes = $this->xml->mail->get_info;
@@ -702,7 +708,7 @@ class Plesk_model extends CI_Model
 			echo "</pre>";
 
 		}
-		
+
 		// Get results only.
 		$result=$this->xml->xpath('//result');
 		$result=$result[0];
@@ -765,9 +771,11 @@ class Plesk_model extends CI_Model
 		if($errno = curl_errno($curl)) {
 			$error_message = curl_strerror($errno);
 			$this->error = "Sorry,  I couldn't communicate with the plesk server,  Please try again.  If this continues please contact support";
+
 			//$this->error .= "cURL error ({$errno}):\n {$error_message}";
 			return (FALSE);
 		}
+
 		
 		curl_close($curl);
 		return $result;

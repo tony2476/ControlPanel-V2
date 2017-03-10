@@ -32,7 +32,7 @@
 	<script src="<?=base_url()?>assets/admin/js/jquery-ui.js"></script>
 	
 	
-	<link rel="stylesheet" href="<?=base_url()?>assets/admin/css/menu.css">
+	
 	<link href="<?=base_url()?>assets/admin/css/font-awesome.css" rel="stylesheet" type="text/css">
 
 		<!-- DataTables CSS -->
@@ -43,6 +43,11 @@
 	<script src="<?=base_url()?>assets/admin/js/jquery.dataTables.min.js"></script>
     <script src="<?=base_url()?>assets/admin/js/dataTables.bootstrap.min.js"></script>
     <script src="<?=base_url()?>assets/admin/js/dataTables.responsive.js"></script>
+
+
+    <link rel="stylesheet" href="<?=base_url()?>assets/admin/css/menu.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

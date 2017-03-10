@@ -10,7 +10,7 @@
 
 class User extends Public_Controller {
 	private $data;
-	private $user;
+	public $user;
 	private $user_list_url;
 	private $default_user_url;
 	private $default_admin_url;
@@ -137,7 +137,7 @@ class User extends Public_Controller {
 		$assistant_list = array(
 			'list' => $this->user->list_all_assistants(),
 			);
-		$this->template->set_title("Assisant List");
+		$this->template->set_title("Assistant List");
 
 		$page_data = $this->parser->parse('user/assistant_list_view', $assistant_list	, TRUE);
 

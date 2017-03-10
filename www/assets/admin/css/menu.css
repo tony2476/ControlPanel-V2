@@ -61,5 +61,42 @@
 	display:	none;
 }
 
+/*  Fixes to css for menu */
+#sidebar {
+	background-color: #172561;
+}
 
+#sidebar a {
+	color: #ffffff;
+}
+
+.sidebar ul li {
+	border-bottom: 1px solid #172561
+}
+
+.sidebar ul li a.active {
+	background-color:	#374581;
+}
+
+ .sidebar-nav>ul>li>a:focus, .sidebar-nav>ul>li>a:hover, .sidebar-nav>ul>li>ul>li>a:focus, .sidebar-nav>ul>li>ul>li>a:hover {
+ 		background-color:	#273571;	
+ }
+
+#wrapper {
+	background-color: #172561;
+	height: 100%;
+}
+
+html, 
+body {
+    height: 100%;
+    background-color: #172561;
+    font-family: 'Noto Sans', sans-serif, Arial, "Helvetica Neue",Helvetica,"Segoe UI",Tahoma;
+    /*overflow:hidden;*/
+}
+
+#page-wrapper {
+	min-height: 100%;
+
+}
 

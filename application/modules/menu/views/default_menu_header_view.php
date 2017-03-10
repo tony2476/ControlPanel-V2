@@ -9,7 +9,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="<?= base_url('/') ?>">{site_title}</a>
+			<a class="navbar-brand" style="padding: 1px;" href="<?= base_url('/') ?>"><img src="/assets/admin/images/logo-48.svg"></a>
 		</div>
 		<!-- /.navbar-header -->
 

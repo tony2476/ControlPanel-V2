@@ -11,18 +11,11 @@ class Profile extends Private_Controller {
 		$this->load->library('parser');
 		$this->load->helper('form');
 
-		//$this->load->model('user/user_model');
-		//$this->user = New User_model;
-
 		$this->load->model('salesforce/salesforce_model');
 		$this->salesforce = New Salesforce_model;
 
 		$this->load->config('ion_auth', TRUE);
 		$this->identity_column = $this->config->item('identity', 'ion_auth');
-		//$this->config->load('user/config');
-
-		
-		
 	}
 
 	public function index()
@@ -42,22 +35,19 @@ class Profile extends Private_Controller {
 			'form_open' => form_open('', array('class'=>'form-horizontal')),
 			'form_close' => form_close(),
 			);
-		$this->user = $this->ion_auth->user()->row();
+		
 
-		if (!is_object($this->session->userdata('sf_cache')))
+		if (!is_object($this->session->userdata('sf_contact_cache')))
 		{
 			$this->session->set_flashdata('error', "We cannot locate any data for this user.");
 			redirect('/','refresh');	
 		}
 
-		$sf_contact_data = clone $this->session->userdata('sf_cache');
+		$sf_contact_data = clone $this->session->userdata('sf_contact_cache');
 
 		$sf_contact_data = (object) (array) $sf_contact_data;
-		unset ($sf_contact_data->Account);
-
-		$help_data = $this->display_help->display_help();
-
-		$form = $form + (array) $help_data + (array) $sf_contact_data;
+		
+		$form = $form  + (array) $sf_contact_data;
 		
 
 		$this->template->set_title("");
@@ -79,21 +69,16 @@ class Profile extends Private_Controller {
 			'form_open' => form_open('', array('class'=>'form-horizontal')),
 			'form_close' => form_close(),
 			);
-		$this->user = $this->ion_auth->user()->row();
-		
-		$sf_data = $this->session->userdata('sf_cache');
 
-		if (!is_object($sf_data))
+		$sf_account_data = $this->session->userdata('sf_account_cache');
+
+		if (!is_object($sf_account_data))
 		{
 			$this->session->set_flashdata('error', "We cannot locate any data for this user.");
 			redirect('/','refresh');	
 		}
 
-		$help_data = $this->display_help->display_help();
-
-
-		$sf_account_data = $sf_data->Account->fields;
-		$form = $form + (array) $sf_account_data + $help_data;
+		$form = $form + (array) $sf_account_data;
 
 		$this->template->set_title("");
 		$page_data = $this->parser->parse('profile/edit_company_profile_view', $form, TRUE);
@@ -113,16 +98,15 @@ class Profile extends Private_Controller {
 			'form_open' => form_open('', array('class'=>'form-horizontal')),
 			'form_close' => form_close(),
 			);
-		$this->user = $this->ion_auth->user()->row();
+		
+		$sf_account_data = $this->session->userdata('sf_account_cache');
 
-		$sf_data = $this->session->userdata('sf_cache');
-		if (!is_object($sf_data))
+		if (!is_object($sf_account_data))
 		{
 			$this->session->set_flashdata('error', "We cannot locate any data for this user.");
 			redirect('/','refresh');	
 		}
-		$sf_account_data = $sf_data->Account->fields;
-		
+
 		$form = $form + (array) $sf_account_data;
 
 		$this->template->set_title("");
@@ -143,16 +127,13 @@ class Profile extends Private_Controller {
 			'form_open' => form_open('', array('class'=>'form-horizontal')),
 			'form_close' => form_close(),
 			);
-		$this->user = $this->ion_auth->user()->row();
-
-		$sf_data = $this->session->userdata('sf_cache');
-		if (!is_object($sf_data))
+		
+		$sf_account_data = $this->session->userdata('sf_account_cache');
+		if (!is_object($sf_account_data))
 		{
 			$this->session->set_flashdata('error', "We cannot locate any data for this user.");
 			redirect('/','refresh');	
 		}
-		$sf_account_data = $sf_data->Account->fields;
-
 		
 		$form = $form + (array) $sf_account_data;
 

@@ -219,7 +219,11 @@ class Salesforce_model extends CI_Model
 		$record->fields->Account = (object)(array) $record->fields->Account;
 
 		//return ($results);
-		$this->session->set_userdata('sf_cache', (object)(array) $record->fields);
+		$sf_account_data = $record->fields->Account->fields;
+		unset ($record->fields->Account);
+
+		$this->session->set_userdata('sf_contact_cache', (object)(array) $record->fields);
+		$this->session->set_userdata('sf_account_cache', (object)(array) $sf_account_data);
 	}
 
 	/* CASE HANDLING */

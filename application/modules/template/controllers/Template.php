@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Template extends MX_Controller {
+class Template extends MY_Controller {
 
 	// Template configuration variables
 	private 	$template_name = "default";
@@ -119,6 +119,8 @@ class Template extends MX_Controller {
 			$this->page_data['page_data'] = $message . $this->page_data['page_data'];
 
 		}
+		$help_data = $this->display_help->display_help();
+		$this->page_data['page_data'] = $this->parser->parse_string($this->page_data['page_data'], $help_data, TRUE);
 
 		$this->load->view("$this->template_name/header", $this->header_data);
 		$this->load->view("$this->template_name/menu", $this->menu_data);

@@ -27,16 +27,14 @@ class Billing extends Private_Controller {
 
 		//Process cached SF Data
 		$this->salesforce->populate_cache($this->user->sf_contact_id);
-		$sf_data = clone $this->session->userdata('sf_cache');
+		$sf_account_data = clone $this->session->userdata('sf_account_cache');
+		$sf_contact_data = clone $this->session->userdata('sf_contact_cache');
 
-		if (!is_object($sf_data))
+		if (!is_object($sf_contact_data) || !is_object($sf_account_data))
 		{
 			$this->session->set_flashdata('error', "We cannot locate any data for this user.");
 			redirect('/','refresh');	
 		}		
-		
-		$sf_account_data = $sf_data->Account->fields;
-		unset ($sf_data->Account);
 
 		$form = array 
 		(
@@ -44,7 +42,7 @@ class Billing extends Private_Controller {
 			'form_close' => form_close(),
 			);
 		
-		$form = $form + (array) $sf_account_data + (array) $sf_data + $help_data;
+		$form = $form + (array) $sf_account_data + (array) $sf_contact_data + $help_data;
 
 		$page_data = $this->parser->parse('billing/billing_settings_form_view', $form, TRUE);
 

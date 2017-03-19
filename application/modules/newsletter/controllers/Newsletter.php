@@ -11,7 +11,6 @@ class Newsletter extends Private_Controller {
 		$this->load->model('salesforce/salesforce_model');
 		$this->salesforce = New Salesforce_model;
 		$this->fullname = $this->user->first_name . " " . $this->user->last_name;
-		
 	}
 
 	public function index()
@@ -21,30 +20,20 @@ class Newsletter extends Private_Controller {
 
 	public function settings()
 	{
-
-
 		$this->template->set_title("E-Newsletter Settings.");
 		$help_data = $this->display_help->display_help();
 
 		//Process cached SF Data
-		$this->salesforce->populate_cache($this->user->sf_contact_id);
-		$sf_data = clone $this->session->userdata('sf_cache');
+		$sf_contact_data = clone $this->session->userdata('sf_contact_cache');
+		$sf_account_data = clone $this->session->userdata('sf_account_cache');
 
-		if (!is_object($sf_data))
+		if (!is_object($sf_contact_data) || !is_object($sf_account_data))
 		{
 			$this->session->set_flashdata('error', "We cannot locate any data for this user.");
 			redirect('/','refresh');	
-		}		
+		}			
 
-		$banner_image = (intval($sf_data->Account->fields->Drupal_Domain_ID__c) !== 0 ? "<img src = \"https://www.financialwisdom.ca/data/e-newsletter/" . intval($sf_data->Account->fields->Drupal_Domain_ID__c) . "/images/banner.png\">" : '');
-
-
-		$birthday_card = form_input(array('name'=>'e_Card_Data__c', 'value'=>set_value('e_Card_Data__c', (isset($contact_details['e_Card_Data__c']) ? $contact_details['e_Card_Data__c'] : '')), 'class'=>'form-control', 'readonly'=>'true'));
-		
-
-		
-		$sf_account_data = $sf_data->Account->fields;
-		unset ($sf_data->Account);
+		$banner_image = (intval($sf_account_data->Drupal_Domain_ID__c) !== 0 ? "<img src = \"https://www.financialwisdom.ca/data/e-newsletter/" . intval($sf_account_data->Drupal_Domain_ID__c) . "/images/banner.png\">" : '');
 
 		$form = array 
 		(
@@ -53,7 +42,7 @@ class Newsletter extends Private_Controller {
 			'banner_image' => $banner_image,
 			);
 		
-		$form = $form + (array) $sf_account_data + (array) $sf_data + $help_data;
+		$form = $form + (array) $sf_account_data + (array) $sf_contact_data + $help_data;
 
 		$page_data = $this->parser->parse('newsletter/newsletter_settings_form_view', $form, TRUE);
 

@@ -24,9 +24,10 @@ class MY_Controller extends MX_Controller {
 		$this->load->add_package_path(APPPATH.'third_party/chromephp') -> library('chromephp');
 
 		// Load Globally Required Modules.
+		$this->load->model('display_help/display_help_model');
 		$this->load->module('template');
 		$this->load->module('menu');
-		$this->load->model('display_help/display_help_model');
+		
 
 		// Load Globally Required Libraries.
 		$this->load->library('parser');

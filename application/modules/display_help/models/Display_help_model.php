@@ -30,8 +30,8 @@ class Display_help_model extends CI_Model
 		}
 		else
 		{
-			$result['help_content'] = '';
-			$result['help_title'] = '';	
+			$result['help_content'] = 'Help not found.';
+			$result['help_title'] = 'Help not found.';	
 		}	
 		return ($result);
 	}

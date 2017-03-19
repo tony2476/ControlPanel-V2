@@ -17,8 +17,6 @@ class Profile extends Private_Controller {
 		$this->load->model('salesforce/salesforce_model');
 		$this->salesforce = New Salesforce_model;
 
-		$this->display_help = New Display_help_model;
-
 		$this->load->config('ion_auth', TRUE);
 		$this->identity_column = $this->config->item('identity', 'ion_auth');
 		//$this->config->load('user/config');

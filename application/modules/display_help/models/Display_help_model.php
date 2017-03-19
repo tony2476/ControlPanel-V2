@@ -21,10 +21,18 @@ class Display_help_model extends CI_Model
 		$this->db->select('title, content');
 		$query = $this->db->where('path', $path)->get($this->dbtable);
 		$result = (array) $query->row();
-		$result['help_content'] = $result['content'];
-		$result['help_title'] = $result['title'];
-		unset ($result['content']);
-		unset ($result['title']);
+		if ($query->num_rows() > 0)
+		{
+			$result['help_content'] = $result['content'];
+			$result['help_title'] = $result['title'];
+			unset ($result['content']);
+			unset ($result['title']);
+		}
+		else
+		{
+			$result['help_content'] = '';
+			$result['help_title'] = '';	
+		}	
 		return ($result);
 	}
 

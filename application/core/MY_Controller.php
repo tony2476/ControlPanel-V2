@@ -41,6 +41,8 @@ class MY_Controller extends MX_Controller {
 		// Set the default template, from the config file.
 		$this->template->set_template($this->config->item('default_template'));
 
+		$this->display_help = New Display_help_model;
+
 		//Load user data (if logged in)
 		if ($this->ion_auth->logged_in()) {
 	

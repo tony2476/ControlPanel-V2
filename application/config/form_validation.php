@@ -1,6 +1,30 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 $config = array 
 (
+	'company_name' => array 
+	(
+		array 
+		(
+			'field' => 'company', 
+			'label' => 'company', 
+			'rules' => 'required'
+			),
+		),
+	'create_ticket' => array 
+	(
+		array 
+		(
+			'field' => 'subject', 
+			'label' => 'subject', 
+			'rules' => 'required'
+			),
+		array 
+		(
+			'field' => 'comment', 
+			'label' => 'comment', 
+			'rules' => 'required'
+			),
+		),
 	'rbacl' => array 
 	(
 		array 

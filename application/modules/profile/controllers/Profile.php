@@ -11,8 +11,8 @@ class Profile extends Private_Controller {
 		$this->load->library('parser');
 		$this->load->helper('form');
 
-		$this->load->model('user/user_model');
-		$this->user = New User_model;
+		//$this->load->model('user/user_model');
+		//$this->user = New User_model;
 
 		$this->load->model('salesforce/salesforce_model');
 		$this->salesforce = New Salesforce_model;
@@ -21,7 +21,7 @@ class Profile extends Private_Controller {
 
 		$this->load->config('ion_auth', TRUE);
 		$this->identity_column = $this->config->item('identity', 'ion_auth');
-		$this->config->load('user/config');
+		//$this->config->load('user/config');
 
 		
 		

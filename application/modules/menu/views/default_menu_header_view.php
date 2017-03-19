@@ -9,7 +9,14 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" style="padding: 1px;" href="<?= base_url('/') ?>"><img src="/assets/admin/images/logo-48.svg"></a>
+			<a class="navbar-brand" href="<?= base_url('/') ?>">
+
+				<img  src="/assets/admin/images/logo2.svg">
+				<span class="advisor-text">
+					<span class="advisor-text-blue"><span class="advisor-text-bigger">A</span>DVISOR</span><span class="advisor-text-grey"><span class="advisor-text-bigger">N</span>ET</span>
+				</span>
+				
+			</a>
 		</div>
 		<!-- /.navbar-header -->
 

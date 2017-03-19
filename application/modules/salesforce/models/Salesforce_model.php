@@ -33,11 +33,8 @@ class Salesforce_model extends CI_Model
 	public function __construct()
 	{
 		parent::__construct();
-		
 		$this->load->library('salesforce_library');
-
 	}
-
 
 	/**
 	 * Gets a list of accounts and formats them for a drop down box.
@@ -114,10 +111,6 @@ class Salesforce_model extends CI_Model
 			WHERE Id = '$sf_account_id'
 			");
 
-			#e_Card_Data__c,   ->In Contact not Account
-			#Drupal_E_news_Current__c, 
-			#E_News_Sample__c,
-			#
 		$queryResult = new QueryResult($response);
 		// If no results present return false, fail early.
 		if ($queryResult->size == 0)
@@ -229,10 +222,219 @@ class Salesforce_model extends CI_Model
 		$this->session->set_userdata('sf_cache', (object)(array) $record->fields);
 	}
 
+	/* CASE HANDLING */
 
-/**
- * ======== ROUTINES USED FOR IMPORTING - DO NOT USE IN PRODUCTION. ========
- */
+
+	/**
+	 * This function gets all the parts of a case, formats the data and returns a complex structure containing all the data.
+	 * @param type $sf_case_id 
+	 * @return type
+	 */
+	public function get_case_by_case_id($sf_case_id, $sf_contact_id, $fullname)
+	{
+		if ($sf_case_id == '') {
+			return FALSE;
+		}
+		$results = new stdClass;
+		$results->header = $this->get_case_header_by_case_id($sf_case_id);
+		$results->responses = $this->get_case_comments_by_case_id($sf_case_id);
+
+		$key = key($results->header);
+		$results->header[0]['CreatedDate'] = $this->convert_date($results->header[0]['CreatedDate']);
+
+		foreach ($results->responses as &$response)
+		{
+			$response->CreatedDate = $this->convert_date($response->CreatedDate);
+			if (substr( $response->CommentBody, 0, 3 ) === "==:")
+			{
+				$created_by_string = explode(":", strtok($response->CommentBody, "\n"));
+				if ($created_by_string[1] == $sf_contact_id) {
+					$created_by_string = $fullname;
+				}
+				else
+				{
+					$created_by_string = "Advisornet";
+				}
+				$response->CreatedById = $created_by_string;
+				$response->CommentBody = preg_replace('/^.+\n/', '', $response->CommentBody);
+			}
+		}
+		return $results;
+	}
+
+	public function get_case_header_by_case_id($sf_case_parent_id)
+	{
+		$response = $this->salesforce_library->query("
+			SELECT CaseNumber, Description, Subject, CreatedDate, Status 
+			FROM Case 
+			WHERE Id = '$sf_case_parent_id'
+			");
+		$queryResult = new QueryResult($response);
+		// If no results present return false, fail early.
+		if ($queryResult->size == 0)
+		{
+			return(FALSE);
+		}
+		$results = array();
+		for ($queryResult->rewind(); $queryResult->pointer < $queryResult->size; $queryResult->next()) {
+			$record = $queryResult->current();
+		    // Id is on the $record, but other fields are accessed via
+		    // the fields object
+			$this_id = $record->Id;
+			foreach ($record->fields as $fieldname => $value)
+			{
+				$results[$this_id][$fieldname] = $value;
+			}
+		}
+		return ($results);
+	}
+
+	public function get_case_comments_by_case_id($sf_case_parent_id)
+	{
+
+		$response = $this->salesforce_library->query("
+			SELECT Id, CommentBody,CreatedDate, CreatedById, ParentId 
+			FROM CaseComment 
+			WHERE ParentId = '$sf_case_parent_id'
+			ORDER BY CreatedDate DESC NULLS FIRST
+			");
+
+
+		$queryResult = new QueryResult($response);
+		// If no results present return false, fail early.
+		if ($queryResult->size == 0)
+		{
+			echo "Nothing found";
+			return(FALSE);
+		}
+		$results = new stdClass;
+
+
+
+		for ($queryResult->rewind(); $queryResult->pointer < $queryResult->size; $queryResult->next()) {
+			$record = $queryResult->current();
+		    // Id is on the $record, but other fields are accessed via
+		    // the fields object
+			$this_id = $record->Id;
+			#echo "Processing $this_id";
+			$results->$this_id = new stdClass;
+
+			$results->$this_id->Id = $record->Id;
+			foreach ($record->fields as $fieldname => $value)
+			{
+				$results->$this_id->$fieldname = $value;
+			}
+		}
+		return ($results);
+	}
+
+	public function create_case ($sf_contact_id, $subject, $comment, $name)
+	{
+		if ($sf_contact_id == '' || $subject == '' || $comment == '') {
+			return FALSE;
+		}
+
+		$records[0] = new SObject();
+		$records[0]->fields = new stdClass;
+		$records[0]->fields->Subject = $subject;
+		$records[0]->fields->Description = $comment;
+		$records[0]->fields->ContactId = $sf_contact_id;
+		$records[0]->type = 'Case';
+
+		$response = $this->salesforce_library->create($records);
+
+		if (!$response[0]->success='1') 
+		{
+			log_message ('info', "Create SF Case Failed.");
+			$this->session->set_flashdata('error', "Create SF Case Failed.");
+			return (FALSE);
+		}
+		return ($response[0]->id);
+	}
+
+	public function add_case_comment($sf_case_parent_id,$sf_case_comment)
+	{
+		$records[0] = new SObject();
+		$records[0]->fields->CommentBody = $sf_case_comment;
+		$records[0]->fields->IsPublished = TRUE;
+		$records[0]->fields->ParentId = $sf_case_parent_id;
+		$records[0]->type = 'CaseComment';
+
+		$response = $this->salesforce_library->create($records);
+
+		if (!$response[0]->success='1') 
+		{
+			log_message ('info', "Create SF Case Comment Failed.");
+			$this->session->set_flashdata('error', "Create SF Case Comment Failed.");
+			return (FALSE);
+		}
+
+		return ($response[0]->id);
+	}
+
+	private function convert_date($date)
+	{
+		return (date('m/d/Y - H:i:s', strtotime($date)));
+	}
+
+	public function get_case_list_by_contact_id($sf_contact_id)
+	{
+		$response = $this->salesforce_library->query("
+			SELECT Id, CaseNumber,CreatedDate,Subject,Status 
+			FROM case 
+			WHERE ContactId = '$sf_contact_id' 
+			");
+		$queryResult = new QueryResult($response);
+		// If no results present return false, fail early.
+		if ($queryResult->size == 0)
+		{
+			return(FALSE);
+		}
+		$results = new stdClass;
+		for ($queryResult->rewind(); $queryResult->pointer < $queryResult->size; $queryResult->next()) {
+			$record = $queryResult->current();
+		    // Id is on the $record, but other fields are accessed via
+		    // the fields object
+			$this_id = $record->Id;
+			$results->$this_id = new stdClass;
+			$results->$this_id->Id = $record->Id;
+			foreach ($record->fields as $fieldname => $value)
+			{
+
+				$results->$this_id->$fieldname = $value;
+			}
+		}
+		return ($results);
+	}
+
+
+	/**
+ 	* ======== ROUTINES USED FOR IMPORTING - DO NOT USE IN PRODUCTION. ========
+ 	*/
+
+	public function is_plesk_enabled($email)
+	{
+		$response = $this->salesforce_library->query("
+			SELECT 
+			Email,
+			Id 
+			FROM 
+			Contact 
+			WHERE 
+			Email_User__c = true
+			AND
+			Email = '$email'
+			");
+
+		$queryResult = new QueryResult($response);
+		// If no results present return false, fail early.
+		if ($queryResult->size == 0)
+		{
+
+			return FALSE;
+		}
+		return TRUE;
+	}
 
 
 	public function importer_get_plesk_enabled()
@@ -278,62 +480,123 @@ class Salesforce_model extends CI_Model
 		return ($results);
 	}
 
-	/**
+		/**
 	 * Get the primary contact records required for import.
 	 * @param type $sf_account_id 
 	 * @return type
 	 */
-	public function importer_get_contact_records() 
-	{
-		$response = $this->salesforce_library->query("
-			SELECT 
-			FirstName,
-			LastName,
-			Id,
-			AccountId,
-			Email,
-			Email_Password__c,
-			Name,
-			Website__c,
-			Web_Agreement__c,
-			Account.Company_Name__c,
-			Account.Name, 
-			Account.Domain_Name__c, 
-			Account.Website
-			FROM 
-			Contact
-			WHERE
-			Email != 'info@financialwisdom.ca'
-			AND
-			Email != 'pedro@advisornet.ca'
-			AND
-			Email != 'aegir@advisornet.ca'
-			AND
-			(Web_Agreement__c = 'Received' OR Web_Agreement__c = 'None')
-			AND
-			Account.AccountStatus__c != 'Prospecting' 
-			AND
-			Account.AccountStatus__c != 'Former Client'
-			
-			");
-
-		$queryResult = new QueryResult($response);
-		// If no results present return false, fail early.
-		if ($queryResult->size == 0)
+		public function importer_get_all_contact_records() 
 		{
 
-			return(FALSE);
-		}
-		$results = array();
-		for ($queryResult->rewind(); $queryResult->pointer < $queryResult->size; $queryResult->next()) {
-			$record = $queryResult->current();
+			$response = $this->salesforce_library->query("
+				SELECT 
+				FirstName,
+				LastName,
+				Id,
+				AccountId,
+				Email,
+				Email_Password__c,
+				Name,
+				Website__c,
+				Web_Agreement__c,
+				Account.Company_Name__c,
+				Account.Name, 
+				Account.Domain_Name__c, 
+				Account.Website
+				FROM 
+				Contact
+				WHERE
+				Email != 'info@financialwisdom.ca'
+				AND
+				Email != 'pedro@advisornet.ca'
+				AND
+				Email != 'aegir@advisornet.ca'
+				AND
+				(Web_Agreement__c = 'Received' OR Web_Agreement__c = 'None')
+				AND
+				Account.AccountStatus__c != 'Prospecting' 
+				AND
+				Account.AccountStatus__c != 'Former Client'
+
+				");
+
+			$queryResult = new QueryResult($response);
+		// If no results present return false, fail early.
+			if ($queryResult->size == 0)
+			{
+
+				return(FALSE);
+			}
+			$results = array();
+			for ($queryResult->rewind(); $queryResult->pointer < $queryResult->size; $queryResult->next()) {
+				$record = $queryResult->current();
 		    // Id is on the $record, but other fields are accessed via
 		    // the fields object
-			$results[$record->Id] = $record->fields;
+				$results[$record->Id] = $record->fields;
+			}
+			return ($results);
 		}
-		return ($results);
+
+
+		/**
+	 * Get the primary contact records required for import.
+	 * @param type $sf_account_id 
+	 * @return type
+	 */
+		public function importer_get_contact_record($account_name) 
+		{
+
+			$response = $this->salesforce_library->query("
+				SELECT 
+				FirstName,
+				LastName,
+				Id,
+				AccountId,
+				Email,
+				Email_Password__c,
+				Name,
+				Website__c,
+				Web_Agreement__c,
+				Account.Company_Name__c,
+				Account.Name, 
+				Account.Domain_Name__c, 
+				Account.Website
+				FROM 
+				Contact
+				WHERE
+				Account.Name = '$account_name'
+				AND
+				Email != 'info@financialwisdom.ca'
+				AND
+				Email != 'pedro@advisornet.ca'
+				AND
+				Email != 'aegir@advisornet.ca'
+				AND
+				(Web_Agreement__c = 'Received' OR Web_Agreement__c = 'None')
+				AND
+				Account.AccountStatus__c != 'Prospecting' 
+				AND
+				Account.AccountStatus__c != 'Former Client'
+
+
+				");
+
+			$queryResult = new QueryResult($response);
+		// If no results present return false, fail early.
+			if ($queryResult->size == 0)
+			{
+
+				return(FALSE);
+			}
+			$results = array();
+			for ($queryResult->rewind(); $queryResult->pointer < $queryResult->size; $queryResult->next()) {
+				$record = $queryResult->current();
+		    // Id is on the $record, but other fields are accessed via
+		    // the fields object
+				$results[$record->Id] = $record->fields;
+			}
+			return ($results);
+		}
+
 	}
-
-
-}
 

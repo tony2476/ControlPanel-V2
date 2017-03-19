@@ -21,6 +21,11 @@ class Private_Controller extends MY_Controller {
 		$this->menu->set_side_menu($this->config->item('private_left_menu_name'));
 		$menu_data = $this->menu->display_menu();
 		$this->template->set_menu_data($menu_data);
+
+		if (!$this->ion_auth->logged_in()) {
+			$this->session->set_flashdata('message', "You must be logged in to access this feature.");
+			redirect('/user/login', 'refresh'); 
+		}
 		
 	}
 

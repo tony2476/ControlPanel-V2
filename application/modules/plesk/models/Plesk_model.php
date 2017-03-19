@@ -612,10 +612,50 @@ class Plesk_model extends CI_Model
 			$this->forwarding = $this->xml->mail->get_info->result->mailname->forwarding;
 			$this->alias = $this->xml->mail->get_info->result->mailname->alias;
 			$this->autoresponder = $this->xml->mail->get_info->result->mailname->autoresponder;
+			$this->format_data();
 			return (TRUE);
 		}
 		return (FALSE);
 	}
+
+	private function format_data() {
+		// Aliases
+		$count = 0;
+		$result = array();
+		foreach ($this->alias as $alias)
+		{
+			$result[$count] = array('alias' => (string) $alias);
+			$count++;
+		}
+		$this->alias = $result;
+
+		// Do enabled checkboxes, convert true to checked and false to '';
+		$this->forwarding = (object)(array) $this->forwarding;
+		$this->autoresponder = (object)(array) $this->autoresponder;
+
+		// Do enabled checkboxes, convert true to checked and false to '';
+		// And set any unused fields so that parser can replace.
+		if ($this->forwarding->enabled == 'true')
+		{
+			$this->forwarding->enabled = 'checked="enabled"';
+		}
+		else
+		{
+			$this->forwarding->enabled = '';
+			$this->forwarding->address = '';	
+		}
+
+		if ($this->autoresponder->enabled == 'true')
+		{
+			$this->autoresponder->enabled = 'checked="enabled"';
+		}
+		else
+		{
+			$this->autoresponder->enabled = '';	
+		}
+		$this->autoresponder->enabled =  $this->autoresponder->enabled;
+	}
+
 
 	public function get_site_domain($site_id)
 	{

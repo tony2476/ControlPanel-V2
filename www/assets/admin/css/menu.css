@@ -78,25 +78,81 @@
 	background-color:	#374581;
 }
 
- .sidebar-nav>ul>li>a:focus, .sidebar-nav>ul>li>a:hover, .sidebar-nav>ul>li>ul>li>a:focus, .sidebar-nav>ul>li>ul>li>a:hover {
- 		background-color:	#273571;	
- }
+.sidebar-nav>ul>li>a:focus, .sidebar-nav>ul>li>a:hover, .sidebar-nav>ul>li>ul>li>a:focus, .sidebar-nav>ul>li>ul>li>a:hover {
+	background-color:	#273571;	
+}
 
 #wrapper {
 	background-color: #172561;
 	height: 100%;
 }
 
-html, 
+html,
 body {
-    height: 100%;
-    background-color: #172561;
-    font-family: 'Noto Sans', sans-serif, Arial, "Helvetica Neue",Helvetica,"Segoe UI",Tahoma;
-    /*overflow:hidden;*/
+	height: calc(100% - 26px);
+	background-color: #172561;
+
 }
 
 #page-wrapper {
 	min-height: 100%;
-
+	font-family: 'Crimson Text', serif;
 }
+
+.navbar-brand {
+	
+	padding: 5px;
+}
+.navbar-brand > img {
+	float: left;
+	padding-right: 5px;
+}
+
+.advisor-text {
+	display: inline-block;
+	vertical-align: middle;
+	padding-top: 9px;
+	font-size: 36px;
+	font-family: 'Crimson Text', serif;
+}
+
+.advisor-text-blue {
+	color: #1f2271;
+	padding-right: 0px;
+	margin-right: 0px;
+}
+
+.advisor-text-grey{
+	color: #12938e;
+	padding-left: 0px;
+	margin-left: 0px;
+}
+
+.advisor-text-bigger {
+	font-size: 44px;
+}
+
+h2 {
+	color: #12938e;
+}
+
+a {
+    color: #1f2271;
+}
+
+
+#ticket > .panel-default > .panel-heading {
+  background-color: #add8e6;
+  color: #000000;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Noto Sans', sans-serif, Arial, "Helvetica Neue",Helvetica,"Segoe UI",Tahoma;
+}
+p, div {
+    font-family: 'Noto Sans', sans-serif, Arial, "Helvetica Neue",Helvetica,"Segoe UI",Tahoma;
+}
+
+
+
 

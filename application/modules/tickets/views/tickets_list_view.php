@@ -18,36 +18,29 @@
 			</div>
 			<!-- /.panel-heading -->
 			<div class="panel-body">
-				<table width="100%" class="table table-striped table-bordered table-hover" id="users-list">
+				<table width="100%" class="table table-striped table-bordered table-hover" id="tickets-list">
 					<thead>
 						<tr>
 							<th>ID</th>
-							<th>User Name</th>
-							<th>email</th>
-							<th>First Name</th>
-							<th>Last Name </th>
-							<th>Company</th>
+							<th>Case Number</th>
+							<th>Created Date</th>
+							<th>Subject</th>
+							<th>Status</th>
 							<th>Actions</th>
 						</tr>
 					</thead>
 					
 					<tbody>
-					{list}
-						<tr class="odd gradeX" data-id="{id}">
-							<td>{id}</td>
-							<td>{username}</td>
-							<td>{email}</td>
-							<td>{first_name}</td>
-							<td>{last_name}</td>
-							<td>{company}</td>
-							<td class="text-center"> <div class="btn-group">
-								<a href="/user/login_as_user/{id}" class="btn btn-info btn-xs" title="Login as this user"><span class="glyphicon glyphicon-user"></span></a>
-								<a href="/user/toggle_status/{id}" class="btn {colour} btn-xs" title="Suspend/Unsuspend"><span class="glyphicon {icon}"></span></a>
-								<a href="/user/user_edit/{id}" class="btn btn-info btn-xs" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
-								<a href="/user/delete/{id}" class="btn btn-danger btn-xs" data-confirm="Are you sure you want to delete username {username}?"><span class="glyphicon glyphicon-trash"></span></a>
-							</div></td>
+						{tickets}
+						<tr class="odd gradeX" data-id="{Id}">
+							<td>{Id}</td>
+							<td>{CaseNumber}</td>
+							<td>{CreatedDate}</td>
+							<td>{Subject}</td>
+							<td>{Status}</td>
+							<td class="text-center"> <div class="btn-group"><a href="/tickets/ticket_view/{Id}/" class="btn btn-info btn-xs" title="Edit"><span class="fa fa-edit fa-fw"></span></a></div></td>
 						</tr>
-						{/list}
+						{/tickets}
 					</tbody>
 				</table>
 			</div>
@@ -60,7 +53,7 @@
 <script>
 	$(document).ready(function() 
 	{
-		$('#users-list').DataTable
+		$('#tickets-list').DataTable
 		({
 			responsive: true,
 			ordering: true

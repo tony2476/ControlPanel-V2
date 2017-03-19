@@ -16,7 +16,7 @@ class MY_Controller extends MX_Controller {
 	{
 		parent::__construct();
 
-		log_message('debug', 'CI My Admin : MY_Controller class loaded');
+		log_message('debug', 'CP2 : MY_Controller class loaded');
 		
 		// Load the ion_auth library from the third_party folder.  Use add_package_path() so that all future calls to that library prepend the path.
 		// I kept the entire ion_auth library in it's own folder to make updates easier and for encapsulation.  Everything relating to ion_auth is in that directory.
@@ -30,7 +30,7 @@ class MY_Controller extends MX_Controller {
 
 		// Load Globally Required Libraries.
 		$this->load->library('parser');
-//		$this->load->library('ion_auth');
+		$this->load->library('ion_auth');
 
 		// Load Globally Required Helpers.
 		$this->load->helper('url');
@@ -43,6 +43,7 @@ class MY_Controller extends MX_Controller {
 
 		//Load user data (if logged in)
 		if ($this->ion_auth->logged_in()) {
+	
 			$this->user = $this->ion_auth->user()->row();
 		}
 

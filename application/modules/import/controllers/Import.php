@@ -31,6 +31,9 @@ class Import extends Admin_Controller
 		}
 		$this->load->model('salesforce/salesforce_model');
 		$this->sf = new Salesforce_model;
+
+		$this->load->model('plesk/plesk_model');
+		$this->plesk = New Plesk_model;
 	}
 
 /*
@@ -54,6 +57,116 @@ class Import extends Admin_Controller
 	{
 
 	}
+
+
+// TEST SITE
+// wealth-max.test
+// Ptz?n037
+
+	/* This routine is used to import a single company into the system */
+	public function import_company()
+	{
+		if ($this->form_validation->run('company_name') == TRUE) {
+			$company_name = $this->input->post('company');
+			$this->session->set_flashdata('message',"Company name $company_name was imported succesfully.");
+
+
+			/* Import the contact records from SF for this company */
+			$error_text = '';
+			$list = $this->sf->importer_get_contact_record($company_name);
+			foreach ($list as $user) 
+			{
+				$username = str_replace(' ','',$user->Name);
+				$password = $user->Email_Password__c;
+				$email = $user->Email;
+				if ($password=='none')
+				{
+					$password = $this->generateStrongPassword();
+				}
+
+				if ($user->Web_Agreement__c == 'Received') {
+					$group = array(2);
+				} 
+				else
+				{
+					$group = array(3);
+				}
+
+				$sf_contact_id = $user->Id;
+				$sf_account_id = $user->AccountId;
+
+				$additional_data = array(
+					'first_name' => $user->FirstName,
+					'last_name' => $user->LastName,
+					'sf_contact_id' => $user->Id,
+					'sf_account_id' => $user->AccountId,
+					'company' => $user->Account->fields->Company_Name__c,
+
+					);
+
+
+				if (!$saved = $this->ion_auth->register($username, $password, $email, $additional_data, $group))
+				{
+					$error_text .= "Failed for $username <br />";
+					continue;
+				} 
+				
+				if ($this->sf->is_plesk_enabled($email))
+				{
+					$data = array 
+					(
+						'plesk_email' => $email,
+						);
+					$this->db->where('id', $saved);
+					$this->db->update('users', $data);
+
+					$username = $this->plesk->get_username_from_email($email);
+					$domain = $this->plesk->get_domain_from_email($email);
+					if (!$plesk_mailbox_id = $this->plesk->get_mailbox_id($username, $domain))
+					{
+						echo "Failed mailbox id $email<br />";
+						echo $this->plesk->errcode;
+						echo $this->plesk->errtext;
+						continue;
+
+					}
+
+					if (!$plesk_site_id = (string) $this->plesk->get_site_id($domain))
+					{
+						echo "Failed site id $email<br />";
+						flush();
+						continue;
+					}
+					
+					$data = array 
+					(
+						'plesk_site_id' => $plesk_site_id,
+						'plesk_mailbox_id' => $plesk_mailbox_id,
+						);
+
+					$this->db->where('plesk_email', $email);
+					$this->db->update('users', $data);
+				}
+			}
+		}
+
+		$form = array 
+		(
+			'form_open' => form_open('', array('class'=>'form-signin')),
+			'form_close' => form_close(),
+			);
+
+		if (validation_errors()) {
+			$this->session->set_flashdata('message',validation_errors());
+		}
+		$page_data = $this->parser->parse('import/import_company_form_view', $form, TRUE);
+
+		$this->template->set_page_data($page_data);
+		$this->template->display_page();
+	}
+
+
+	/*  THIS IS THE BULK IMPORT ROUTINES.  They should not be used */
 
 	public function populate_plesk_cache()
 	{
@@ -84,7 +197,7 @@ class Import extends Admin_Controller
 			}
 			echo $plesk_mailbox_id . "<br />
 			$plesk_site_id<br />";
-			flush();
+
 
 			$data = array 
 			(
@@ -96,12 +209,12 @@ class Import extends Admin_Controller
 			echo "$email <br />";
 			print_r ($data);
 			echo "</pre>";
-			
-			
-			
+
+
+
 			$this->db->where('plesk_email', $email);
 			$this->db->update('users', $data);
-			
+
 		}
 	}
 
@@ -119,7 +232,7 @@ class Import extends Admin_Controller
 			{
 				$user_id = $result->id;
 			}
-			echo "SFid: $id, $user_id<br />";
+			//echo "SFid: $id, $user_id<br />";
 			$data = array 
 			(
 
@@ -162,16 +275,8 @@ class Import extends Admin_Controller
 				'company' => $user->Account->fields->Company_Name__c,
 
 				);
-			
-			/*echo "$username, $password, $email";
-			echo "<pre>";
-			echo "additional data <br />";
-			print_r ($additional_data);
-			echo "</pre>";
-			*/
-			
-			
-			// save the new user in ion auth.
+
+
 			if (!$saved = $this->ion_auth->register($username, $password, $email, $additional_data, $group))
 			{
 				echo "Failed for $username <br />";

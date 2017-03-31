@@ -1,52 +1,46 @@
-<div class="row">
-	<div class="col-lg-12">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<strong>User list and Management.</strong>
-				<div class="pull-right">
-					<div class="btn-group">
-						<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-							Options.
-							<span class="caret"></span>
-						</button>
-						<ul id="menu_select" class="dropdown-menu pull-right" role="menu">
-							<li><a href="/user/create" id="">Add a User</a>
-							</li>
-						</ul>
-					</div>
-				</div>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<strong>User list and Management.</strong>
+		<div class="pull-right">
+			<div class="btn-group">
+				<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+					Options.
+					<span class="caret"></span>
+				</button>
+				<ul id="menu_select" class="dropdown-menu pull-right" role="menu">
+					<li><a href="/user/create" id="">Add a User</a>
+					</li>
+				</ul>
 			</div>
-			<!-- /.panel-heading -->
-			<div class="panel-body">
-				<table width="100%" class="table table-striped table-bordered table-hover" id="tickets-list">
-					<thead>
-						<tr>
-							<th>ID</th>
-							<th>Case Number</th>
-							<th>Created Date</th>
-							<th>Subject</th>
-							<th>Status</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					
-					<tbody>
-						{tickets}
-						<tr class="odd gradeX" data-id="{Id}">
-							<td>{Id}</td>
-							<td>{CaseNumber}</td>
-							<td>{CreatedDate}</td>
-							<td>{Subject}</td>
-							<td>{Status}</td>
-							<td class="text-center"> <div class="btn-group"><a href="/tickets/ticket_view/{Id}/" class="btn btn-info btn-xs" title="Edit"><span class="fa fa-edit fa-fw"></span></a></div></td>
-						</tr>
-						{/tickets}
-					</tbody>
-				</table>
-			</div>
-			<!-- /.table-responsive -->
 		</div>
-		<!-- /.panel-body -->
+	</div>
+	<!-- /.panel-heading -->
+	<div class="panel-body">
+		<table width="100%" class="table table-striped table-bordered table-hover" id="tickets-list">
+			<thead>
+				<tr>
+					<th>Case Number</th>
+					<th>Created Date</th>
+					<th>Closed Date</th>
+					<th>Subject</th>
+					<th>Status</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				{tickets}
+				<tr class="odd gradeX" data-id="{Id}">
+					<td>{CaseNumber}</td>
+					<td>{CreatedDate}</td>
+					<th>{ClosedDate}</th>
+					<td>{Subject}</td>
+					<td>{Status}</td>
+					<td class="text-center"> <div class="btn-group"><a href="/tickets/ticket_view/{Id}/" class="btn btn-info btn-xs" title="Edit"><span class="fa fa-edit fa-fw"></span></a></div></td>
+				</tr>
+				{/tickets}
+			</tbody>
+		</table>
 	</div>
 </div>
 

@@ -47,6 +47,8 @@
 
     <link rel="stylesheet" href="<?=base_url()?>assets/admin/css/menu.css">
 
+    <link rel="stylesheet" href="<?=base_url()?>assets/admin/css/payments.css">
+
     <link href="https://fonts.googleapis.com/css?family=Crimson+Text" rel="stylesheet">
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

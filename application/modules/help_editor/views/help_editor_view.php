@@ -7,33 +7,18 @@
 </div>
 
 
-<div class="row">
-	<div class="col-lg-8">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<strong>Currently Editing  : </strong> <span id="current_menu">{path}</span>
-			</div>
-			<div class="panel-body">
-				<textarea id="content">{content}</textarea>
-			</div>
-			<div class="panel-footer clearfix">
-				<div class="btn-group pull-right">
-					<a class="btn btn-warning btn-sm" href="/help_editor/help_list">Return to list.</a>
-					<button id="btn-save" class="btn btn-success btn-sm" type="submit">Save</button>
-					
-				</div>
-			</div>
-		</div>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<strong>Currently Editing  : </strong> <span id="current_menu">{path}</span>
 	</div>
-
-	<div class="col-lg-4">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				Instructions
-			</div>
-			<div class="panel-body">
-				<p>Select a help file from the drop down men</p>
-			</div>
+	<div class="panel-body">
+		<textarea id="content">{content}</textarea>
+	</div>
+	<div class="panel-footer clearfix">
+		<div class="btn-group pull-right">
+			<a class="btn btn-warning btn-sm" href="/help_editor/help_list">Return to list.</a>
+			<button id="btn-save" class="btn btn-success btn-sm" type="submit">Save</button>
+			
 		</div>
 	</div>
 </div>

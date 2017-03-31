@@ -299,6 +299,12 @@ switch (ENVIRONMENT)
 	define('VIEWPATH', $view_folder.DIRECTORY_SEPARATOR);
 
 /*
+ * Load autoloader
+ */
+
+require APPPATH . 'third_party/vendor/autoload.php';
+
+/*
  * --------------------------------------------------------------------
  * LOAD THE BOOTSTRAP FILE
  * --------------------------------------------------------------------

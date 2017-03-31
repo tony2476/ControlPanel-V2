@@ -246,22 +246,43 @@ class Salesforce_model extends CI_Model
 		$key = key($results->header);
 		$results->header[0]['CreatedDate'] = $this->convert_date($results->header[0]['CreatedDate']);
 
-		foreach ($results->responses as &$response)
+		if (is_object($results->responses))
 		{
-			$response->CreatedDate = $this->convert_date($response->CreatedDate);
-			if (substr( $response->CommentBody, 0, 3 ) === "==:")
+			foreach ($results->responses as &$response)
 			{
-				$created_by_string = explode(":", strtok($response->CommentBody, "\n"));
-				if ($created_by_string[1] == $sf_contact_id) {
-					$created_by_string = $fullname;
-				}
-				else
+				$response->CreatedDate = $this->convert_date($response->CreatedDate);
+				if (substr( $response->CommentBody, 0, 3 ) === "==:")
 				{
-					$created_by_string = "Advisornet";
+					$created_by_string = explode(":", strtok($response->CommentBody, "\n"));
+					if ($created_by_string[1] == $sf_contact_id) {
+						$created_by_string = $fullname;
+					}
+					else
+					{
+						$created_by_string = "Advisornet";
+					}
+					$response->CreatedById = $created_by_string;
+					$response->CommentBody = preg_replace('/^.+\n/', '', $response->CommentBody);
 				}
-				$response->CreatedById = $created_by_string;
-				$response->CommentBody = preg_replace('/^.+\n/', '', $response->CommentBody);
+				else {
+					if ($response->CreatedById == $sf_contact_id)
+					{
+						$response->CreatedById = $fullname;
+					}
+					else
+					{
+						$response->CreatedById = "Advisornet";
+					}
+				}
 			}
+		}
+		else 
+		{
+			$results->responses = new stdClass;
+			$results->responses->noresponses = new stdClass;
+			$results->responses->noresponses->CreatedById = 'No Responses to Display';
+			$results->responses->noresponses->CommentBody = '';
+
 		}
 		return $results;
 	}
@@ -308,12 +329,9 @@ class Salesforce_model extends CI_Model
 		// If no results present return false, fail early.
 		if ($queryResult->size == 0)
 		{
-			echo "Nothing found";
 			return(FALSE);
 		}
 		$results = new stdClass;
-
-
 
 		for ($queryResult->rewind(); $queryResult->pointer < $queryResult->size; $queryResult->next()) {
 			$record = $queryResult->current();
@@ -378,13 +396,13 @@ class Salesforce_model extends CI_Model
 
 	private function convert_date($date)
 	{
-		return (date('m/d/Y - H:i:s', strtotime($date)));
+		return (date('m/d/Y - h:i:s a', strtotime($date)));
 	}
 
 	public function get_case_list_by_contact_id($sf_contact_id)
 	{
 		$response = $this->salesforce_library->query("
-			SELECT Id, CaseNumber,CreatedDate,Subject,Status 
+			SELECT Id, CaseNumber,CreatedDate, ClosedDate,Subject,Status 
 			FROM case 
 			WHERE ContactId = '$sf_contact_id' 
 			");
@@ -408,6 +426,16 @@ class Salesforce_model extends CI_Model
 				$results->$this_id->$fieldname = $value;
 			}
 		}
+
+		foreach ($results as &$result)
+		{
+			$result->CreatedDate = $this->convert_date($result->CreatedDate);
+			if ($result->ClosedDate != '')
+			{
+				$result->ClosedDate = $this->convert_date($result->ClosedDate);
+			}
+		}
+		
 		return ($results);
 	}
 
@@ -416,73 +444,73 @@ class Salesforce_model extends CI_Model
  	* ======== ROUTINES USED FOR IMPORTING - DO NOT USE IN PRODUCTION. ========
  	*/
 
-	public function is_plesk_enabled($email)
-	{
-		$response = $this->salesforce_library->query("
-			SELECT 
-			Email,
-			Id 
-			FROM 
-			Contact 
-			WHERE 
-			Email_User__c = true
-			AND
-			Email = '$email'
-			");
+ 	public function is_plesk_enabled($email)
+ 	{
+ 		$response = $this->salesforce_library->query("
+ 			SELECT 
+ 			Email,
+ 			Id 
+ 			FROM 
+ 			Contact 
+ 			WHERE 
+ 			Email_User__c = true
+ 			AND
+ 			Email = '$email'
+ 			");
 
-		$queryResult = new QueryResult($response);
+ 		$queryResult = new QueryResult($response);
 		// If no results present return false, fail early.
-		if ($queryResult->size == 0)
-		{
+ 		if ($queryResult->size == 0)
+ 		{
 
-			return FALSE;
-		}
-		return TRUE;
-	}
+ 			return FALSE;
+ 		}
+ 		return TRUE;
+ 	}
 
 
-	public function importer_get_plesk_enabled()
-	{
-		$response = $this->salesforce_library->query("
-			SELECT 
-			Email,
-			Id 
-			FROM 
-			Contact 
-			WHERE 
-			Email_User__c = true
-			AND
-			Email != 'info@financialwisdom.ca'
-			AND
-			Email != 'pedro@advisornet.ca'
-			AND
-			Email != 'aegir@advisornet.ca'
-			AND
-			(Web_Agreement__c = 'Received' OR Web_Agreement__c = 'None')
-			AND
-			Account.AccountStatus__c != 'Prospecting' 
-			AND
-			Account.AccountStatus__c != 'Former Client'
-			AND
-			Account.AccountStatus__c != ''
-			");
+ 	public function importer_get_plesk_enabled()
+ 	{
+ 		$response = $this->salesforce_library->query("
+ 			SELECT 
+ 			Email,
+ 			Id 
+ 			FROM 
+ 			Contact 
+ 			WHERE 
+ 			Email_User__c = true
+ 			AND
+ 			Email != 'info@financialwisdom.ca'
+ 			AND
+ 			Email != 'pedro@advisornet.ca'
+ 			AND
+ 			Email != 'aegir@advisornet.ca'
+ 			AND
+ 			(Web_Agreement__c = 'Received' OR Web_Agreement__c = 'None')
+ 			AND
+ 			Account.AccountStatus__c != 'Prospecting' 
+ 			AND
+ 			Account.AccountStatus__c != 'Former Client'
+ 			AND
+ 			Account.AccountStatus__c != ''
+ 			");
 
-		$queryResult = new QueryResult($response);
+ 		$queryResult = new QueryResult($response);
 		// If no results present return false, fail early.
-		if ($queryResult->size == 0)
-		{
+ 		if ($queryResult->size == 0)
+ 		{
 
-			return(FALSE);
-		}
-		$results = array();
-		for ($queryResult->rewind(); $queryResult->pointer < $queryResult->size; $queryResult->next()) {
-			$record = $queryResult->current();
+ 			return(FALSE);
+ 		}
+ 		$results = array();
+ 		for ($queryResult->rewind(); $queryResult->pointer < $queryResult->size; $queryResult->next()) {
+ 			$record = $queryResult->current();
 		    // Id is on the $record, but other fields are accessed via
 		    // the fields object
-			$results[$record->Id] = $record->fields;
-		}
-		return ($results);
-	}
+ 			$results[$record->Id] = $record->fields;
+ 		}
+ 		return ($results);
+ 	}
 
 		/**
 	 * Get the primary contact records required for import.

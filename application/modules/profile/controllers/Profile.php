@@ -23,6 +23,36 @@ class Profile extends Private_Controller {
 		echo "Nothing here!";
 	}
 
+	public function domain()
+	{
+		if ($this->form_validation->run('domain') == TRUE)
+		{
+
+		}
+
+		$form = array 
+		(
+			'form_open' => form_open('', array('class'=>'form-horizontal')),
+			'form_close' => form_close(),
+			);
+
+		$sf_account_data = $this->session->userdata('sf_account_cache');
+
+		if (!is_object($sf_account_data))
+		{
+			$this->session->set_flashdata('error', "We cannot locate any data for this user.");
+			redirect('/','refresh');	
+		}
+
+		$form = $form + (array) $sf_account_data;
+
+		$this->template->set_title("");
+		$page_data = $this->parser->parse('profile/view_domain_view', $form, TRUE);
+
+		$this->template->set_page_data($page_data);
+		$this->template->display_page();
+	}
+
 	public function personal()
 	{
 		if ($this->form_validation->run('personal') == TRUE)
@@ -43,8 +73,7 @@ class Profile extends Private_Controller {
 			redirect('/','refresh');	
 		}
 
-		$sf_contact_data = clone $this->session->userdata('sf_contact_cache');
-
+		$sf_contact_data = $this->session->userdata('sf_contact_cache');
 		$sf_contact_data = (object) (array) $sf_contact_data;
 		
 		$form = $form  + (array) $sf_contact_data;

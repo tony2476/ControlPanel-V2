@@ -113,7 +113,7 @@ class User extends Public_Controller {
 				'form_close' => form_close(),
 				);
 			$page_data = $this->parser->parse('user/login_form_view', $form, TRUE);
-
+			$this->template->disable_help();
 			$this->template->set_page_data($page_data);
 			$this->template->display_page();
 		}
@@ -132,81 +132,81 @@ class User extends Public_Controller {
  	* Use Harold for testing.
  	* @return type
  	*/
-	public function assistants()
-	{
-		$assistant_list = array(
-			'list' => $this->user->list_all_assistants(),
-			);
-		$this->template->set_title("Assistant List");
+ 	public function assistants()
+ 	{
+ 		$assistant_list = array(
+ 			'list' => $this->user->list_all_assistants(),
+ 			);
+ 		$this->template->set_title("Assistant List");
 
-		$page_data = $this->parser->parse('user/assistant_list_view', $assistant_list	, TRUE);
+ 		$page_data = $this->parser->parse('user/assistant_list_view', $assistant_list	, TRUE);
 
-		$this->template->set_page_data($page_data);
-		$this->template->display_page();
-	}
+ 		$this->template->set_page_data($page_data);
+ 		$this->template->display_page();
+ 	}
 
-	public function assistant_status()
-	{
-		$assistant_id = $this->uri->segment(3);
-		if (!$this->user->is_assistant($assistant_id))
-		{
-			redirect('/user/assistants', 'refresh');
-		}
+ 	public function assistant_status()
+ 	{
+ 		$assistant_id = $this->uri->segment(3);
+ 		if (!$this->user->is_assistant($assistant_id))
+ 		{
+ 			redirect('/user/assistants', 'refresh');
+ 		}
 
-		$user_id = $this->uri->segment(3);
-		$current_user = $this->ion_auth->get_user_id();
-		if ($current_user == $user_id) {
-			$this->session->set_flashdata('message','You are not allowed to suspend/resume Yourself.');
-			redirect('/user/assistants', 'refresh');
-		}
+ 		$user_id = $this->uri->segment(3);
+ 		$current_user = $this->ion_auth->get_user_id();
+ 		if ($current_user == $user_id) {
+ 			$this->session->set_flashdata('message','You are not allowed to suspend/resume Yourself.');
+ 			redirect('/user/assistants', 'refresh');
+ 		}
 
-		$user = $this->ion_auth->user($assistant_id)->row();
-		$status = $user->active;
-		
-		if ($status) {
-			$status = 0;
-		} else
-		{
-			$status = 1;
-		}
+ 		$user = $this->ion_auth->user($assistant_id)->row();
+ 		$status = $user->active;
 
-		$data = array(
-			'active' => $status,
-			);
-		
-		$this->ion_auth->update($user_id, $data);
-		redirect('/user/assistants', 'refresh');
+ 		if ($status) {
+ 			$status = 0;
+ 		} else
+ 		{
+ 			$status = 1;
+ 		}
 
-	}
+ 		$data = array(
+ 			'active' => $status,
+ 			);
 
-	public function assistant_edit()
-	{
+ 		$this->ion_auth->update($user_id, $data);
+ 		redirect('/user/assistants', 'refresh');
 
-	}
+ 	}
 
-	public function assistant_delete()
-	{
+ 	public function assistant_edit()
+ 	{
 
-	}
+ 	}
 
-	public function user_list()
-	{
-		if (!$this->session->is_admin)
-		{
-			$this->session->set_flashdata('error', 'You need to be logged in as an administrator to access that feature.');
-			redirect('/', 'refresh');
-		}
+ 	public function assistant_delete()
+ 	{
 
-		$user_list = array(
-			'list' => $this->user->list_all_users(),
-			);
-		$this->template->set_title("Client List");
+ 	}
 
-		$page_data = $this->parser->parse('user/user_list_view', $user_list	, TRUE);
+ 	public function user_list()
+ 	{
+ 		if (!$this->session->is_admin)
+ 		{
+ 			$this->session->set_flashdata('error', 'You need to be logged in as an administrator to access that feature.');
+ 			redirect('/', 'refresh');
+ 		}
 
-		$this->template->set_page_data($page_data);
-		$this->template->display_page();
-	}
+ 		$user_list = array(
+ 			'list' => $this->user->list_all_users(),
+ 			);
+ 		$this->template->set_title("Client List");
+
+ 		$page_data = $this->parser->parse('user/user_list_view', $user_list	, TRUE);
+
+ 		$this->template->set_page_data($page_data);
+ 		$this->template->display_page();
+ 	}
 
 	/**
 	 * Logout

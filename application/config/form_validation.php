@@ -1,6 +1,27 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 $config = array 
 (
+	'order_form' => array 
+	(
+		array 
+		(
+			'field' => 'url', 
+			'label' => 'url', 
+			'rules' => 'required'
+			),
+		array 
+		(
+			'field' => 'header_title', 
+			'label' => 'header_title', 
+			'rules' => 'required'
+			),
+		array 
+		(
+			'field' => 'header_text', 
+			'label' => 'header_text', 
+			'rules' => 'required'
+			),
+		),
 	'company_name' => array 
 	(
 		array 

@@ -1,72 +1,53 @@
-<div class="row">
-	<div class="col-md-8">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<strong>Help Editor</strong>
-				<div class="pull-right">
-					<div class="btn-group">
-						<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-							Options.
-							<span class="caret"></span>
-						</button>
-						<ul id="menu_select" class="dropdown-menu pull-right" role="menu">
-							<li>
-								<a href="#" data-toggle="modal" data-target="#addItemModal">Add a Help Item</a>
-								<!--<a href="/help_editor/add_item" id="">Add a Help Item</a>-->
-							</li>
-						</ul>
-					</div>
-				</div>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<strong>Help Editor</strong>
+		<div class="pull-right">
+			<div class="btn-group">
+				<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+					Options.
+					<span class="caret"></span>
+				</button>
+				<ul id="menu_select" class="dropdown-menu pull-right" role="menu">
+					<li>
+						<a href="#" data-toggle="modal" data-target="#addItemModal">Add a Help Item</a>
+						<!--<a href="/help_editor/add_item" id="">Add a Help Item</a>-->
+					</li>
+				</ul>
 			</div>
-			<!-- /.panel-heading -->
-			<div class="panel-body">
-				<table width="100%" class="table table-striped table-bordered table-hover" id="users-list">
-					<thead>
-						<tr>
-							<th>ID</th>
-							<th>Path</th>
-							<th>Title</th>
-							<th>Content</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					
-					<tbody>
-						{list}
-						<tr class="odd gradeX" data-id="{id}">
-							<td>{ID}</td>
-							<td>{path}</td>
-							<td>{title}</td>
-							<td>{content}</td>
-							<td class="text-center">
-								<div class="btn-group">
-									<a href="/help_editor/help_edit/{ID}" class="btn btn-info btn-xs" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
-									<a href="/help_editor/help_delete/{ID}" class="btn btn-danger btn-xs" data-confirm="Are you sure you want to delete help file {title}?"><span class="glyphicon glyphicon-trash"></span></a>
-								</div>
-							</td>
-						</tr>
-						{/list}
-					</tbody>
-				</table>
-			</div>
-			<!-- /.table-responsive -->
 		</div>
-		<!-- /.panel-body -->
 	</div>
+	<!-- /.panel-heading -->
+	<div class="panel-body">
+		<table width="100%" class="table table-striped table-bordered table-hover" id="users-list">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Path</th>
+					<th>Title</th>
+					<th>Content</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
 
-	<div class="col-md-4">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				{help_title}
-			</div>
-			<div class="panel-body">
-				{help_content}
-			</div>
-		</div>
+			<tbody>
+				{list}
+				<tr class="odd gradeX" data-id="{id}">
+					<td>{ID}</td>
+					<td>{path}</td>
+					<td>{title}</td>
+					<td>{content}</td>
+					<td class="text-center">
+						<div class="btn-group">
+							<a href="/help_editor/help_edit/{ID}" class="btn btn-info btn-xs" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+							<a href="/help_editor/help_delete/{ID}" class="btn btn-danger btn-xs" data-confirm="Are you sure you want to delete help file {title}?"><span class="glyphicon glyphicon-trash"></span></a>
+						</div>
+					</td>
+				</tr>
+				{/list}
+			</tbody>
+		</table>
 	</div>
-	
 </div>
-
 
 <div class="container">
 	<!-- Modal -->
@@ -151,10 +132,6 @@
 					console.log(ID);
 				}
 			});
-			
-
-			
-			
 		});
 
 	});

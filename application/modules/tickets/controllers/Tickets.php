@@ -60,8 +60,6 @@ class Tickets extends Private_Controller {
 		
 		$this->template->set_title("Create a new ticket.");
 
-	
-		
 		$form = array 
 		(
 			'form_open' => form_open('', array('class'=>'form-horizontal')),

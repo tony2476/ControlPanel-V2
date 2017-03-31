@@ -35,11 +35,6 @@ class Salesforce_library
 
 	public function __construct($config = array())
 	{
-		// Store each config item in private vars for later use.
-		//foreach($config as $key => $value){
-		//	$this->$key = $value;
-		//}
-		//
 		
 		log_message ('debug', "----->>>  Building SF Library");
 		// Define the wsdl file

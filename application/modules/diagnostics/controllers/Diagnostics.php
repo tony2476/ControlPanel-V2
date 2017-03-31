@@ -62,5 +62,10 @@ class Diagnostics extends Public_Controller {
 		$this->template->display_page();
 		
 	}
+
+	public function php_info()
+	{
+		echo phpinfo();
+	}
 }
 

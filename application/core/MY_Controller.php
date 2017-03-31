@@ -22,6 +22,7 @@ class MY_Controller extends MX_Controller {
 		// I kept the entire ion_auth library in it's own folder to make updates easier and for encapsulation.  Everything relating to ion_auth is in that directory.
 		$this->load->add_package_path(APPPATH.'third_party/ion_auth') -> library('ion_auth');
 		$this->load->add_package_path(APPPATH.'third_party/chromephp') -> library('chromephp');
+		
 
 		// Load Globally Required Modules.
 		$this->load->model('display_help/display_help_model');
@@ -32,6 +33,7 @@ class MY_Controller extends MX_Controller {
 		// Load Globally Required Libraries.
 		$this->load->library('parser');
 		$this->load->library('ion_auth');
+		
 
 		// Load Globally Required Helpers.
 		$this->load->helper('url');

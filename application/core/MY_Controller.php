@@ -23,6 +23,10 @@ class MY_Controller extends MX_Controller {
 		$this->load->add_package_path(APPPATH.'third_party/ion_auth') -> library('ion_auth');
 		$this->load->add_package_path(APPPATH.'third_party/chromephp') -> library('chromephp');
 		
+		// Form Validation
+		$this->load->library('form_validation');
+		$this->form_validation->CI =& $this;
+
 
 		// Load Globally Required Modules.
 		$this->load->model('display_help/display_help_model');
@@ -36,7 +40,7 @@ class MY_Controller extends MX_Controller {
 		
 
 		// Load Globally Required Helpers.
-		$this->load->helper('url');
+		$this->load->helper('url', 'form');
 
 		// Load Application Config.  This contains configuration data that is Global but is not directly related to the configuration of codeigniter itself.
 		$this->config->load('application');

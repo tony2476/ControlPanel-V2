@@ -22,7 +22,13 @@ class Orders extends Public_Controller {
 		$url = $this->uri->segment(3);
 		$form = $this->forms->load_form($url);
 
-		$this->template->set_title($form['header_title']); 
+		$this->template->set_title($form['header_title']);
+
+
+		$form_open_data = array(
+			'form_open' => form_open('/orders/confirm', array('class'=>'form-horizontal')),
+			);
+		$page_data = $this->parser->parse('orders/form_open', $form_open_data, TRUE);
 
 		if ($form['header_enable'])
 		{
@@ -31,7 +37,7 @@ class Orders extends Public_Controller {
 				'header_title' => $form['header_title'],
 				'header_text' => $form['header_text'],
 				);
-			$page_data = $this->parser->parse('orders/header', $header, TRUE);
+			$page_data .= $this->parser->parse('orders/header', $header, TRUE);
 		}
 
 		// Services here
@@ -41,20 +47,21 @@ class Orders extends Public_Controller {
 			);
 		$page_data .= $this->parser->parse('orders/services', $services_data, TRUE);
 
-		//>>> promo code here
+		// promo code here (not needed for special offers form)
 		if ($form['promo_code_enable'])
 		{
 			$promo_data = array();			
 			$page_data .= $this->parser->parse('orders/promo', $promo_data, TRUE);
 		}
 		
-		//>>> Domain name here
+		// Domain name here (not needed for add ons)
 		if ($form['domain_enable'])
 		{
 			$domain_data = array();
 			$page_data .= $this->parser->parse('orders/domain', $domain_data, TRUE);
 		}
 		
+		// Enable the contact form (not needed if client logged in or has existing services)
 		if ($form['contact_enable'])
 		{
 			$contact_data = array();
@@ -66,19 +73,26 @@ class Orders extends Public_Controller {
 		$page_data .= $this->parser->parse('orders/payment', $payment_data, TRUE);
 
 
+		$disclaimer_data = array();
+		$page_data .= $this->parser->parse('orders/disclaimer', $disclaimer_data, TRUE);
 
-		$form_data = array 
-		(
-			'form_open' => form_open('', array('class'=>'form-horizontal')),
+		$form_close_data = array(
 			'form_close' => form_close(),
-			'services' => $this->services->list_all(),
 			);
-
-		
-		//$page_data = $this->parser->parse('orders/step_one_form_view', $form_data, TRUE);
+		$page_data .= $this->parser->parse('orders/form_close', $form_close_data, TRUE);
 
 		$this->template->set_page_data($page_data);
 		$this->template->display_page();
+	}
+
+	function confirm()
+	{
+		$this->session->set_userdata('order_data', $this->input->post());
+		$confirmation_data = $this->input->post();
+		$page_data = $this->parser->parse('orders/confirmation', $confirmation_data, TRUE);
+		$this->template->disable_help();
+		$this->template->set_page_data($page_data);
+		$this->template->display_page();	
 
 	}
 }

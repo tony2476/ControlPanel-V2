@@ -1,0 +1,17 @@
+[#username#.dpsys.ca]
+user = #username#
+group = #username#
+
+listen = /var/run/php-fpm-#username#.dpsys.ca.sock
+
+listen.owner = #username#
+listen.group = nginx
+
+
+# Default settings;
+pm = dynamic
+pm.max_children = 25
+pm.start_servers = 10
+pm.min_spare_servers = 5
+pm.max_spare_servers = 20
+pm.max_requests = 500

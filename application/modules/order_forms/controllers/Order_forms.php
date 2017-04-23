@@ -27,8 +27,10 @@ class Order_forms extends Admin_Controller {
 			);
 
 		$this->template->set_title("Order Forms.");
+		$this->template->disable_help();
 		$page_data = $this->parser->parse('order_forms/order_forms_list_view', $forms, TRUE);
 		
+
 		$this->template->set_page_data($page_data);
 		$this->template->display_page();
 	}

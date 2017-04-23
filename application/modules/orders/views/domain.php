@@ -23,7 +23,7 @@
 			<div class="form-group">
 				<label class="control-label col-xs-3" for="domain_name">Domain Name</label>
 				<div class="col-xs-9">
-					<input class="form-control" placeholder="Domain Name" name="domain_name" type="text" autofocus>
+					<input class="form-control" placeholder="Domain Name" name="domain_name" type="text" autofocus required>
 				</div>
 			</div>
 		</fieldset>

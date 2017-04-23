@@ -24,8 +24,10 @@ class User extends Public_Controller {
 		$this->load->library('form_validation');
 		$this->load->library('parser');
 		$this->load->model('user/user_model');
-		$this->load->helper('form');
 		$this->user = New User_model;
+		
+		$this->load->helper('form');
+		
 
 		$this->load->config('ion_auth', TRUE);
 		$this->identity_column = $this->config->item('identity', 'ion_auth');
@@ -92,7 +94,7 @@ class User extends Public_Controller {
 		{
 			//the user is not logging in or has failed, display the login page
 			//set the flash data error message if there is one
-			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+			/*$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 			$this->session->set_flashdata('message', $this->data['message']);
 			$this->data['username'] = array('name' => 'username',
 				'id' => 'username',
@@ -103,7 +105,7 @@ class User extends Public_Controller {
 			$this->data['password'] = array('name' => 'password',
 				'id' => 'password',
 				'type' => 'password',
-				);
+				);*/
 
 			$this->template->set_title("");
 

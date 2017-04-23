@@ -7,7 +7,8 @@
 			<div class="form-group">
 				<label class="control-label col-xs-3" for="Website">Account Activation</label>
 				<div class="col-xs-9">
-					<select class="form-control" name="service" autofocus>
+					<select class="form-control" name="service" autofocus required>
+					<option value="">-- Please Select A  Service --</option>
 						{services}
 						<option value="{short_code}">{description} @ ${price} p/m + ${setup} Setup</option>
 						{/services}

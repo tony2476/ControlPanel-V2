@@ -1,0 +1,53 @@
+.advisor-text {
+	display: inline-block;
+	vertical-align: middle;
+	padding-top: 9px;
+	font-size: 36px;
+	font-family: 'Crimson Text', serif;
+}
+
+.advisor-text-blue {
+	color: #1f2271;
+	padding-right: 0px;
+	margin-right: 0px;
+}
+
+.advisor-text-grey{
+	color: #12938e;
+	padding-left: 0px;
+	margin-left: 0px;
+}
+
+.advisor-text-bigger {
+	font-size: 44px;
+}
+
+h2 {
+	color: #12938e;
+}
+
+a {
+    color: #1f2271;
+}
+
+#ticket > .panel-default > .panel-heading {
+  background-color: #add8e6;
+  color: #000000;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Noto Sans', sans-serif, Arial, "Helvetica Neue",Helvetica,"Segoe UI",Tahoma;
+}
+p, div {
+    font-family: 'Noto Sans', sans-serif, Arial, "Helvetica Neue",Helvetica,"Segoe UI",Tahoma;
+}
+
+.panel-default > .panel-heading {
+	background-color: #d5d5d5;
+}
+
+.panel-title {
+	
+	background-color: #f5f5f5;
+	background-color: #d5d5d5;
+}

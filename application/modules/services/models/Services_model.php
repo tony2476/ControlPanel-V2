@@ -88,6 +88,28 @@ class Services_model extends CI_Model {
 		return (TRUE);
 	}
 
+	public function toggle_group_status($id)
+	{
+		$query = $this->db->query("SELECT status from service_groups where ID = '$id'");
+		$group = $query->result_array();
+		if ($group['status'] == 'enabled') {
+			$new_status = 'disabled';
+		}
+		else
+		{
+			$new_status = 'enabled';
+		}
+
+		$sql = "updates service_groups set status = '$new_status' where ID = '$id'";
+		$query = $this->db->query($sql);
+		if ($this->db->affected_rows() == 0) 
+		{
+			$this->error = "We failed to change the status";
+			return (FALSE);
+		}
+		return (TRUE);
+	}
+
 	public function clone_service ($id, $data)
 	{
 		if (!is_int($id)  || !is_array($data))

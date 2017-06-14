@@ -37,7 +37,6 @@ class Dev_model extends CI_Model
 	{
 		$query = $this->vhost_db->query("SELECT username FROM vhosts where ID = '$id';");
 		return ($query->result()[0]->username);
-		
 	}
 
 	public function get_vhost_id_by_hostname($hostname)
@@ -90,6 +89,14 @@ class Dev_model extends CI_Model
 			return (FALSE);
 		}
 		return (TRUE);
+	}
+
+	public function delete_database($username)
+	{
+		$query = $this->dev_server->query("DROP DATABASE $username");
+		$query = $this->dev_server->query("DROP USER '$username'@'localhost'");
+		$query = $this->dev_server->query("FLUSH PRIVILEGES;");
+
 	}
 
 	public function add_database($username, $password)

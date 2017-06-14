@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Billing extends Private_Controller {
+class Beanstream extends Admin_Controller {
 
 	/**
 	 * Constructor
@@ -10,7 +10,9 @@ class Billing extends Private_Controller {
 		parent::__construct();
 		$this->load->model('salesforce/salesforce_model');
 		$this->salesforce = New Salesforce_model;
-		$this->fullname = $this->user->first_name . " " . $this->user->last_name;
+		$this->load->model('beanstream/beanstream_model');
+		$this->beanstream = New Beanstream_model;
+		
 		
 	}
 
@@ -19,39 +21,62 @@ class Billing extends Private_Controller {
 
 	}
 
-	public function details()
+	public function test2()
 	{
-		$this->template->set_title("Billing Settings.");
-		//$help_data = $this->display_help->display_help();
+		$order_number = 'orderNumber0024ty';
+		$amount = 12.2352;
+		$payment_method = 'card';
+		$name = 'Mr. Card Testerson';
+		$number = '4030000010001234';
+		$expiry_month = '07';
+		$expiry_year = '22';
+		$cvd = '123';
 
-		//Process cached SF Data
-		$this->salesforce->populate_cache($this->user->sf_contact_id);
-		$sf_account_data = clone $this->session->userdata('sf_account_cache');
-		$sf_contact_data = clone $this->session->userdata('sf_contact_cache');
+		$this->beanstream->set_order_number($order_number);
+		$this->beanstream->set_amount($amount);
+		$this->beanstream->set_payment_method($payment_method);
+		$this->beanstream->set_card_details($name, $number, $expiry_month, $expiry_year, $cvd);
+		$result = $this->beanstream->take_payment();
+	}
 
-		if (!is_object($sf_contact_data) || !is_object($sf_account_data))
+	public function currency()
+	{
+		$amount = "12.2" + 0;
+		$amount = (float)(string)$amount;
+		if (is_float($amount))
 		{
-			$this->session->set_flashdata('error', "We cannot locate any data for this user.");
-			redirect('/','refresh');	
-		}		
-
-		$form = array 
-		(
-			'form_open' => form_open('', array('class'=>'form-horizontal')),
-			'form_close' => form_close(),
-			);
-		
-		$form = $form + (array) $sf_account_data + (array) $sf_contact_data + $help_data;
-
-		$page_data = $this->parser->parse('billing/billing_settings_form_view', $form, TRUE);
-
-		if (validation_errors())
-		{
-			$this->session->set_flashdata('message', validation_errors());
+			echo "is float";
 		}
-		$this->template->set_page_data($page_data);
-		$this->template->display_page();
+		echo number_format($amount,2);
+	}
 
+	public function create_profile()
+	{
+		$name = "Karl Gray";
+		$email = "karl@test.me.uk";
+		$phone = "0121 222 6754";
+		$address_1 = "10 nowhere street";
+		$city = "London";
+		$province = "BC";
+		$postal_code = "BC1 H2H";
+		$country = "CA";
+		$result = $this->beanstream->set_profile_address($name, $email, $phone, $address_1, $city, $province, $postal_code, $country);
+		$this->beanstream->create_profile();
+	}
+
+	public function delete_profile()
+	{
+		$profile_id = "4727185573F345C5985F69b95f921361";
+		$this->beanstream->delete_profile($profile_id);
+	}
+
+		public function get_profile()
+	{
+		$profile_id = "4727185573F345C5985F69b95f921361";
+		if (!$profile = $this->beanstream->get_profile($profile_id))
+		{
+			echo "Error: " . $this->beanstream->error;
+		}
 	}
 
 	public function test()
@@ -66,7 +91,7 @@ class Billing extends Private_Controller {
 
 		//Example Card Payment Data
 		$payment_data = array(
-			'order_number' => 'orderNumber0011ty',
+			'order_number' => 'orderNumber0021ty',
 			'amount' => 1.00,
 			'payment_method' => 'card',
 			'card' => array(

@@ -51,3 +51,7 @@ p, div {
 	background-color: #f5f5f5;
 	background-color: #d5d5d5;
 }
+
+.form-control{
+	width: 100% !important;
+}

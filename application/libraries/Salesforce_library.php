@@ -36,8 +36,6 @@ class Salesforce_library
 	public function __construct($config = array())
 	{
 		
-		log_message ('debug', "----->>>  Building SF Library");
-		// Define the wsdl file
 		$wsdl  = APPPATH . 'third_party/salesforce/' . strtolower($this->sforce_type) . ($this->sforce_sandbox ? '.sandbox' : '') . '.wsdl.xml';
 
 		// Define our class

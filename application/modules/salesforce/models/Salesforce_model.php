@@ -64,6 +64,32 @@ class Salesforce_model extends CI_Model
 		return ($results);
 	}
 
+	public function get_account_id_by_domain($domain)
+	{
+		$response = $this->salesforce_library->query("
+			SELECT
+			Id
+			FROM Account
+			WHERE Domain_Name__c = '$domain'
+			");
+
+		$queryResult = new QueryResult($response);
+		// If no results present return false, fail early.
+		if ($queryResult->size == 0)
+		{
+			echo "No results";
+			return(FALSE);
+		}
+		
+		for ($queryResult->rewind(); $queryResult->pointer < $queryResult->size; $queryResult->next()) {
+			$record = $queryResult->current();
+			$id = $record->Id;
+			
+		}
+		return ($id);
+
+	}
+
 	public function get_all_company_records($sf_account_id) 
 	{
 		
@@ -104,7 +130,10 @@ class Salesforce_model extends CI_Model
 			E_Newsletter_Disclaimer__c,
 			Drupal_Domain_ID__c,
 			E_News_Custom_Comments_Title__c,
-			E_News_Custom_Comments__c
+			E_News_Custom_Comments__c,
+			reCaptcha_Secret_Key__c,
+			reCaptcha_Site_Key__c,
+			IEM_reCaptcha_Enabled__c
 
 
 			FROM Account
@@ -512,7 +541,36 @@ class Salesforce_model extends CI_Model
  		return ($results);
  	}
 
-		/**
+ 	public function get_all_recaptchas()
+	{
+		$response = $this->salesforce_library->query("
+			SELECT Domain_Name__c,Id,reCaptcha_Secret_Key__c,reCaptcha_Site_Key__c 
+			FROM Account 
+			WHERE Domain_Name__c != '' 
+			AND reCaptcha_Secret_Key__c != '' 
+			ORDER BY Id 
+			ASC NULLS FIRST"
+			);
+		$queryResult = new QueryResult($response);
+		// If no results present return false, fail early.
+		if ($queryResult->size == 0)
+		{
+
+			return(FALSE);
+		}
+		$results = array();
+		for ($queryResult->rewind(); $queryResult->pointer < $queryResult->size; $queryResult->next()) {
+			$record = $queryResult->current();
+		    // Id is on the $record, but other fields are accessed via
+		    // the fields object
+			
+			$results[$record->Id] = $record->fields;
+		}
+		return ($results);
+
+	}
+
+	/**
 	 * Get the primary contact records required for import.
 	 * @param type $sf_account_id 
 	 * @return type

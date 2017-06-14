@@ -31,6 +31,40 @@ class Services_model extends CI_Model {
 		}
 	}
 
+	public function get_service_costs($order_code)
+	{
+		$query = $this->db->query("SELECT price, setup, period, cycle, pre_paid, discount, discount_period from services where short_code='$order_code'");
+		$list = $query->result_array();
+		$count = $query->num_rows();
+		if ($count > 0) {
+			foreach ($list as $item)
+			{
+				return ($item);
+			}
+			
+		} else {
+			$this->error = "We could not retrieve the service costs";
+			return (FALSE);
+		}	
+	}
+
+	public function get_service_name_order_code($order_code)
+	{
+		$query = $this->db->query("SELECT description from services where short_code='$order_code'");
+		$list = $query->result_array();
+		$count = $query->num_rows();
+		if ($count > 0) {
+			foreach ($list as $item)
+			{
+				return ($item['description']);
+			}
+			
+		} else {
+			$this->error = "There could not retrieve the services list";
+			return (FALSE);
+		}
+	}
+
 	public function list_all()
 	{
 		$query = $this->db->query("SELECT * from services");

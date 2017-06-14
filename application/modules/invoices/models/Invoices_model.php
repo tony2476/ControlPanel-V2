@@ -5,6 +5,9 @@ class Invoices_model extends CI_Model {
 	function __construct()
 	{
 		parent::__construct();
+		$this->config->load('invoices/config');
+		$this->status = $this->config->item('status');
+		$this->reverse_status = array_flip($this->status);
 	}
 
 	public function index()
@@ -32,16 +35,22 @@ class Invoices_model extends CI_Model {
 		$query = $this->db->get('invoices');
 
 		$list = $query->result_array();
-		$count = $query->num_rows();
-		if ($count > 0) {
+		
+		if ($query->num_rows() > 0) {
+			foreach ($list as &$item)
+			{
+				$status = $item['status'];
+				$item['status'] = $this->reverse_status[$status];
+				$item['date'] = $this->mysql_date_to_display($item['date']);
+				$item['due'] = $this->mysql_date_to_display($item['due']);
+			}
+
 			return ($list);
 		} else {
 			$this->error = "We could not retrieve the Invoices list";
 			return (FALSE);
 		}
 	}
-
-
 
 	public function add_invoice($data)
 	{
@@ -73,9 +82,32 @@ class Invoices_model extends CI_Model {
 		return ($id);
 	}
 
-	public function get_invoice($invoice_id)
+	public function get_invoice_items($invoice_id)
 	{
+		$this->db->where('invoice_id', $invoice_id);
+		$query = $this->db->get('invoice_items');
+		return ((array) $query->row());
+	}
 
+	public function get_invoice_by_id($invoice_id)
+	{
+		$this->db->where('id', $invoice_id);
+		$query = $this->db->get('invoices');
+		if ($query->num_rows() > 0 )
+		{
+			$invoice = ((array) $query->row());
+				$status = $invoice['status'];
+				$invoice['status'] = $this->reverse_status[$status];
+				$invoice['date'] = $this->mysql_date_to_display($invoice['date']);
+				$invoice['due'] = $this->mysql_date_to_display($invoice['due']);
+			return ($invoice);
+		}
+		return (FALSE);
+	}
+
+	public function mysql_date_to_display($mysql_date)
+	{
+		return (date( 'd/M/Y', strtotime($mysql_date)));
 	}
 
 	public function mark_invoice_paid($invoice_id)

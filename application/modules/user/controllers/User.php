@@ -92,20 +92,6 @@ class User extends Public_Controller {
 
 		else 
 		{
-			//the user is not logging in or has failed, display the login page
-			//set the flash data error message if there is one
-			/*$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-			$this->session->set_flashdata('message', $this->data['message']);
-			$this->data['username'] = array('name' => 'username',
-				'id' => 'username',
-				'type' => 'text',
-				'placeholder' => 'email address / username',
-				'value' => $this->form_validation->set_value('username'),
-				);
-			$this->data['password'] = array('name' => 'password',
-				'id' => 'password',
-				'type' => 'password',
-				);*/
 
 			$this->template->set_title("");
 

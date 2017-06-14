@@ -2,21 +2,30 @@
 
 class Diagnostics extends Public_Controller {
 
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see https://codeigniter.com/user_guide/general/urls.html
-	 */
+	
+	public function test_api()
+	{
+
+
+		$curl_handle = curl_init();
+		curl_setopt($curl_handle, CURLOPT_URL, 'http://cp2.local/api/recaptcha/domain/ondaedge.ca');
+		curl_setopt($curl_handle, CURLOPT_USERPWD, 'admin' . ':' . '1234');
+		curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+		$buffer = curl_exec($curl_handle);
+		$result = json_decode($buffer);
+		curl_close($curl_handle);
+
+		
+		echo "<pre>";
+		echo "result <br />";
+		print_r ($result);
+		echo "</pre>";
+		
+		
+
+		
+	}
+
 	public function sf_cache()
 	{
 
@@ -67,5 +76,86 @@ class Diagnostics extends Public_Controller {
 	{
 		echo phpinfo();
 	}
+
+	// This gets the order from session.
+	public function display_order()
+	{
+		$order_data = $this->session->userdata('order_data');
+		echo "<pre>";
+		echo "order data <br />";
+		print_r ($order_data);
+		echo "</pre>";
+
+		$card_data = $this->session->userdata('card_data');
+		echo "<pre>";
+		echo "card data <br />";
+		print_r ($card_data);
+		echo "</pre>";
+	}
+
+	public function decode_json()
+	{
+		$order_id = 4;
+
+		$this->db->where('id', $order_id);
+		$query = $this->db->get('orders');
+		$row = $query->row();
+		$order_data = json_decode($row->order_data, TRUE);
+		
+
+		
+		unset($order_data['form_open']);
+		unset($order_data['form_close']);
+
+		$output = '';
+		foreach ($order_data as $key => $value)
+		{
+			if (is_array($value))
+			{
+				$output.= $key . "\n";
+				foreach ($value as $subkey => $subvalue)
+				{
+					$output .= "\t$subkey: $subvalue\n";
+				}
+				
+			}
+			else
+			{
+				$output .= "$key: $value\n";
+			}
+		}
+		echo "<pre>";
+		
+		print_r ($output);
+		echo "</pre>";
+	}
+
+
+	public function test_email()
+	{
+
+		echo "testing email";
+		$this->load->library('email');
+		
+		$this->email->initialize();
+
+		$this->email->from('karl@gray.me.uk');
+		$this->email->to('karl@gray.me.uk');
+		
+		$this->email->subject("test");
+		$this->email->message("test body");
+
+		if ($this->email->send(FALSE))
+		{
+			echo "OK";
+		}
+		else
+		{
+			echo "NOT SENT";
+			$this->email->print_debugger();
+		}
+	}
+
+
 }
 

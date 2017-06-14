@@ -1,11 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- *  This class handles functionality related to logged in users.  
- *  It cannot access any other system or modules except for ion_auth
- *  ion_auth is a requirement.
- */
-
 class Dev extends Admin_Controller {
 
 	private $result;
@@ -25,7 +19,7 @@ class Dev extends Admin_Controller {
 
 	public function test()
 	{
-		$this->dev->delete_vhost(1);
+		$this->dev->delete_database($username);
 	}
 
 	public function status()
@@ -188,59 +182,57 @@ class Dev extends Admin_Controller {
 
 		$username = $this->dev->get_vhost_by_id($id);
 		$hostname = $username . ".dpsys.ca";
+		$status = $this->dev->get_vhost_status_by_id($id);
 
-		$cmd = "rm /etc/nginx/sites-available/$hostname.conf";
+		$cmd = "rm -f /etc/nginx/sites-enabled/$hostname.*";
 		if (!$this->send_command($cmd, $this->cert_path))
 		{
-			echo "Failed <br />";
-			echo $cmd;
-			exit;
+			$this->session->set_flashdata('message', "comand failed: $cmd");
 		}
 
-		$cmd = "rm -fr /etc/php5/fpm/pool.d/$hostname.conf";
+		$cmd = "rm -f /etc/nginx/sites-available/$hostname.conf";
 		if (!$this->send_command($cmd, $this->cert_path))
 		{
-			echo "Failed <br />";
-			echo $cmd;
-			exit;
+		$this->session->set_flashdata('message', "comand failed: $cmd");
+		}
+
+		$cmd = "rm -f /etc/php5/fpm/pool.d/$hostname.conf";
+		if (!$this->send_command($cmd, $this->cert_path))
+		{
+			$this->session->set_flashdata('message', "comand failed: $cmd");
 		}
 
 		$cmd = "rm -fr /var/www/vhosts/$hostname";
 		if (!$this->send_command($cmd, $this->cert_path))
 		{
-			echo "Failed <br />";
-			echo $cmd;
-			exit;
+			$this->session->set_flashdata('message', "comand failed: $cmd");
 		}
 
 		$cmd = "service nginx restart";
 		if (!$this->send_command($cmd, $this->cert_path))
 		{
-			echo "Failed <br />";
-			echo $cmd;
-			exit;
+			$this->session->set_flashdata('message', "comand failed: $cmd");
 		}
 
 		$cmd = "service php5-fpm restart";
 		if (!$this->send_command($cmd, $this->cert_path))
 		{
-			echo "Failed <br />";
-			echo $cmd;
-			exit;
+			$this->session->set_flashdata('message', "comand failed: $cmd");
+
 		}
 
 		$cmd = "userdel $username";
 		if (!$this->send_command($cmd, $this->cert_path))
 		{
-			echo "Failed <br />";
-			echo $cmd;
-			exit;
+			$this->session->set_flashdata('message', "comand failed: $cmd");
 		}
+
+		$this->dev->delete_database($username);
 
 		$this->dev->delete_vhost($id);
 
-		$this->session->set_flashdata('message', "Vhost with username $username was delete");
-			redirect('/dev/', 'refresh');
+		$this->session->set_flashdata('message', "Vhost with username $username was deleted");
+		redirect('/dev/', 'refresh');
 	}
 
 	public function vhost_suspend($hostname)

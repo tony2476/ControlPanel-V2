@@ -1,5 +1,6 @@
 {
     "require": {
-        "beanstream/beanstream": "^1.0"
+        "beanstream/beanstream": "^1.0",
+        "google/recaptcha": "~1.1"
     }
 }

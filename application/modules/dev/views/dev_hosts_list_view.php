@@ -44,6 +44,7 @@
 					<th>User Name</th>
 					<th>Password</th>
 					<th>Actions</th>
+					<th>Status</th>
 				</tr>
 			</thead>
 
@@ -53,6 +54,7 @@
 					<td>{ID}</td>
 					<td>{username}</td>
 					<td>{password}</td>
+					<td>{status}</td>
 					<td class="text-center"> <div class="btn-group">
 						<a href="/dev/status/{ID}" class="btn {colour} btn-xs" title="Suspend/Unsuspend"><span class="glyphicon {icon}"></span></a>
 						<a href="/dev/vhost_delete/{ID}" class="btn btn-danger btn-xs" data-confirm="Are you sure you want to delete vhost {username}?"><span class="glyphicon glyphicon-trash"></span></a>

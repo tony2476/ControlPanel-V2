@@ -63,6 +63,46 @@ class Import extends Admin_Controller
 // wealth-max.test
 // Ptz?n037
 
+	public function populate_recaptcha_cache()
+	{
+		$list = $this->sf->get_all_recaptchas();
+		/*(echo "<pre>";
+		echo "list <br />";
+		print_r ($list);
+		echo "</pre>";*/
+		
+		
+		foreach ($list as $user) 
+		{
+			$sf_account_id = $user->Id;
+			$domain = $user->Domain_Name__c;
+			$reCaptcha_Secret_Key = $user->reCaptcha_Secret_Key__c;
+			$reCaptcha_Site_Key = $user->reCaptcha_Site_Key__c;
+
+
+			$this->db->select('u.id');
+			$this->db->from('users u, users_groups g');
+			$this->db->where('g.user_id = u.id');
+			$this->db->where('g.group_id = 2');
+			$this->db->where("u.sf_account_id = '$sf_account_id'");
+			$query = $this->db->get();
+			$result = $query->row_array();
+			$id = $result['id'];
+
+			$data = array 
+			(
+				'reCaptcha_Secret_Key' => $reCaptcha_Secret_Key,
+				'reCaptcha_Site_Key' => $reCaptcha_Site_Key,
+				'primary_domain' => $domain,
+				);
+			
+			$this->db->where('id', $id);
+			$this->db->update('users', $data);
+			
+
+		}
+	}
+
 	/* This routine is used to import a single company into the system */
 	public function import_company()
 	{

@@ -93,4 +93,82 @@ class User_model extends CI_Model
 		return ($results);
 	}
 
+	// Creates a user.  This will be a owner account.  Do not use this to create admins or assistants.
+	public function create_user($email, $firstname, $lastname)
+	{
+
+		$username = $firstname . $lastname;
+		$password = $this->generateStrongPassword();
+		$additional_data = array(
+								'first_name' => $firstname,
+								'last_name' => $lastname,
+								);
+		$group = array('2'); // Sets user to admin.
+
+		if (!$result = $this->ion_auth->register($username, $password, $email, $additional_data, $group))
+		{
+			return FALSE;
+		}
+		return ($result);
+	}
+
+	public function update_beanstream_profile_id($user_id, $profile_id)
+	{
+		$sql = "update users set beanstream_id = '$profile_id' where id = '$user_id'";
+		$query = $this->db->query($sql);
+		if ($this->db->affected_rows() == 0) 
+		{
+			$this->error = "We failed to set the beanstream id";
+			return (FALSE);
+		}
+		return (TRUE);
+	}
+
+		/**
+	 * Source: https://gist.github.com/tylerhall/521810
+	 * @param type $length 
+	 * @param type|bool $add_dashes 
+	 * @param type|string $available_sets 
+	 * @return type
+	 */
+	public function generateStrongPassword($length = 9, $add_dashes = false, $available_sets = 'luds')
+	{
+		$sets = array();
+		if(strpos($available_sets, 'l') !== false)
+			$sets[] = 'abcdefghjkmnpqrstuvwxyz';
+		if(strpos($available_sets, 'u') !== false)
+			$sets[] = 'ABCDEFGHJKMNPQRSTUVWXYZ';
+		if(strpos($available_sets, 'd') !== false)
+			$sets[] = '23456789';
+		if(strpos($available_sets, 's') !== false)
+			$sets[] = '!#$%*';
+		$all = '';
+		$password = '';
+		foreach($sets as $set)
+		{
+			$password .= $set[array_rand(str_split($set))];
+			$all .= $set;
+		}
+		$all = str_split($all);
+
+		for($i = 0; $i < $length - count($sets); $i++)
+			$password .= $all[array_rand($all)];
+
+		$password = str_shuffle($password);
+
+		if(!$add_dashes)
+			return $password;
+
+		$dash_len = floor(sqrt($length));
+		$dash_str = '';
+
+		while(strlen($password) > $dash_len)
+		{
+			$dash_str .= substr($password, 0, $dash_len) . '-';
+			$password = substr($password, $dash_len);
+		}
+		$dash_str .= $password;
+		return $dash_str;
+	}
+
 }

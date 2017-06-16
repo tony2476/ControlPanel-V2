@@ -10,7 +10,7 @@
 							<span class="caret"></span>
 						</button>
 						<ul id="menu_select" class="dropdown-menu pull-right" role="menu">
-							<li><a href="/services/add_service" id="">Add a Service Group</a>
+							<li><a href="/services/add_service" id="">Add a Service</a>
 							</li>
 						</ul>
 					</div>
@@ -54,7 +54,7 @@
 							<td>{discount_period}</td>
 							<td class="text-center"> <div class="btn-group">
 								<a href="/services/toggle_status/{id}" class="btn btn-success btn-xs"><span class="fa fa-pause fa-fw"></span></a>
-								<a href="/services/clone/{id}" class="btn btn-info btn-xs"><span class="fa fa-clone fa-fw"></span></a>
+								<a href="/services/clone/{ID}" class="btn btn-info btn-xs"><span class="fa fa-clone fa-fw"></span></a>
 								
 							</div></td>
 						</tr>

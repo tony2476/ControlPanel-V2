@@ -5,6 +5,8 @@ class Orders_model extends CI_Model
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->config('order/constants');
+		$this->orders_status_codes = $this->config->item('order_status_codes');
 	}
 
 
@@ -23,13 +25,10 @@ class Orders_model extends CI_Model
 		$list = $query->result_array();
 		
 		if ($query->num_rows() > 0) {
-			/*foreach ($list as &$item)
+			foreach ($list as &$item)
 			{
-				$status = $item['status'];
-				$item['status'] = $this->reverse_status[$status];
-				$item['date'] = $this->mysql_date_to_display($item['date']);
-				$item['due'] = $this->mysql_date_to_display($item['due']);
-			}*/
+				$item['status'] = $this->orders_status_codes[$item['status']];
+			}
 
 			return ($list);
 		} else {

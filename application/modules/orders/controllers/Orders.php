@@ -37,4 +37,9 @@ class Orders extends Admin_Controller {
 		$this->template->display_page();
 	}
 
+	public function view()
+	{
+		echo "Temporarily unavailable, please contact support";
+	}
+
 }

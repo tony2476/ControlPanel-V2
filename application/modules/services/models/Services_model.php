@@ -96,11 +96,25 @@ class Services_model extends CI_Model {
 		}
 	}
 
+	public function add_service_group($data)
+	{
+		extract ($data);
+		
+		$sql = "insert into service_groups (name, description) values ('$group_name', '$group_description')";
+		$query = $this->db->query($sql);
+		if ($this->db->affected_rows() == 0) 
+		{
+			$this->error = "We failed to add the new group";
+			return (FALSE);
+		}
+		return (TRUE);
+	}
+
 	public function add_service($data)
 	{
 		extract ($data);
 		
-		$sql = "insert into services (status, short_code, description, price, period) values ('$status', '$short_code', '$description', '$price', '$period')";
+		$sql = "insert into services (status, service_group, short_code, description, price, period, cycle, pre_paid, discount, discount_period) values ('$status', '$service_group','$short_code', '$description', '$price', '$period','$cycle', '$pre_paid', '$discount', '$discount_period')";
 		$query = $this->db->query($sql);
 		if ($this->db->affected_rows() == 0) 
 		{

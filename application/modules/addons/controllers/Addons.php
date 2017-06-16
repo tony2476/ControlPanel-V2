@@ -1,10 +1,10 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-// Order Processing Class.
+// Order Processing Class for logged in clients.
 // 
 // To see the order lists for admin and managing orders please see the orders module.
 
-class Order extends Public_Controller {
+class Addons extends Public_Controller {
 
 	/**
 	 * Constructor
@@ -26,17 +26,22 @@ class Order extends Public_Controller {
 		$url = $this->uri->segment(3);
 		if ($url == '')
 		{
-			$url = 'standard';
+			$this->session->set_flashdata('message', "No order form specified");
+			redirect('/', 'refresh');
 		}
 
-		$form = $this->forms->load_form($url);
+		if (!$form = $this->forms->load_form($url))
+		{
+			$this->session->set_flashdata('message', $this->forms->error);
+			redirect('/', 'refresh');
+		}
 
 		$this->template->set_title($form['header_title']);
 
 		$form_open_data = array(
-			'form_open' => form_open('/order/confirm', array('class'=>'form-horizontal')),
+			'form_open' => form_open('/addons/confirm', array('class'=>'form-horizontal')),
 			);
-		$page_data = $this->parser->parse('order/form_open', $form_open_data, TRUE);
+		$page_data = $this->parser->parse('addons/form_open', $form_open_data, TRUE);
 
 		if ($form['header_enable'])
 		{
@@ -45,7 +50,13 @@ class Order extends Public_Controller {
 				'header_title' => $form['header_title'],
 				'header_text' => $form['header_text'],
 				);
-			$page_data .= $this->parser->parse('order/header', $header, TRUE);
+			$page_data .= $this->parser->parse('addons/header', $header, TRUE);
+		}
+
+		if (!$services = $this->services->get_services_by_group($form['service_group']))
+		{
+			$this->session->set_flashdata('message', "There are no add on services currently available to order.");
+			redirect('/', 'refresh');
 		}
 
 		// Services here
@@ -53,33 +64,27 @@ class Order extends Public_Controller {
 		(
 			'services' => $this->services->get_services_by_group($form['service_group']),
 			);
-		$page_data .= $this->parser->parse('order/services', $services_data, TRUE);
+		$page_data .= $this->parser->parse('addons/services', $services_data, TRUE);
 
 		// promo code here (not needed for special offers form)
 		if ($form['promo_code_enable'])
 		{
 			$promo_data = array();			
-			$page_data .= $this->parser->parse('order/promo', $promo_data, TRUE);
+			$page_data .= $this->parser->parse('addons/promo', $promo_data, TRUE);
 		}
 		
 		// Domain name here (not necessarily needed for add ons)
 		if ($form['domain_enable'])
 		{
 			$domain_data = array();
-			$page_data .= $this->parser->parse('order/domain', $domain_data, TRUE);
+			$page_data .= $this->parser->parse('addons/domain', $domain_data, TRUE);
 		}
 		
-		// Enable the contact form (not needed if client logged in or has existing services)
-		if ($form['contact_enable'])
-		{
-			$contact_data = array();
-			$page_data .= $this->parser->parse('order/details', $contact_data, TRUE);
-		}
-
+		
 		$form_close_data = array(
 			'form_close' => form_close(),
 			);
-		$page_data .= $this->parser->parse('order/form_close', $form_close_data, TRUE);
+		$page_data .= $this->parser->parse('addons/form_close', $form_close_data, TRUE);
 
 		$this->template->set_page_data($page_data);
 		$this->template->display_page();
@@ -89,23 +94,7 @@ class Order extends Public_Controller {
 	{
 
 		$confirmation_data = $this->input->post();
-
-		//Check if this person already has an account, redirect them to the control panel.
-		if ($this->ion_auth->email_check($confirmation_data['email']))
-		{
-			$this->session->set_userdata('email', $confirmation_data['email']);
-			redirect('/order/existing_client', 'refresh');
-		}
-
-		$confirmation_data['designations_list'] = '';
-
-		// format the designations array for display
-		foreach ($confirmation_data['designations'] as $key => $value)
-		{
-			$confirmation_data['designations_list'] .= $value . ", ";
-		}
-		$confirmation_data['designations_list'] = rtrim($confirmation_data['designations_list'], ', ');
-		
+	
 		//Get the service name from code
 		$confirmation_data['product_description'] = $this->services->get_service_name_order_code($confirmation_data['service']);
 
@@ -128,14 +117,19 @@ class Order extends Public_Controller {
 		$confirmation_data['pre_pay'] = $pre_pay;
 		$confirmation_data['total'] = $total;
 
+		if (!array_key_exists ( 'domain_name' , $confirmation_data ))
+		{
+			$confirmation_data['domain_name'] = 'N/A';
+		}
+
 		
-		$confirmation_data['form_open'] = form_open('/order/payment', array('class'=>'form-horizontal'));
+		$confirmation_data['form_open'] = form_open('/addons/payment', array('class'=>'form-horizontal'));
 		$confirmation_data['form_close'] = form_close();
 		
 		//Save the order data for later processing
 		$this->session->set_userdata('order_data', $confirmation_data);
 		
-		$page_data = $this->parser->parse('order/confirmation', $confirmation_data, TRUE);
+		$page_data = $this->parser->parse('addons/confirmation', $confirmation_data, TRUE);
 		
 		$this->template->set_page_data($page_data);
 		$this->template->display_page();	
@@ -143,16 +137,25 @@ class Order extends Public_Controller {
 
 	function payment()
 	{
-		if($this->session->userdata('card_data')){
-
-		}
-
 		$order_data = $this->session->userdata('order_data');
+
+		// calculate taxes
+		// Load tax model
+		$this->load->model('taxes/taxes_model');
+		$this->taxes = New Taxes_model;
+
+		$subtotal = $order_data['total'];
+		$taxes = $this->taxes->calculate_tax($subtotal, $this->user->province);
+		$total = $subtotal + $taxes;
+
+		// Configure form
 		$this->template->set_title('Payment');
 		$payment_data = array(
-			'form_open' 	=> form_open('/order/complete', array('class'=>'form-horizontal')),
+			'form_open' 	=> form_open('/addons/complete', array('class'=>'form-horizontal')),
 			'form_close' 	=> form_close(),
-			'total'			=> money_format('$%i', $order_data['total'])
+			'subtotal'		=> money_format('$%i', $subtotal),
+			'taxes'			=> money_format('$%i', $taxes),
+			'total'			=> money_format('$%i', $total),
 			);
 
 		if($this->session->userdata('card_data')){
@@ -166,11 +169,11 @@ class Order extends Public_Controller {
 			$payment_data['email'] = $card_data['email'];
 
 
-			$page_data = $this->parser->parse('order/payment_prefilled', $payment_data, TRUE);
+			$page_data = $this->parser->parse('addons/payment_prefilled', $payment_data, TRUE);
 		}
 		else 
 		{
-			$page_data = $this->parser->parse('order/payment', $payment_data, TRUE);
+			$page_data = $this->parser->parse('addons/payment', $payment_data, TRUE);
 		}
 		$this->template->disable_help();
 		$this->template->set_page_data($page_data);
@@ -208,7 +211,7 @@ class Order extends Public_Controller {
 			$this->session->set_flashdata('message', "Address data problem: " . $this->beanstream->error);
 			
 			// Redisplay form with error message.
-			redirect('/order/payment', 'refresh');
+			redirect('/addons/payment', 'refresh');
 		}
 
 		// Create user.  Only create a user if we have a valid beanstream profile id.
@@ -227,7 +230,7 @@ class Order extends Public_Controller {
 			// If we failed to create a user then we need to clean up the beanstream profile.
 			$this->beanstream->delete_profile($profile_id);
 			$this->session->set_flashdata('message', "We encountered a problem, please contact sales@advisornet.ca");
-			redirect('/order/payment', 'refresh');
+			redirect('/addons/payment', 'refresh');
 		} 
 
 		// Add the beanstream profile to the new user.
@@ -245,7 +248,7 @@ class Order extends Public_Controller {
 			$this->ion_auth->delete_user($user_id);
 
 			$this->session->set_flashdata('message', "Card Data Problem: " . $this->beanstream->error);
-			redirect('/order/payment', 'refresh');
+			redirect('/addons/payment', 'refresh');
 		}
 
 		// We now have a user on the system, a beanstream profile and card data stored.  
@@ -267,7 +270,7 @@ class Order extends Public_Controller {
 		{
 			// Payment failed Let Tony know.
 			$this->order_model->payment_failed($order_id, $this->beanstream->error); 
-			redirect('/order/payment_failed', 'refresh');
+			redirect('/addons/payment_failed', 'refresh');
 		}
 		
 		// Mark order as paid.
@@ -283,7 +286,7 @@ class Order extends Public_Controller {
 		(
 			'order_id' => $order_id,
 			);
-		$page_data = $this->parser->parse('order/success', $success, TRUE);
+		$page_data = $this->parser->parse('addons/success', $success, TRUE);
 		
 		$this->template->disable_help();
 		$this->template->set_page_data($page_data);
@@ -296,7 +299,7 @@ class Order extends Public_Controller {
 		$this->template->set_title("Information:");
 		
 		$failed = array();
-		$page_data = $this->parser->parse('order/payment_failed', $failed, TRUE);
+		$page_data = $this->parser->parse('addons/payment_failed', $failed, TRUE);
 		
 		$this->template->disable_help();
 		$this->template->set_page_data($page_data);
@@ -312,7 +315,7 @@ class Order extends Public_Controller {
 		(
 			'email' => $email,
 			);
-		$page_data = $this->parser->parse('order/existing_client', $exists, TRUE);
+		$page_data = $this->parser->parse('addons/existing_client', $exists, TRUE);
 		
 		$this->template->disable_help();
 		$this->template->set_page_data($page_data);

@@ -10,7 +10,7 @@
 							<span class="caret"></span>
 						</button>
 						<ul id="menu_select" class="dropdown-menu pull-right" role="menu">
-							<li><a href="/services/add_service" id="">Add a Service Group</a>
+							<li><a href="/services/add_service_group" id="">Add a Service Group</a>
 							</li>
 						</ul>
 					</div>

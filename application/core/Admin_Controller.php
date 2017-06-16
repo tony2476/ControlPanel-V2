@@ -22,7 +22,11 @@ class Admin_Controller extends MY_Controller {
 		$menu_data = $this->menu->display_menu();
 		$this->template->set_menu_data($menu_data);
 		
-		
+		if (!$this->session->is_admin)
+ 		{
+ 			$this->session->set_flashdata('error', 'You need to be logged in as an administrator to access that feature.');
+ 			redirect('/', 'refresh');
+ 		}
 	}
 
 }

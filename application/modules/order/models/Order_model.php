@@ -12,6 +12,9 @@ class Order_model extends CI_Model
 		$this->load->model('mail/mail_model');
 		$this->mail = New Mail_model;
 
+		$this->load->config('order/constants');
+		$this->order_status_codes = $this->config->item('order_status_codes');
+
 	}
 
 	public function save_order($data)

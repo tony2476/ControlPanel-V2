@@ -10,6 +10,8 @@ class Services extends Admin_Controller {
 		parent::__construct();
 		$this->load->model('services/services_model');
 		$this->services = New Services_model;
+
+		$this->config->load('services/form_validation');
 	}
 
 	public function index()
@@ -51,7 +53,59 @@ class Services extends Admin_Controller {
 
 	public function add_service_group()
 	{
-		$service_group_id = $this->uri->segment(3);
+		if ($this->form_validation->run('service_group') == TRUE)
+		{
+			$this->services->add_service_group($this->input->post());
+			$this->session->set_flashdata('info', "Service Group Created.");
+			redirect('/services/list_service_groups','refresh');
+		}
+
+		$form = array 
+		(
+			'form_open' => form_open('/services/add_service_group', array ('class'=>'form-horizontal')),
+			'form_close' => form_close(),
+			'service_groups' => $this->services->get_service_groups(),
+			);
+		
+		$this->template->set_title("Add Service Group.");
+		$page_data = $this->parser->parse('services/add_service_group_form_view', $form, TRUE);
+		if (validation_errors())
+		{
+			$this->session->set_flashdata('message', validation_errors());
+		}
+		$this->template->set_page_data($page_data);
+		$this->template->display_page();
+	}
+
+	public function add_service()
+	{
+		if ($this->form_validation->run('services') == TRUE)
+		{
+			$this->services->add_service($this->input->post());
+			$this->session->set_flashdata('info', "Service Created.");
+			redirect('/services/list_services','refresh');
+		}
+
+		$form = array 
+		(
+			'form_open' => form_open('/services/add_service', array ('class'=>'form-horizontal')),
+			'form_close' => form_close(),
+			'service_groups' => $this->services->get_service_groups(),
+
+			);
+		if ($this->input->post())
+		{
+			$form = $form + $this->input->post();
+		}
+		
+		$this->template->set_title("Add Service.");
+		$page_data = $this->parser->parse('services/add_service_form_view', $form, TRUE);
+		if (validation_errors())
+		{
+			$this->session->set_flashdata('message', validation_errors());
+		}
+		$this->template->set_page_data($page_data);
+		$this->template->display_page();
 
 	}
 

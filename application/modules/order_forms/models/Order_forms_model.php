@@ -19,7 +19,7 @@ class Order_forms_model extends CI_Model {
 		}
 		else
 		{
-			$this->error = "That url doesn't have an associated form";
+			$this->error = "We couldn't find that form sorry.  Please contact support.";
 			return FALSE;
 		}
 	}

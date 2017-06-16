@@ -12,21 +12,21 @@
 			<div class="form-group">
 				<label class="control-label col-xs-3" for="cardname">Name as it appears on card.</label>
 				<div class="col-xs-9">
-					<input class="form-control" placeholder="" name="cardname" type="text" required autofocus>
+					<input class="form-control" value="{cardname}" name="cardname" type="text" required autofocus>
 				</div>
 			</div>
 
 			<div class="form-group">
 				<label class="control-label col-xs-3" for="address_1">Address 1</label>
 				<div class="col-xs-9">
-					<input class="form-control" placeholder="" name="address_1" type="text" required autofocus>
+					<input class="form-control" value="{address_1}" name="address_1" type="text" required autofocus>
 				</div>
 			</div>
 
 			<div class="form-group">
 				<label class="control-label col-xs-3" for="address_2">Address 2</label>
 				<div class="col-xs-9">
-					<input class="form-control" placeholder="" name="address_2" type="text" autofocus>
+					<input class="form-control" value="{address_2}" name="address_2" type="text" autofocus>
 				</div>
 			</div>
 
@@ -34,7 +34,7 @@
 			<div class="form-group">
 				<label class="control-label col-xs-3" for="city">City</label>
 				<div class="col-xs-9">
-					<input class="form-control" placeholder="" name="city" type="text" required autofocus>
+					<input class="form-control" value="{city}" name="city" type="text" required autofocus>
 				</div>
 			</div>
 
@@ -63,28 +63,28 @@
 			<div class="form-group">
 				<label class="control-label col-xs-3" for="country">Country</label>
 				<div class="col-xs-9">
-					<input class="form-control" placeholder="CA" name="country" type="text" disabled>
+					<input class="form-control" value="CA" name="country" type="text" disabled>
 				</div>
 			</div>
 
 			<div class="form-group">
 				<label class="control-label col-xs-3" for="postal_code">Postal Code</label>
 				<div class="col-xs-9">
-					<input class="form-control" placeholder="" name="postal_code" type="text" required autofocus>
+					<input class="form-control" value="{postal_code}" name="postal_code" type="text" required autofocus>
 				</div>
 			</div>
 
 			<div class="form-group">
 				<label class="control-label col-xs-3" for="phone">Phone</label>
 				<div class="col-xs-9">
-					<input class="form-control" placeholder="" name="phone" type="text" required autofocus>
+					<input class="form-control" value="{phone}" name="phone" type="text" required autofocus>
 				</div>
 			</div>
 
 			<div class="form-group">
 				<label class="control-label col-xs-3" for="email">Email</label>
 				<div class="col-xs-9">
-					<input class="form-control" placeholder="" name="email" type="text" required autofocus>
+					<input class="form-control" value="{email}" name="email" type="text" required autofocus>
 				</div>
 			</div>
 
@@ -128,30 +128,14 @@
 			</div>
 
 			<div class="row">
-				<div class="col-xs-4">
+				<div class="col-xs-12">
 					<div class="form-group">
-						<label for="subtotal">Subtotal</label>
+						<label for="amount">Amount</label>
 						<div class="input-group">
-							<input type="currency" class="form-control" name="subtotal" placeholder="{subtotal}" disabled />
+							<input type="currency" class="form-control" name="amount" placeholder="{total}" disabled />
 
 						</div>
-					</div>
-				</div>
-				<div class="col-xs-4">
-					<div class="form-group">
-						<label for="taxes">Taxes</label>
-						<div class="input-group">
-							<input type="currency" class="form-control" name="taxes" placeholder="{taxes}" disabled />
-						</div>
-					</div>
-				</div>
-				<div class="col-xs-4">
-					<div class="form-group">
-						<label for="total">Total</label>
-						<div class="input-group">
-							<input type="currency" class="form-control" name="total" placeholder="{total}" disabled />
-						</div>
-					</div>
+					</div>                            
 				</div>
 			</div>
 
@@ -162,7 +146,7 @@
 					<p class="payment-errors"></p>
 				</div>
 			</div>
-			<button class="btn btn-lg btn-success btn-block" type="submit">Pay Now</button>
+			<button class="btn btn-lg btn-success btn-block" type="submit">Confirm</button>
 			{form_close}
 		</div>
 	</div>  

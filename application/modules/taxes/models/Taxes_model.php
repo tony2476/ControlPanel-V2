@@ -103,6 +103,7 @@ class Taxes_model extends CI_Model {
 	public function calculate_tax($amount, $province)
 	{
 		$this->db->where('province', $province);
+		$query = $this->db->get('taxes');
 		$taxes = $query->result_array();
 		$rate = $taxes[0]['rate'];
 		if ($amount >0) 

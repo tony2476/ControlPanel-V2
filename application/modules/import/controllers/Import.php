@@ -59,9 +59,51 @@ class Import extends Admin_Controller
 	}
 
 
-// TEST SITE
-// wealth-max.test
-// Ptz?n037
+	public function populate_province()
+	{
+		$list = $this->sf->get_all_account_provinces();
+		foreach ($list as &$item)
+		{
+			if (strlen ( $item->BillingState ) == 2)
+			{
+				//echo "GOOD: Province $item->BillingState<br />";
+			}
+			else
+			{
+				//echo "BAD: Province $item->BillingState<br />";
+				switch ($item->BillingState) {
+					case "Ontario":
+						$item->BillingState = "ON";
+					break;
+					case "Alberta":
+						$item->BillingState = "AB";
+					break;
+					case "UAE":
+						$item->BillingState = "";
+					break;
+					case "Greater London":
+						$item->BillingState = "";
+					break;
+				}	
+				//echo "BAD: Province replaced with $item->BillingState <br />";
+			}
+		}
+		
+
+		foreach ($list as $item)
+		{
+			if ($item->BillingState !='')
+			{
+				$data = array 
+					(
+						'province' => $item->BillingState,
+						);
+					$this->db->where('sf_account_id', $item->Id);
+					$this->db->update('users', $data);
+			}
+		}
+		
+	}
 
 	public function populate_recaptcha_cache()
 	{

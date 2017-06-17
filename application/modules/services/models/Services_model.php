@@ -113,7 +113,7 @@ class Services_model extends CI_Model {
 	public function add_service($data)
 	{
 		extract ($data);
-		
+		$status = '0';
 		$sql = "insert into services (status, service_group, short_code, description, price, period, cycle, pre_paid, discount, discount_period) values ('$status', '$service_group','$short_code', '$description', '$price', '$period','$cycle', '$pre_paid', '$discount', '$discount_period')";
 		$query = $this->db->query($sql);
 		if ($this->db->affected_rows() == 0) 

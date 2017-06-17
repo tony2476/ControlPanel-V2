@@ -104,7 +104,7 @@ class Addons extends Public_Controller {
 		$confirmation_data['price_data'] = $this->services->get_service_costs($confirmation_data['service']);
 		$prices = $confirmation_data['price_data'];
 		$total = $prices['setup'];
-		$pre_pay = $prices['pre_paid'] * $prices['price'];
+		$pre_pay = $prices['pre_paid'] / $prices['period'] * $prices['price'];
 		if ($prices['discount'] >0) {
 			$discount_rate = $prices['discount'];
 			$discount_value = ($pre_pay/100) * $discount_rate;

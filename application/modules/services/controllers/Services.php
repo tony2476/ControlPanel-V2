@@ -97,6 +97,22 @@ class Services extends Admin_Controller {
 		{
 			$form = $form + $this->input->post();
 		}
+		else
+		{
+			$blank = array 
+			(
+				'short_code'		=>	'',
+				'description'		=>	'',
+				'price'				=>	'',
+				'setup'				=>	'',
+				'period'			=>	'',
+				'cycle'				=>	'',
+				'pre_paid'			=>	'',
+				'discount'			=>	'',
+				'discount_period'	=>	''
+				);
+			$form = $form + $blank;
+		}
 		
 		$this->template->set_title("Add Service.");
 		$page_data = $this->parser->parse('services/add_service_form_view', $form, TRUE);

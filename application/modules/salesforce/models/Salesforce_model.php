@@ -542,15 +542,100 @@ class Salesforce_model extends CI_Model
  	}
 
  	public function get_all_recaptchas()
+ 	{
+ 		$response = $this->salesforce_library->query("
+ 			SELECT Domain_Name__c,Id,reCaptcha_Secret_Key__c,reCaptcha_Site_Key__c 
+ 			FROM Account 
+ 			WHERE Domain_Name__c != '' 
+ 			AND reCaptcha_Secret_Key__c != '' 
+ 			ORDER BY Id 
+ 			ASC NULLS FIRST"
+ 			);
+ 		$queryResult = new QueryResult($response);
+		// If no results present return false, fail early.
+ 		if ($queryResult->size == 0)
+ 		{
+
+ 			return(FALSE);
+ 		}
+ 		$results = array();
+ 		for ($queryResult->rewind(); $queryResult->pointer < $queryResult->size; $queryResult->next()) {
+ 			$record = $queryResult->current();
+		    // Id is on the $record, but other fields are accessed via
+		    // the fields object
+
+ 			$results[$record->Id] = $record->fields;
+ 		}
+ 		return ($results);
+ 	}
+
+
+ 	public function get_all_account_provinces()
+ 	{
+ 		$response = $this->salesforce_library->query("
+ 			SELECT BillingState,Id 
+ 			FROM Account
+ 			ORDER BY Id 
+ 			ASC NULLS FIRST"
+ 			);
+ 		$queryResult = new QueryResult($response);
+		// If no results present return false, fail early.
+ 		if ($queryResult->size == 0)
+ 		{
+
+ 			return(FALSE);
+ 		}
+ 		$results = array();
+ 		for ($queryResult->rewind(); $queryResult->pointer < $queryResult->size; $queryResult->next()) {
+ 			$record = $queryResult->current();
+		    // Id is on the $record, but other fields are accessed via
+		    // the fields object
+
+ 			$results[$record->Id] = $record->fields;
+ 		}
+ 		return ($results);
+ 	}
+
+	/**
+	 * Get the primary contact records required for import.
+	 * @param type $sf_account_id 
+	 * @return type
+	 */
+	public function importer_get_all_contact_records() 
 	{
+
 		$response = $this->salesforce_library->query("
-			SELECT Domain_Name__c,Id,reCaptcha_Secret_Key__c,reCaptcha_Site_Key__c 
-			FROM Account 
-			WHERE Domain_Name__c != '' 
-			AND reCaptcha_Secret_Key__c != '' 
-			ORDER BY Id 
-			ASC NULLS FIRST"
-			);
+			SELECT 
+			FirstName,
+			LastName,
+			Id,
+			AccountId,
+			Email,
+			Email_Password__c,
+			Name,
+			Website__c,
+			Web_Agreement__c,
+			Account.Company_Name__c,
+			Account.Name, 
+			Account.Domain_Name__c, 
+			Account.Website
+			FROM 
+			Contact
+			WHERE
+			Email != 'info@financialwisdom.ca'
+			AND
+			Email != 'pedro@advisornet.ca'
+			AND
+			Email != 'aegir@advisornet.ca'
+			AND
+			(Web_Agreement__c = 'Received' OR Web_Agreement__c = 'None')
+			AND
+			Account.AccountStatus__c != 'Prospecting' 
+			AND
+			Account.AccountStatus__c != 'Former Client'
+
+			");
+
 		$queryResult = new QueryResult($response);
 		// If no results present return false, fail early.
 		if ($queryResult->size == 0)
@@ -563,69 +648,10 @@ class Salesforce_model extends CI_Model
 			$record = $queryResult->current();
 		    // Id is on the $record, but other fields are accessed via
 		    // the fields object
-			
 			$results[$record->Id] = $record->fields;
 		}
 		return ($results);
-
 	}
-
-	/**
-	 * Get the primary contact records required for import.
-	 * @param type $sf_account_id 
-	 * @return type
-	 */
-		public function importer_get_all_contact_records() 
-		{
-
-			$response = $this->salesforce_library->query("
-				SELECT 
-				FirstName,
-				LastName,
-				Id,
-				AccountId,
-				Email,
-				Email_Password__c,
-				Name,
-				Website__c,
-				Web_Agreement__c,
-				Account.Company_Name__c,
-				Account.Name, 
-				Account.Domain_Name__c, 
-				Account.Website
-				FROM 
-				Contact
-				WHERE
-				Email != 'info@financialwisdom.ca'
-				AND
-				Email != 'pedro@advisornet.ca'
-				AND
-				Email != 'aegir@advisornet.ca'
-				AND
-				(Web_Agreement__c = 'Received' OR Web_Agreement__c = 'None')
-				AND
-				Account.AccountStatus__c != 'Prospecting' 
-				AND
-				Account.AccountStatus__c != 'Former Client'
-
-				");
-
-			$queryResult = new QueryResult($response);
-		// If no results present return false, fail early.
-			if ($queryResult->size == 0)
-			{
-
-				return(FALSE);
-			}
-			$results = array();
-			for ($queryResult->rewind(); $queryResult->pointer < $queryResult->size; $queryResult->next()) {
-				$record = $queryResult->current();
-		    // Id is on the $record, but other fields are accessed via
-		    // the fields object
-				$results[$record->Id] = $record->fields;
-			}
-			return ($results);
-		}
 
 
 		/**

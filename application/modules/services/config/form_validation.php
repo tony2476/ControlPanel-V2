@@ -65,7 +65,7 @@ $config = array
 		(
 			'field' => 'pre_paid', 
 			'label' => 'pre_paid', 
-			'rules' => 'required|decimal'
+			'rules' => 'required|integer|is_natural_no_zero'
 			),
 		array 
 		(

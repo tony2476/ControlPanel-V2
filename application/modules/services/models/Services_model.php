@@ -16,14 +16,14 @@ class Services_model extends CI_Model {
 
 	public function get_services_by_group($group_id)
 	{
-		$query = $this->db->query("SELECT * from services where service_group='$group_id'");
+		$query = $this->db->query("SELECT * from services where service_group='$group_id' AND status='1'");
 		$list = $query->result_array();
 		$count = $query->num_rows();
 		if ($count > 0) {
-			foreach ($list as &$item)
-			{
-				$item['status'] = $this->services_status_codes[$item['status']];
-			}
+			//foreach ($list as &$item)
+			//{
+			//	$item['status'] = $this->services_status_codes[$item['status']];
+			//}
 			return ($list);
 		} else {
 			$this->error = "There could not retrieve the services list";

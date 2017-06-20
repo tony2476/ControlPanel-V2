@@ -43,13 +43,14 @@
 		var segments = url.split( '/' );
 		var id = segments[5];
 
-		console.log(data);
+		//console.log(data);
 		$.ajax
 		({
 			url:"/help_editor/ajax_save",
 			type:"post",
 			dataType:"html",
-			data: 'content=' + data + '&id=' + id,
+			data: 'content=' + escape(data) + '&id=' + id,
+			
 			success:function(obj)
 			{
 				$('#flash_message').slideDown();

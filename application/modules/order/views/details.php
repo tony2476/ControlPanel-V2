@@ -64,19 +64,19 @@
 				<div class="col-xs-9">
 					<select class="form-control" name="province" autofocus required>
 						<option value="">-- Please select your province --</option>
-						<option value="Alberta">Alberta</option>
-						<option value="British Columbia">British Columbia</option>
-						<option value="Manitoba">Manitoba</option>
-						<option value="New Brunswick">New Brunswick</option>
-						<option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
-						<option value="Northwest Territories">Northwest Territories</option>
-						<option value="Nova Scotia">Nova Scotia</option>
-						<option value="Nunavut">Nunavut</option>
-						<option value="Ontario">Ontario</option>
-						<option value="Prince Edward Island">Prince Edward Island</option>
-						<option value="Quebec">Quebec</option>
-						<option value="Saskatchewan">Saskatchewan</option>
-						<option value="Yukon Territory">Yukon Territory</option>
+						<option value="AB">Alberta</option>
+						<option value="BC">British Columbia</option>
+						<option value="MT">Manitoba</option>
+						<option value="NB">New Brunswick</option>
+						<option value="NL">Newfoundland and Labrador</option>
+						<option value="NT">Northwest Territories</option>
+						<option value="NS">Nova Scotia</option>
+						<option value="NV">Nunavut</option>
+						<option value="ON">Ontario</option>
+						<option value="PE">Prince Edward Island</option>
+						<option value="QB">Quebec</option>
+						<option value="SK">Saskatchewan</option>
+						<option value="YT">Yukon Territory</option>
 					</select>
 				</div>
 			</div>
@@ -131,13 +131,52 @@
 					</label>
 				</div>
 			</div>
-
 			<div class="form-group">
 				<label class="control-label col-xs-3" for="Other">Other</label>
 				<div class="col-xs-9">
 					<input class="form-control" placeholder="Other" name="other" type="text" autofocus>
 				</div>
 			</div>
+
+
+
+			<div class="form-group">
+				<label class="control-label col-xs-3" for="password">Please choose a password.</label>
+				<div class="col-xs-9">
+					<input id="password" class="form-control" name="password" type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])..{12,32}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 12 or more characters" autofocus required>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label id="confirm_text" class="control-label col-xs-3" for="Password_Again">Confirm Password Please.</label>
+				<div class="col-xs-9">
+					<input id="confirm_password" class="form-control" name="confirm_password" type="password" autofocus required>
+				</div>
+			</div>
 		</fieldset>
 	</div>
 </div>
+<script type="text/javascript">
+
+	window.onload = function () {
+		document.getElementById("password").onchange = validatePassword;
+		document.getElementById("confirm_password").onkeyup = validatePassword;
+	}
+
+	function validatePassword(){
+		var pass2=document.getElementById("confirm_password").value;
+		var pass1=document.getElementById("password").value;
+		if(pass1!=pass2)
+		{
+			document.getElementById("confirm_password").style.borderColor = "red"; 
+			document.getElementById("confirm_text").style.color = "red";
+		}
+	//document.getElementById("password2").setCustomValidity("Passwords Don't Match");
+	else
+	{
+		document.getElementById("confirm_password").style.borderColor = "green";
+		document.getElementById("confirm_text").style.color = "green";
+	}
+
+}
+</script>

@@ -147,17 +147,22 @@ class Beanstream_model extends CI_Model {
 		return ($result);
 	}
 
-	public function update_profile()
+	public function update_profile($profile_id)
 	{
+		$profile_data = array(
+			'billing' => $this->billing_address,
+			);
 		try
 		{
 			$result = $this->beanstream->profiles()->updateProfile($profile_id, $profile_data);
+			return 	(TRUE);
 		}
 		catch (\Beanstream\Exception $e) 
 		{
 			$this->error = (string) $e->getMessage();
 			return (FALSE);
 		}
+
 	}
 
 	public function delete_profile($profile_id)
@@ -165,10 +170,12 @@ class Beanstream_model extends CI_Model {
 		try
 		{
 			$result = $this->beanstream->profiles()->deleteProfile($profile_id);
+			return (TRUE);
 		}
 		catch (\Beanstream\Exception $e) 
 		{
 			$this->error = (string) $e->getMessage();
+
 			return (FALSE);
 		}
 
@@ -229,6 +236,7 @@ class Beanstream_model extends CI_Model {
 		try
 		{
 			$result = $this->beanstream->profiles()->getCards($profile_id);
+			return (TRUE);
 		}
 		catch (\Beanstream\Exception $e) 
 		{

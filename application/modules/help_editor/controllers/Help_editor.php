@@ -48,12 +48,19 @@ class Help_editor extends Admin_Controller {
 
 	public function ajax_save()
 	{
+		
+		 
+		//print_r ($this->input->post());
+		
+		 
+		
 		$html='';
 		if ($this->input->post('content')) 
 		{
 			$content = $this->input->post('content');
 			$id = $this->input->post('id');
 			$this->help->save_help($id, $content);
+
 		}
 	}
 

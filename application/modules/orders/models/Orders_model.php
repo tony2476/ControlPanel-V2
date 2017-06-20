@@ -18,6 +18,10 @@ class Orders_model extends CI_Model
 			{
 				$this->db->where('user_id', $filter_object->user_id);
 			}
+			if (isset($filter_object->status))
+			{
+				$this->db->where('status', $filter_object->status);
+			}
 		}
 
 		$query = $this->db->get('orders');

@@ -4,7 +4,7 @@
 // 
 // To see the order lists for admin and managing orders please see the orders module.
 
-class Addons extends Public_Controller {
+class Addons extends Private_Controller {
 
 	/**
 	 * Constructor
@@ -158,24 +158,8 @@ class Addons extends Public_Controller {
 			'total'			=> money_format('$%i', $total),
 			);
 
-		if($this->session->userdata('card_data')){
-			$card_data = $this->session->userdata('card_data');
-			$payment_data['cardname'] = $card_data['cardname'];
-			$payment_data['address_1'] = $card_data['address_1'];
-			$payment_data['address_2'] = $card_data['address_2'];
-			$payment_data['city'] = $card_data['city'];
-			$payment_data['postal_code'] = $card_data['postal_code'];
-			$payment_data['phone'] = $card_data['phone'];
-			$payment_data['email'] = $card_data['email'];
-
-
-			$page_data = $this->parser->parse('addons/payment_prefilled', $payment_data, TRUE);
-		}
-		else 
-		{
-			$page_data = $this->parser->parse('addons/payment', $payment_data, TRUE);
-		}
-		$this->template->disable_help();
+		
+		$page_data = $this->parser->parse('addons/payment', $payment_data, TRUE);
 		$this->template->set_page_data($page_data);
 		$this->template->display_page();	
 	}
@@ -184,9 +168,8 @@ class Addons extends Public_Controller {
 	{
 		// get order_data from session.
 		$order_data = $this->session->userdata('order_data');
-		$card_data = $this->input->post();
-		$this->session->set_userdata('card_data', $card_data);
-
+		
+	
 		// Load order model
 		$this->load->model('order/order_model');
 		$this->order_model = New Order_model;
@@ -195,78 +178,29 @@ class Addons extends Public_Controller {
 		$this->load->model('beanstream/beanstream_model');
 		$this->beanstream = New Beanstream_model;
 
-		// Extract the card data and set it in the beanstream module.
-		extract ($card_data);
-		$this->beanstream->set_profile_address($cardname, $email, $phone, $address_1, $city, $province, $postal_code, 'CA');
-		
-		$bang = explode("/", $cardExpiry);
-		$expiry_month = $bang[0];
-		$expiry_year = $bang[1];
 
-		$this->beanstream->set_card_details($cardname, $cardNumber, $expiry_month, $expiry_year, $cardCVC);
-		
-		// Create a new profile in beanstream for this user.
-		if (!$profile_id = $this->beanstream->create_profile())
-		{
-			$this->session->set_flashdata('message', "Address data problem: " . $this->beanstream->error);
-			
-			// Redisplay form with error message.
-			redirect('/addons/payment', 'refresh');
-		}
-
-		// Create user.  Only create a user if we have a valid beanstream profile id.
-		$username = $order_data['first_name'] . $order_data['last_name'];
-		$password = $this->generateStrongPassword();
-		$email = $order_data['email'];
-		$additional_data = array(
-			'first_name' => $order_data['first_name'],
-			'last_name' => $order_data['last_name'],
-			'company' => $order_data['company_name'],
-			);
-		$group = array(2);
-
-		if (!$user_id = $this->ion_auth->register($username, $password, $email, $additional_data, $group))
-		{
-			// If we failed to create a user then we need to clean up the beanstream profile.
-			$this->beanstream->delete_profile($profile_id);
-			$this->session->set_flashdata('message', "We encountered a problem, please contact sales@advisornet.ca");
-			redirect('/addons/payment', 'refresh');
-		} 
-
-		// Add the beanstream profile to the new user.
-		$this->load->model('user/user_model');
-		$this->user_model = New User_model;
-		$this->user_model->update_beanstream_profile_id($user_id, $profile_id);
-		
-		// Add the clients card to beanstream for subscription payments.
-		if (!$card_id = $this->beanstream->add_card_to_profile($profile_id))
-		{
-			// We need to delete the profile and recreate only on succesful card add to avoid abandoned profiles.
-			$this->beanstream->delete_profile($profile_id);
-
-			// We need to delete the user to prevent us getting too many unused users on the system.
-			$this->ion_auth->delete_user($user_id);
-
-			$this->session->set_flashdata('message', "Card Data Problem: " . $this->beanstream->error);
-			redirect('/addons/payment', 'refresh');
-		}
-
-		// We now have a user on the system, a beanstream profile and card data stored.  
 		// Save the order to the database.
-		$data['user_id'] = $user_id;
+		$data['user_id'] = $this->user->id;
 		// status 1 = pending.
 		$data['status'] = '1';
-		$data['fullname'] = $order_data['first_name'] . " " . $order_data['last_name'];
+		$data['fullname'] = $this->user->first_name . " " . $this->user->last_name;
 		$data['order_data'] = json_encode($order_data);
 		$order_id = $this->order_model->save_order($data);
 
-
-
+		
 		// Send email to Tony (have a look at this routine and tidy up formatting once tony is happy).
 		$this->order_model->mail_order_details_unformated($order_id);
 
+		$profile_id = $this->user->beanstream_id;
+		if ($profile_id == '')
+		{
+			$this->session->set_flashdata('warning', "You have no payment method set.");
+			redirect('/billing/card_profile', 'refresh');
+
+		}
+
 		// take payment using profile. 
-		if (!$payment_id = $this->beanstream->take_payment_using_profile($profile_id, $card_id, $order_id, $order_data['total']))
+		if (!$payment_id = $this->beanstream->take_payment_using_profile($profile_id, '1', $order_id, $order_data['total']))
 		{
 			// Payment failed Let Tony know.
 			$this->order_model->payment_failed($order_id, $this->beanstream->error); 

@@ -1,6 +1,6 @@
 <div class="panel panel-default">
 	<div class="panel-heading">
-		<strong>Invoices.</strong>
+		<strong>Orders.</strong>
 	</div>
 	
 	<div class="panel-body">

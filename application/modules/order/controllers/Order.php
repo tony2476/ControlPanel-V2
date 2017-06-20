@@ -143,15 +143,24 @@ class Order extends Public_Controller {
 
 	function payment()
 	{
-		if($this->session->userdata('card_data')){
-
-		}
-
 		$order_data = $this->session->userdata('order_data');
+
+
+		// calculate taxes
+		// Load tax model
+		// 
+		$this->load->model('taxes/taxes_model');
+		$this->taxes = New Taxes_model;
+		$subtotal = $order_data['total'];
+		$taxes = $this->taxes->calculate_tax($subtotal, $order_data['province']);
+		$total = $subtotal + $taxes;
+
 		$this->template->set_title('Payment');
 		$payment_data = array(
 			'form_open' 	=> form_open('/order/complete', array('class'=>'form-horizontal')),
 			'form_close' 	=> form_close(),
+			'subtotal'		=> $subtotal,
+			'taxes'			=> $taxes,
 			'total'			=> money_format('$%i', $order_data['total'])
 			);
 
@@ -213,7 +222,7 @@ class Order extends Public_Controller {
 
 		// Create user.  Only create a user if we have a valid beanstream profile id.
 		$username = $order_data['first_name'] . $order_data['last_name'];
-		$password = $this->generateStrongPassword();
+		$password = $order_data['password'];
 		$email = $order_data['email'];
 		$additional_data = array(
 			'first_name' => $order_data['first_name'],

@@ -22,10 +22,9 @@ class Help_editor_model extends CI_Model
 	{
 		$data = array 
 		(
-			
 			'content' => $content,
 			);
-		//print_r($data);
+		
 		$this->db->where('id', $id);
 		$this->db->update($this->dbtable, $data);
 	}
